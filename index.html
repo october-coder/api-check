@@ -41,6 +41,29 @@
         textarea {
             height: 100px;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            gap: 20px;
+        }
+        .button {
+            padding: 5px 10px;
+            font-size: 14px;
+            border-radius: 3px;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .styled-button {
+            background-color: #4CAF50; /* 默认按钮颜色：绿色 */
+            color: white;
+        }
+        .styled-button:hover {
+            background-color: #f44336; /* 鼠标悬停颜色 */
+        }
 
         .submit-container {
             display: flex;
@@ -367,6 +390,26 @@
     <h1>API CHECKER</h1>
     <h3>（适配 oneapi/newapi 等中转格式）</h3>
 
+    <!-- 添加缓存开关和下拉列表 -->
+    <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 15px; gap: 15px;">
+        <div style="display: flex; align-items: center; gap: 10px;">
+            <label for="enableCache">启用本地缓存</label>
+            <input type="checkbox" id="enableCache" onchange="toggleCache(this.checked)">
+        </div>
+
+        <!-- 历史记录下拉列表 -->
+        <div style="display: flex; align-items: center; gap: 10px; max-width: 50%;">
+            <select id="history" onchange="selectHistory(this)">
+                <option value="">选择历史记录</option>
+            </select>
+        </div>
+    </div>
+    <div class="button-container">
+        <!-- 删除缓存按钮 -->
+        <button type="button" class="button styled-button" onclick="confirmDeleteSelectedCache()"> 从缓存中删除当前API信息 </button>
+        <button type="button" class="button styled-button" onclick="confirmClearAllCache()"> 删除所有缓存！！！ </button>
+    </div>
+
     <form id="apiForm">
             <textarea id="api_info" name="api_info"
                       placeholder="懒人专用文本框，支持同时粘贴接口地址和密钥，智能提取，如：https://api.openai.com，sk-TodayIsThursdayVme50ForKFC"></textarea>
@@ -412,7 +455,7 @@
     function showToast() {
         const message = `
             <div>
-                <p><strong>API CHECKER v1.3</strong></p>
+                <p><strong>API CHECKER v1.3-beta </strong></p>
                 <br>
                 <div>仓库地址:  <a href="https://github.com/QAbot-zh/query-key" target="_blank" style="color: #1e88e5">QAbot-zh/query-key</a></div><div>点点star 可以自行部署</div>
                 <br>
@@ -423,6 +466,7 @@
                     <div>🖱️ 测试全在本地进行</div>
                     <div>🎉 等待结果并查看详细报告</div>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
+                    <div>🔒 <strong>beta 功能：增加本地缓存API信息功能，数据仅本地保留</strong> </div>
                 </ul>
                 <br>
                 <p><strong>版本历史:</strong></p>
@@ -471,10 +515,149 @@
         }
     });
 
+    // 本地缓存功能
+    const CACHE_KEY = 'apiHistory';
+    let cacheEnabled = false;
+    // 获取历史记录相关元素
+    var historyDropdown = document.getElementById('history');
+    var deleteSelectedCacheButton = document.querySelector('.button-container button[onclick="confirmDeleteSelectedCache()"]');
+    var clearAllCacheButton = document.querySelector('.button-container button[onclick="confirmClearAllCache()"]');
+    
+    function toggleCache(enabled) {
+        cacheEnabled = enabled;
+        if (enabled) {
+            loadHistory();
+            historyDropdown.style.display = 'flex';
+            deleteSelectedCacheButton.style.display = 'flex';
+            clearAllCacheButton.style.display = 'flex';
+        } else {
+            clearHistoryDropdown(); 
+            historyDropdown.style.display = 'none';
+            deleteSelectedCacheButton.style.display = 'none';
+            clearAllCacheButton.style.display = 'none';
+        }
+    }
+    function clearHistoryDropdown() {
+        historyDropdown.innerHTML = '<option value="">选择历史记录</option>'; 
+    }
+
+    function saveToCache(apiUrl, apiKey) {
+        if (!cacheEnabled) return;
+
+        const history = JSON.parse(localStorage.getItem(CACHE_KEY)) || [];
+        const newEntry = { apiUrl, apiKey };
+
+        if (!history.some(entry => entry.apiUrl === apiUrl && entry.apiKey === apiKey)) {
+            history.push(newEntry);
+            localStorage.setItem(CACHE_KEY, JSON.stringify(history));
+            updateHistoryDropdown(history);
+            console.log("api信息已保存到缓存:", apiUrl, apiKey.substring(0, 7) + '***');
+        }
+    }
+
+    function loadHistory() {
+        const history = JSON.parse(localStorage.getItem(CACHE_KEY)) || [];
+        updateHistoryDropdown(history);
+    }
+
+    function updateHistoryDropdown(history) {
+        historyDropdown.innerHTML = '<option value="">选择历史记录</option>';
+
+        if (history.length > 0) {
+            history.forEach((entry, index) => {
+                const option = document.createElement('option');
+                option.value = `${entry.apiUrl}|${entry.apiKey}`;
+
+                const maskedKey = entry.apiKey.substring(0, 7) + '***';
+                option.text = `${entry.apiUrl} + ${maskedKey}`;
+
+                option.setAttribute('data-index', index);
+                historyDropdown.add(option);
+            });
+        }
+    }
+
+    function selectHistory(select) {
+        if (select.value) {
+            const [apiUrl, apiKey] = select.value.split('|');
+            document.getElementById('api_url').value = apiUrl;
+            document.getElementById('api_key').value = apiKey;
+            document.getElementById('api_info').value = '';
+        }
+    }
+    // 提示缓存未启用
+    function showCacheNotEnabledAlert() {
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            layer.alert('缓存未启用，无法进行此操作。', {icon: 0});
+        });
+    }
+    // 确认删除当前API缓存
+    function confirmDeleteSelectedCache() {
+        if (!cacheEnabled) {
+            showCacheNotEnabledAlert();
+            return;
+        }
+        const selectedIndex = historyDropdown.selectedIndex;
+        
+        if (selectedIndex > 0) { // 确保不是选择了默认的提示项
+            const selectedApi = historyDropdown.options[selectedIndex].text; // 获取选中的API信息
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.confirm(`确定要从缓存中删除以下API吗？<br><strong>${selectedApi}</strong><br>此操作无法撤销！`, {
+                    btn: ['确定', '取消'] // 按钮
+                }, function(){
+                    deleteSelectedCache();
+                    layer.msg('当前API缓存已删除', {icon: 1});
+                }, function(){
+                    layer.msg('操作已取消', {icon: 0});
+                });
+            });
+        } else {
+            layui.use('layer', function(){
+                var layer = layui.layer;
+                layer.msg('请选择要删除的API', {icon: 0});
+            });
+        }
+    }
+
+    // 确认删除所有缓存
+    function confirmClearAllCache() {
+        if (!cacheEnabled) {
+            showCacheNotEnabledAlert();
+            return;
+        }
+        layui.use('layer', function(){
+            var layer = layui.layer;
+            
+            layer.confirm('确定要删除所有缓存吗？此操作无法撤销！', {
+                btn: ['确定', '取消'] // 按钮
+            }, function(){
+                clearAllCache();
+                layer.msg('所有缓存已删除', {icon: 1});
+            }, function(){
+                layer.msg('操作已取消', {icon: 0});
+            });
+        });
+    }
+    function deleteSelectedCache() {
+        const selectedIndex = historyDropdown.selectedIndex;
+        if (selectedIndex > 0) {  // 确保不是选择了默认的提示项
+            const history = JSON.parse(localStorage.getItem(CACHE_KEY)) || [];
+            history.splice(selectedIndex - 1, 1);  // 删除选中项
+            localStorage.setItem(CACHE_KEY, JSON.stringify(history));  // 更新缓存
+            loadHistory();  // 重新加载下拉列表
+        }
+    }
+
+    function clearAllCache() {
+        localStorage.removeItem(CACHE_KEY);  // 删除所有缓存
+        loadHistory();  // 清空下拉列表
+    }
     function getModelList() {
         const apiUrl = document.getElementById('api_url').value.replace(/\/+$/, '');
         const apiKey = document.getElementById('api_key').value;
-        console.log(apiUrl, apiKey);
+        saveToCache(apiUrl, apiKey);
 
         layui.use('layer', function () {
             let layer = layui.layer;
@@ -651,6 +834,8 @@
         };
         const apiUrl = document.getElementById('api_url').value.replace(/\/+$/, '');
         const apiKey = document.getElementById('api_key').value;
+        saveToCache(apiUrl, apiKey);
+
         const modelNames = document.getElementById('model_name').value.split(',').map(m => m.trim()).filter(m => m);
         const timeout = parseInt(document.getElementById('model_timeout').value) * 1000; // 转换为毫秒
         const concurrency = parseInt(document.getElementById('model_concurrency').value);
@@ -1086,6 +1271,7 @@
     function clearForm() {
         document.getElementById('apiForm').reset();
         document.getElementById('results').innerHTML = '';
+        document.getElementById('history').selectedIndex = 0; 
     }
 
     // 复制一致模型
@@ -1125,7 +1311,20 @@
         copyText(uniqueModels.join(','));
     }
 
-
+    // 页面加载时检查缓存
+    window.onload = function () {
+        const enableCache = document.getElementById('enableCache');
+        if (enableCache.checked) {
+            historyDropdown.style.display = 'flex';
+            deleteSelectedCacheButton.style.display = 'flex';
+            clearAllCacheButton.style.display = 'flex';
+        }
+        else{
+            historyDropdown.style.display = 'none';
+            deleteSelectedCacheButton.style.display = 'none';
+            clearAllCacheButton.style.display = 'none';
+        }
+    };
 </script>
 </body>
 </html>
