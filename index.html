@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
     <title>API CHECKER</title>
@@ -251,12 +251,26 @@
             color: white;
         }
 
-        .verify-btn {
-            background-color: #ffc107;
+        .verify-btn.blue {
+          background-color: #3498db;
+          color: white;
         }
-
-        .verify-btn {
-            background-color: #28a745;
+        .verify-btn.blue:hover {
+          background-color: #2980b9;
+        }
+        .verify-btn.green {
+          background-color: #28a745;
+          color: white;
+        }
+        .verify-btn.green:hover {
+          background-color: #218838;
+        }
+        .verify-btn.yellow {
+          background-color: #ffc107;
+          color: white;
+        }
+        .verify-btn.yellow:hover {
+          background-color: #e0a800;
         }
 
         .model-filter-container {
@@ -446,7 +460,9 @@
         <br>贡献者：<a href="https://linux.do/u/rick" target="_blank"><img
             src="https://linux.do/user_avatar/linux.do/rick/288/137821_2.png" alt="rick">rick </a>和<a
             href="https://linux.do/u/zhong_little" target="_blank"><img
-            src="https://linux.do/user_avatar/linux.do/zhong_little/288/104887_2.png" alt="Megasoft">Megasoft</a></p>
+            src="https://linux.do/user_avatar/linux.do/zhong_little/288/104887_2.png" alt="Megasoft">Megasoft</a>和<a
+            href="https://linux.do/u/fangyuan99" target="_blank"><img
+            src="https://linux.do/letter_avatar_proxy/v4/letter/f/b3f665/144.png" alt="fangyuan99">fangyuan99</a></p>
 </div>
 <div id="results" class="response-container"></div>
 
@@ -466,6 +482,7 @@
                     <div>🖱️ 测试全在本地进行</div>
                     <div>🎉 等待结果并查看详细报告</div>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
+                    <div>🕵️‍♀️ 使用“温度验证”功能确认API的真实性</div>
                     <div>🔒 <strong>beta 功能：增加本地缓存API信息功能，数据仅本地保留</strong> </div>
                 </ul>
                 <br>
@@ -474,7 +491,8 @@
                  <div><a href="https://linux.do/t/topic/190955" target="_blank" style="color: #1e88e5">v1.2版本介绍</a></div>
                  <br>
                 <p><strong>Tips:</strong></p>
-                <div>GPT系列，才有官转验证，系统判断仅供参考，原理请看 <a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
+                <div>🌱GPT系列，才有官转验证，系统判断仅供参考，原理请看 <a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
+                <div>🌡️ 温度验证：低温度参数下，大模型回复的稳定性。测试结果仅供参考，原理请看 <a href="https://linux.do/t/topic/195972" target="_blank" style="color: #1e88e5">温度验证</a></div>
             </div>
         `;
         const toast = document.createElement('div');
@@ -993,12 +1011,21 @@
                 '<td class="td2"><span class="copy-btn2"" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
 
-            let verifyButton = '';
-            if (r.model.startsWith('gpt-')) {
-                let buttonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? 'green' : 'yellow';
-                verifyButton = '<button class="verify-btn ' + buttonClass + '" onclick="verifyOfficial(\'' + r.model + '\')">官转验证</button>';
+            let verifyButtons = '';
+            if (r.model.startsWith('gpt-') || r.model.startsWith('claude-')) {
+                let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
+                verifyButtons =
+                  '<button class="verify-btn blue" onclick="verifyTemperature(\'' +
+                  r.model +
+                  "')\">温度验证</button>" +
+                  (r.model.startsWith('gpt-') ? 
+                  '<button class="verify-btn ' +
+                  officialButtonClass +
+                  '" onclick="verifyOfficial(\'' +
+                  r.model +
+                  "')\">官转验证</button>" : '');
             }
-            content += '<td class="td4">' + verifyButton + '</td>'
+            content += '<td class="td4">' + verifyButtons + '</td>'
         });
 
         results.inconsistent.forEach(function (r) {
@@ -1039,6 +1066,118 @@
             });
         });
     }
+    async function verifyTemperature(model) {
+        layui.use("layer", function () {
+          const layer = layui.layer;
+          layer.load();
+        });
+
+        try {
+          const results = await Promise.all(
+            [1, 2, 3, 4].map(() => sendTemperatureVerificationRequest(model))
+          );
+          const responses = results.map((result) =>
+            result.choices[0].message.content.trim()
+          );
+          let referenceValue;
+          if (model.startsWith("gpt-4o-mini")) {
+            referenceValue = 32;
+          } else if (model.startsWith("gpt-4o")) {
+            referenceValue = 59;
+          } else if (model.startsWith("claude-3-5") || model.startsWith("claude-3.5")) {
+            referenceValue = 51;
+          }
+          else{
+            referenceValue = null;
+          }
+          layui.use("layer", function () {
+            const layer = layui.layer;
+            layer.closeAll("loading");
+
+            let message = `<strong>当前待验证模型：${model}</strong><p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p><br><br>`;
+            message +=
+              '<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">' +
+              '<tr><th style="border: 1px solid #ddd; padding: 8px;">测试</th><th style="border: 1px solid #ddd; padding: 8px;">响应</th></tr>';
+            
+            for (let i = 0; i < 4; i++) {
+              
+              let color = responses[i] == referenceValue ? "green" : "black";
+              message +=
+                "<tr>" +
+                '<td style="border: 1px solid #ddd; padding: 8px;">测试 ' +
+                (i + 1) +
+                "</td>" +
+                `<td style="border: 1px solid #ddd; padding: 8px; color: ${color};">` +
+                responses[i] +
+                "</td>" +
+                "</tr>";
+            }
+
+            message += "</table>";
+
+            const allSame = responses.every((val) => val === responses[0]);
+            message +=
+              "<strong>结论：</strong> " +
+              (allSame
+                ? "所有响应相同，可能是官方API"
+                : "响应不同，可能不是官方API");
+
+            layer.alert(message, {
+              title: "温度验证结果",
+              area: ["600px", "400px"],
+            });
+          });
+        } catch (error) {
+          console.error("Error in verifyTemperature:", error);
+          layui.use("layer", function () {
+            const layer = layui.layer;
+            layer.closeAll("loading");
+            layer.alert("验证过程中发生错误: " + error.message, {
+              title: "错误",
+            });
+          });
+        }
+      }
+
+      async function sendTemperatureVerificationRequest(model) {
+        const apiUrl = document
+          .getElementById("api_url")
+          .value.replace(/\/+$/, "");
+        const apiKey = document.getElementById("api_key").value;
+        try {
+          const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+            method: "POST",
+            headers: {
+              Authorization: `Bearer ${apiKey}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              messages: [
+                {
+                  role: "system",
+                  content:
+                    "You're an associative thinker. The user gives you a sequence of 6 numbers. Your task is to figure out and provide the 7th number directly, without explaining how you got there.",
+                },
+                {
+                  role: "user",
+                  content: "5, 15, 77, 19, 53, 54,",
+                },
+              ],
+              temperature: 0.01,
+              model: model,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          return await response.json();
+        } catch (error) {
+          console.error("Error in sendTemperatureVerificationRequest:", error);
+          return { error: error.message };
+        }
+      }
 
     async function performOfficialVerification(model, seed) {
         layui.use('layer', function () {
