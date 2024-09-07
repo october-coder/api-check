@@ -67,6 +67,12 @@
 3. 🔍 检查系统指纹
 4. 🧮 计算相似度得分
 
+## 🕵️‍♀️ 温度验证
+
+1. 🧊 设置低温度参数（0.01）
+2. 🔄 发送多个相同的请求（计算某个指定序列的下一个数）
+3. 🎯 根据官方api参考值，检测命中率
+
 ## 🤝 贡献
 
 欢迎提出建议和改进！随时提交 pull requests 或开启 issues。让我们一起让这个工具变得更棒！ 🌈
@@ -81,6 +87,7 @@
 
 - [Rick](https://linux.do/u/rick) 🚀
 - [Megasoft](https://linux.do/u/zhong_little) 💻
+- [fangyuan99](https://linux.do/u/fangyuan99) ❀
 
 你们的贡献是这个项目成功的关键！
 
