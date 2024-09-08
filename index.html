@@ -517,8 +517,8 @@
                     <div>🎉 等待结果并查看详细报告</div>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
                     <div>🕵️‍♀️ 使用“温度验证”功能确认API的真实性</div>
-                    <div>📊 使用“函数验证”功能确认API的真实性</div>
-                    <div>🔒 <strong>beta 功能：增加本地缓存API信息功能，数据仅本地保留</strong> </div>
+                    <div>📊 使用“函数验证”功能检测API是否支持FC</div>
+                    <div>🔒 <strong> beta 功能：支持本地缓存API信息，数据仅本地保留，默认关闭</strong> </div>
                 </ul>
                 <br>
                 <p><strong>版本历史:</strong></p>
@@ -1048,35 +1048,45 @@
                 '<td class="td2"><span class="copy-btn2"" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
 
-            let verifyButtons = '';
+            let verifyButtons = `
+                <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
+                    函数验证
+                </button>
+            `;
             if (r.model.startsWith('gpt-') || r.model.startsWith('claude-')) {
                 let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
-                verifyButtons =
-                  '<button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature(\'' +
-                  r.model +
-                  "')\">温度验证</button>" +
-                  (r.model.startsWith('gpt-') ? 
-                  '<button class="verify-btn ' +
-                  officialButtonClass +
-                  '" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial(\'' +
-                  r.model +
-                  "')\">官转验证</button>" : '') +
-                  (r.model.startsWith('gpt-') ? 
-                  '<button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling(\'' +
-                  r.model +
-                  "')\">函数验证</button>" : '');
+                verifyButtons += `
+                    <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
+                        温度验证
+                    </button>
+                    ${r.model.startsWith('gpt-') ? ` 
+                        <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
+                            官转验证
+                        </button>
+                    ` : ''}
+                `;
             }
-            content += '<td class="td4"><div class="verify-btn-group">' + verifyButtons + '</div></td>'
+            content += `<td class="td4"><div class="verify-btn-group">${verifyButtons}</div></td>`;
         });
 
         results.inconsistent.forEach(function (r) {
 
-            content += '<tr>' +
-                '<td class="td1 td1-no" >模型不一致/映射，tnnd掺假？</td>' +
-                '<td class="td2"><span class="copy-btn2"" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
-                '<td class="td3">' + r.responseTime.toFixed(2) + '</td>' +
-                '<td class="td4">' + (r.returnedModel ? '返回模型: ' + r.returnedModel : '该接口未返回模型名称') + '</td>' +
-                '</tr>';
+            content += `
+                <tr>
+                    <td class="td1 td1-no" >模型不一致/映射，tnnd掺假？</td>
+                    <td class="td2">
+                        <span class="copy-btn2"" onclick="copyText('${r.model}')">${r.model}</span>
+                    </td>
+                    <td class="td3">${r.responseTime.toFixed(2)}</td>
+                    <td class="td4">
+                        <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
+                            函数验证
+                        </button>
+                        <br>
+                        ${r.returnedModel ? '返回模型: ' + r.returnedModel : '该接口未返回模型名称'}
+                    </td>
+                </tr>
+            `;
         });
 
         results.invalid.forEach(function (r) {
@@ -1453,13 +1463,14 @@
             layui.use('layer', function () {
                 const layer = layui.layer;
                 layer.closeAll('loading');
-                const title = '<b><span style="color: black;">模型函数调用响应对比</span></b>';
+                const title = '<b><span style="color: black;">模型函数调用响应对比（非openai模型的函数调用响应可能有差异，但肉眼可辨）</span></b>';
                 let text;
-                if(result.choices?.[0]?.finish_reason !== 'function_call'){
-                    text = '<b><span style="color: red;">模型无函数调用响应返回，测试模型为：' + model + '</span></b>';
+                // 第一种是 openai 的函数调用响应，第二种是经 oneapi 中转后 gemini 的函数调用响应，目前手里只有这两种支持 FC
+                if(result.choices?.[0]?.finish_reason === 'function_call' || result.choices?.[0]?.message?.tool_calls?.[0]?.type === "function"){
+                    text = '<b><span style="color: green;">模型返回了函数调用响应，测试模型为：' + model + '</span></b>';
                 }
                 else{
-                    text = '<b><span style="color: green;">模型返回了函数调用响应，测试模型为：' + model + '</span></b>';
+                    text = '<b><span style="color: red;">模型无函数调用响应返回，测试模型为：' + model + '</span></b>';
                 }
                 const referenceFunctionCall = JSON.stringify({
                     "index": 0,
@@ -1479,7 +1490,7 @@
                     <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
                         <thead>
                             <tr>
-                                <th style="padding: 8px; background-color: #f2f2f2;">标准输出参考</th>
+                                <th style="padding: 8px; background-color: #f2f2f2;">OpenAI 标准输出参考</th>
                                 <th style="padding: 8px; background-color: #f2f2f2;">测试模型输出</th>
                             </tr>
                         </thead>
