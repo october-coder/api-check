@@ -272,6 +272,21 @@
         .verify-btn.yellow:hover {
           background-color: #e0a800;
         }
+        .verify-btn::after {
+            content: attr(data-tooltip); /* 获取 data-tooltip 属性的值作为提示文本 */
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            background-color: #333;
+            color: #fff; 
+            padding: 5px 10px;
+            border-radius: 3px;
+            transition: opacity 0.3s; 
+        }
+        .verify-btn:hover::after {
+            visibility: visible;
+            opacity: 1;
+        }
 
         .model-filter-container {
             display: flex;
@@ -1015,13 +1030,13 @@
             if (r.model.startsWith('gpt-') || r.model.startsWith('claude-')) {
                 let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
                 verifyButtons =
-                  '<button class="verify-btn blue" onclick="verifyTemperature(\'' +
+                  '<button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature(\'' +
                   r.model +
                   "')\">温度验证</button>" +
                   (r.model.startsWith('gpt-') ? 
                   '<button class="verify-btn ' +
                   officialButtonClass +
-                  '" onclick="verifyOfficial(\'' +
+                  '" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial(\'' +
                   r.model +
                   "')\">官转验证</button>" : '');
             }
