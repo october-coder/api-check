@@ -172,6 +172,7 @@
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
+            vertical-align: middle;
         }
 
         th {
@@ -241,16 +242,20 @@
         .copyright a:hover {
             text-decoration: underline;
         }
-
+        .verify-btn-group {
+            display: line-block;
+        }
         .verify-btn {
-            padding: 5px 10px;
-            margin-left: 10px;
+            padding: 3px 8px;
+            margin-left: 8px;
             cursor: pointer;
             border: none;
             border-radius: 3px;
             color: white;
+            display: inline-block;
+            font-size: 14px;
+            line-height: 1.5;
         }
-
         .verify-btn.blue {
           background-color: #3498db;
           color: white;
@@ -271,6 +276,20 @@
         }
         .verify-btn.yellow:hover {
           background-color: #e0a800;
+        }
+        .verify-btn.cyan {
+            background-color: #1abc9c;
+            color: white;
+        }
+        .verify-btn.cyan:hover {
+            background-color: #16a085;
+        }
+        .verify-btn.pink {
+            background-color: #e91e63;
+            color: white;
+        }
+        .verify-btn.pink:hover {
+            background-color: #c2185b;
         }
         .verify-btn::after {
             content: attr(data-tooltip); /* 获取 data-tooltip 属性的值作为提示文本 */
@@ -498,6 +517,7 @@
                     <div>🎉 等待结果并查看详细报告</div>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
                     <div>🕵️‍♀️ 使用“温度验证”功能确认API的真实性</div>
+                    <div>📊 使用“函数验证”功能确认API的真实性</div>
                     <div>🔒 <strong>beta 功能：增加本地缓存API信息功能，数据仅本地保留</strong> </div>
                 </ul>
                 <br>
@@ -1024,7 +1044,7 @@
 
         results.valid.forEach(function (r) {
             content += '<tr>' +
-                '<td class="td1 td1-ok">模型一致可用</td>' +
+                '<td class="td1 td1-ok">模型一致可用</ td>' +
                 '<td class="td2"><span class="copy-btn2"" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
 
@@ -1040,9 +1060,13 @@
                   officialButtonClass +
                   '" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial(\'' +
                   r.model +
-                  "')\">官转验证</button>" : '');
+                  "')\">官转验证</button>" : '') +
+                  (r.model.startsWith('gpt-') ? 
+                  '<button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling(\'' +
+                  r.model +
+                  "')\">函数验证</button>" : '');
             }
-            content += '<td class="td4">' + verifyButtons + '</td>'
+            content += '<td class="td4"><div class="verify-btn-group">' + verifyButtons + '</div></td>'
         });
 
         results.inconsistent.forEach(function (r) {
@@ -1156,45 +1180,45 @@
         }
       }
 
-      async function sendTemperatureVerificationRequest(model) {
+    async function sendTemperatureVerificationRequest(model) {
         const apiUrl = document
-          .getElementById("api_url")
-          .value.replace(/\/+$/, "");
+            .getElementById("api_url")
+            .value.replace(/\/+$/, "");
         const apiKey = document.getElementById("api_key").value;
         try {
-          const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+            const response = await fetch(`${apiUrl}/v1/chat/completions`, {
             method: "POST",
             headers: {
-              Authorization: `Bearer ${apiKey}`,
-              "Content-Type": "application/json",
+                Authorization: `Bearer ${apiKey}`,
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
-              messages: [
+                messages: [
                 {
-                  role: "system",
-                  content:
+                    role: "system",
+                    content:
                     "You're an associative thinker. The user gives you a sequence of 6 numbers. Your task is to figure out and provide the 7th number directly, without explaining how you got there.",
                 },
                 {
-                  role: "user",
-                  content: "5, 15, 77, 19, 53, 54,",
+                    role: "user",
+                    content: "5, 15, 77, 19, 53, 54,",
                 },
-              ],
-              temperature: 0.01,
-              model: model,
+                ],
+                temperature: 0.01,
+                model: model,
             }),
-          });
+            });
 
-          if (!response.ok) {
+            if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
-          }
+            }
 
-          return await response.json();
+            return await response.json();
         } catch (error) {
-          console.error("Error in sendTemperatureVerificationRequest:", error);
-          return { error: error.message };
+            console.error("Error in sendTemperatureVerificationRequest:", error);
+            return { error: error.message };
         }
-      }
+    }
 
     async function performOfficialVerification(model, seed) {
         layui.use('layer', function () {
@@ -1320,6 +1344,168 @@
         }
     }
 
+    async function verifyFunctionCalling(model) {
+        console.log("开始验证函数调用");
+        layui.use('layer', function () {
+        const layer = layui.layer;
+
+        layer.open({
+            title: '请输入两个整数 a 和 b',
+            area: ['400px', '250px'],
+            content: `
+                <div style="padding: 10px;">
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: inline-block; width: 100px;">请输入整数 a:</label>
+                        <input type="number" id="inputA" class="layui-input" style="width: 60px; display: inline-block;" value="3" placeholder="a">
+                    </div>
+                    <div style="margin-bottom: 10px;">
+                        <label style="display: inline-block; width: 100px;">请输入整数 b:</label>
+                        <input type="number" id="inputB" class="layui-input" style="width: 60px; display: inline-block;" value="5" placeholder="b">
+                    </div>
+                </div>
+            `,
+            btn: ['确定', '取消'],
+            yes: function (index, layero) {
+                const a = parseInt(document.getElementById('inputA').value);
+                const b = parseInt(document.getElementById('inputB').value);
+
+                if (isNaN(a) || isNaN(b)) {
+                    layer.msg('请输入有效的整数 a 和 b');
+                    return;
+                }
+
+                layer.close(index);
+                performFunctionCallingVerification(model, a, b);
+            }
+        });
+    });
+    }
+    async function sendFunctionCallingRequest(model, a, b) {
+        const apiUrl = document.getElementById('api_url').value.replace(/\/+$/, '');
+        const apiKey = document.getElementById('api_key').value;
+        try {
+            const response = await fetch(`${apiUrl}/v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: [
+                        {"role": "system", "content": "You are a helpful assistant."},
+                        {"role": "user", "content": `Please add ${a} and ${b}.`}
+                    ],
+                    functions: [
+                        {
+                            "name": "add_numbers",
+                            "description": "Adds two numbers together",
+                            "parameters": {
+                            "type": "object",
+                            "properties": {
+                                "a": {
+                                "type": "number",
+                                "description": "The first number"
+                                },
+                                "b": {
+                                "type": "number",
+                                "description": "The second number"
+                                }
+                            },
+                            "required": ["a", "b"]
+                            }
+                        }
+                    ],
+                    function_call: "auto",
+                    temperature: 0.5,
+                    model: model
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error in sendFunctionCallingRequest:', error);
+            return {error: error.message};
+        }
+    }
+    async function performFunctionCallingVerification(model, a, b) {
+        layui.use('layer', function () {
+            const layer = layui.layer;
+            layer.load();
+        });
+
+        try {
+            const result = await sendFunctionCallingRequest(model, a, b);
+
+            if (result.error) {
+                console.error(`Error in request:`, result.error);
+                layui.use('layer', function () {
+                    const layer = layui.layer;
+                    layer.closeAll('loading');
+                    layer.alert(`请求失败: ${result.error}`, {title: '错误'});
+                });
+                return;
+            }
+
+            layui.use('layer', function () {
+                const layer = layui.layer;
+                layer.closeAll('loading');
+                const title = '<b><span style="color: black;">模型函数调用响应对比</span></b>';
+                let text;
+                if(result.choices?.[0]?.finish_reason !== 'function_call'){
+                    text = '<b><span style="color: red;">模型无函数调用响应返回，测试模型为：' + model + '</span></b>';
+                }
+                else{
+                    text = '<b><span style="color: green;">模型返回了函数调用响应，测试模型为：' + model + '</span></b>';
+                }
+                const referenceFunctionCall = JSON.stringify({
+                    "index": 0,
+                    "message": {
+                        "role": "assistant",
+                        "content": null,
+                        "function_call": {
+                            "name": "add_numbers",
+                            "arguments": `{"a":${a},"b":${b}}`
+                        },
+                    },
+                    "logprobs": null,
+                    "finish_reason": "function_call",
+                }, null, 4);
+                const modelFunctionCall = JSON.stringify(result.choices?.[0], null, 4);
+                const message = text + `
+                    <table border="1" style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 8px; background-color: #f2f2f2;">标准输出参考</th>
+                                <th style="padding: 8px; background-color: #f2f2f2;">测试模型输出</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 8px;">
+                                    <pre style="white-space: pre-wrap; word-wrap: break-word;">${referenceFunctionCall}</pre>
+                                </td>
+                                <td style="padding: 8px;">
+                                    <pre style="white-space: pre-wrap; word-wrap: break-word;">${modelFunctionCall}</pre>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                `;
+                layer.alert(message, {title: title, area: ['800px', '600px']});
+            });
+        } catch (error) {
+            console.error('Error in performOfficialVerification:', error);
+            layui.use('layer', function () {
+                const layer = layui.layer;
+                layer.closeAll('loading');
+                layer.alert('验证过程中发生错误: ' + error.message, {title: '错误'});
+            });
+        }
+    }
 
     function compareTextSimilarity(text1, text2, text3, text4) {
         function calculateSimilarity(str1, str2) {
