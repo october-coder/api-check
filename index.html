@@ -1109,20 +1109,20 @@
             const layer = layui.layer;
             layer.closeAll("loading");
 
-            let message = `<strong>当前待验证模型：${model}</strong><p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p><br><br>`;
+            let message = `<strong>当前待验证模型：${model}</strong><p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p>`;
             message +=
               '<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">' +
-              '<tr><th style="border: 1px solid #ddd; padding: 8px;">测试</th><th style="border: 1px solid #ddd; padding: 8px;">响应</th></tr>';
+              '<tr><th style="border: 1px solid #ddd; padding: 4px;">测试</th><th style="border: 1px solid #ddd; padding: 4px;">响应</th></tr>';
             
             for (let i = 0; i < 4; i++) {
               
               let color = responses[i] == referenceValue ? "green" : "black";
               message +=
                 "<tr>" +
-                '<td style="border: 1px solid #ddd; padding: 8px;">测试 ' +
+                '<td style="border: 1px solid #ddd; padding: 4px;">测试 ' +
                 (i + 1) +
                 "</td>" +
-                `<td style="border: 1px solid #ddd; padding: 8px; color: ${color};">` +
+                `<td style="border: 1px solid #ddd; padding: 4px; color: ${color};">` +
                 responses[i] +
                 "</td>" +
                 "</tr>";
