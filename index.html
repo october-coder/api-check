@@ -1070,7 +1070,22 @@
         });
 
         results.inconsistent.forEach(function (r) {
-
+            let verifyButtons = `<button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
+                            函数验证
+                        </button>`
+            if (r.model.startsWith('gpt-') || r.model.startsWith('claude-')) {
+                let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
+                verifyButtons += `
+                    <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
+                        温度验证
+                    </button>
+                    ${r.model.startsWith('gpt-') ? ` 
+                        <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
+                            官转验证
+                        </button>
+                    ` : ''}
+                `;
+            }
             content += `
                 <tr>
                     <td class="td1 td1-no" >模型不一致/映射，tnnd掺假？</td>
@@ -1079,9 +1094,7 @@
                     </td>
                     <td class="td3">${r.responseTime.toFixed(2)}</td>
                     <td class="td4">
-                        <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
-                            函数验证
-                        </button>
+                    ${verifyButtons}
                         <br>
                         ${r.returnedModel ? '返回模型: ' + r.returnedModel : '该接口未返回模型名称'}
                     </td>
