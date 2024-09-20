@@ -1027,6 +1027,7 @@
     function displayResults(results) {
         const resultsDiv = document.getElementById('results');
         let content = '<h2>测试结果</h2>' +
+            '<h3>（结果仅供参考，防君子不防小人）</h3>' + 
             '<div class="copy-buttons">' +
             '<div className="submit-container">' +
             '<button class="check-quota copy-btn" onclick="copyConsistentModels()">复制一致模型</button>' +
@@ -1086,6 +1087,10 @@
                     ` : ''}
                 `;
             }
+            let highlightedReturnModel = r.returnedModel;
+            if (r.returnedModel.startsWith(`${r.model}-`)){
+                highlightedReturnModel = `<span style="color: green; font-weight: bold;">${r.model}</span>${r.returnedModel.slice(r.model.length)}<br>可能是带版本号模型映射`;
+            }
             content += `
                 <tr>
                     <td class="td1 td1-no" >模型不一致/映射，tnnd掺假？</td>
@@ -1096,7 +1101,7 @@
                     <td class="td4">
                     ${verifyButtons}
                         <br>
-                        ${r.returnedModel ? '返回模型: ' + r.returnedModel : '该接口未返回模型名称'}
+                        ${r.returnedModel ? '返回模型: ' + highlightedReturnModel : '该接口未返回模型名称'}
                     </td>
                 </tr>
             `;
@@ -1130,6 +1135,22 @@
             });
         });
     }
+    function findMostFrequent(arr) {
+        const frequency = {};
+        let maxCount = 0;
+        let mostFrequentElement = null;
+
+        for (const item of arr) {
+            frequency[item] = (frequency[item] || 0) + 1;
+            
+            if (frequency[item] > maxCount) {
+                maxCount = frequency[item];
+                mostFrequentElement = item;
+            }
+        }
+
+        return { element: mostFrequentElement, count: maxCount };
+    }
     async function verifyTemperature(model) {
         layui.use("layer", function () {
           const layer = layui.layer;
@@ -1141,19 +1162,19 @@
             [1, 2, 3, 4].map(() => sendTemperatureVerificationRequest(model))
           );
           const responses = results.map((result) =>
-            result.choices[0].message.content.trim()
+            result.choices
+              ? result?.choices?.[0]?.message?.content?.trim()
+              : "该次调用响应异常"
           );
-          let referenceValue;
-          if (model.startsWith("gpt-4o-mini")) {
-            referenceValue = 32;
-          } else if (model.startsWith("gpt-4o")) {
-            referenceValue = 59;
-          } else if (model.startsWith("claude-3-5") || model.startsWith("claude-3.5")) {
-            referenceValue = 51;
-          }
-          else{
-            referenceValue = null;
-          }
+          const referenceMap = {
+            "gpt-4o-mini": 32,
+            "gpt-4o": 59,
+            "claude-3-5": 51,
+            "claude-3.5": 51
+          };
+          const matchedKey = Object.keys(referenceMap).find(key => model.startsWith(key));
+          let referenceValue = matchedKey ? referenceMap[matchedKey] : null;
+
           layui.use("layer", function () {
             const layer = layui.layer;
             layer.closeAll("loading");
@@ -1162,10 +1183,19 @@
             message +=
               '<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">' +
               '<tr><th style="border: 1px solid #ddd; padding: 4px;">测试</th><th style="border: 1px solid #ddd; padding: 4px;">响应</th></tr>';
-            
+            let hitReferenceCount = 0;
+            let color;
             for (let i = 0; i < 4; i++) {
-              
-              let color = responses[i] == referenceValue ? "green" : "black";
+              if (responses[i] == referenceValue) {
+                hitReferenceCount++;
+                color = "green";
+              }
+              else if (responses[i] == "该次调用响应失败"){
+                color = "red"
+              }
+              else{
+                color = "black";
+              }
               message +=
                 "<tr>" +
                 '<td style="border: 1px solid #ddd; padding: 4px;">测试 ' +
@@ -1177,17 +1207,26 @@
                 "</tr>";
             }
 
-            message += "</table>";
+            message += "</table><strong>结论：</strong>";
 
-            const allSame = responses.every((val) => val === responses[0]);
-            message +=
-              "<strong>结论：</strong> " +
-              (allSame
-                ? "所有响应相同，可能是官方API"
-                : "响应不同，可能不是官方API");
+            frequencyCheckResult = findMostFrequent(responses);
+            const diffentCount = frequencyCheckResult.count;
+            
+            if (diffentCount === responses.length) {
+                message += "所有响应相同，可能是官方API";
+            } else {
+                message += `响应结果重复度：${diffentCount}/${responses.length}`;
+                // 检查模型前缀是否符合条件
+                if (/^(gpt-4o|claude-3-5|claude-3.5)/.test(model)) {
+                    message += `，参考值命中率：${hitReferenceCount}/${responses.length}`;
+                }
+                message += "，可能不是官方API";
+            }
+
+            message += "<br>";
 
             layer.alert(message, {
-              title: "温度验证结果",
+              title: "温度验证结果（<strong>无参考值模型请自行根据结果重复度判断</strong>）",
               area: ["600px", "400px"],
             });
           });
