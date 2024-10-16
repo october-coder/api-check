@@ -1327,21 +1327,23 @@
                 if (api_url === "https://api.openai.com") {
                     layer.alert("官方API你来验证？", {title: '官方API'});
                 }
+                let validFingerprintsCount = Object.values(fingerprints).filter(value => value !== 'N/A').length;
                 let similarityCount = Object.values(similarity).filter(value => parseFloat(value) > 0.6).length;
                 let lowSimilarityCount = Object.values(similarity).filter(value => parseFloat(value) < 0.1).length;
 
                 let title = '验证结果';
                 let message = '';
-                if (similarityCount >= 3) {
-                    title = '恭喜你，官方API呀！';
+                if (validFingerprintsCount >=3 && similarityCount >= 3) {
+                    title = '恭喜你，大概率是官方API呀！';
                     message += '<strong>Tips: 这是官方API！</strong>';
-                } else if (similarityCount >= 2) {
+                } else if (validFingerprintsCount >= 2 && similarityCount >= 2) {
                     title = '可能是官方API';
                     message += '<strong>Tips: 应该是官方的</strong>';
-                } else if (lowSimilarityCount >= 2) {
+                } else if (validFingerprintsCount <= 2 && lowSimilarityCount >= 2) {
                     title = '可能是假的';
                     message += '<strong>Tips: 假的8</strong>';
                 } else {
+                    title = '没有系统指纹且回答一致性差，则api大概率是假的';
                     message += '<strong>Tips: 结果不确定，请进一步验证</strong>';
                 }
 
