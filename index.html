@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <title>API CHECKER</title>
@@ -242,9 +242,9 @@
         .copyright a:hover {
             text-decoration: underline;
         }
-        .verify-btn-group {
-            display: line-block;
-        }
+        /*.verify-btn-group {*/
+        /*    display: line-block;*/
+        /*}*/
         .verify-btn {
             padding: 3px 8px;
             margin-left: 8px;
@@ -252,6 +252,7 @@
             border: none;
             border-radius: 3px;
             color: white;
+            background-color: #28a745;
             display: inline-block;
             font-size: 14px;
             line-height: 1.5;
@@ -263,20 +264,7 @@
         .verify-btn.blue:hover {
           background-color: #2980b9;
         }
-        .verify-btn.green {
-          background-color: #28a745;
-          color: white;
-        }
-        .verify-btn.green:hover {
-          background-color: #218838;
-        }
-        .verify-btn.yellow {
-          background-color: #ffc107;
-          color: white;
-        }
-        .verify-btn.yellow:hover {
-          background-color: #e0a800;
-        }
+
         .verify-btn.cyan {
             background-color: #1abc9c;
             color: white;
@@ -284,13 +272,7 @@
         .verify-btn.cyan:hover {
             background-color: #16a085;
         }
-        .verify-btn.pink {
-            background-color: #e91e63;
-            color: white;
-        }
-        .verify-btn.pink:hover {
-            background-color: #c2185b;
-        }
+
         .verify-btn::after {
             content: attr(data-tooltip); /* 获取 data-tooltip 属性的值作为提示文本 */
             visibility: hidden;
@@ -953,7 +935,7 @@
 
                     if (response.ok) {
                         const data = await response.json();
-                        const returnedModel = data.model;
+                        const returnedModel = data.model || "no returned model by rick"; // 确保 returnedModel 有效
                         if (returnedModel === model) {
                             results.valid.push({model, responseTime});
                             if (/^(gpt-|chatgpt-|o1-)/.test(model)) {
@@ -980,7 +962,7 @@
                                 response_text = '无法解析响应内容';
                             }
                         }
-                        results.invalid.push({model, response_text})
+                        results.invalid.push({model, response_text});
                         console.log(`测试 API 节点：${apiUrl} 测试模型：${model} 模型不可用，响应：${response.status} ${response.statusText} ${response_text}`);
                     }
                 } catch (error) {
@@ -997,7 +979,11 @@
             }
 
             async function runBatch(models) {
-                const promises = models.map(model => testModel(model));
+                const promises = models.map(model =>
+                    testModel(model).catch(error => {
+                        console.error(`测试模型 ${model} 时发生错误：${error.message}`);
+                    })
+                );
                 await Promise.all(promises);
             }
 
@@ -1047,7 +1033,7 @@
             '<div className="submit-container">' +
             '<button class="check-quota copy-btn" onclick="copyConsistentModels()">复制一致模型</button>' +
             '<button class="check-quota copy-btn" onclick="copyConsistentAndInconsistentModels()">复制所有可用模型</button>' +
-            '<button class="check-quota copy-btn"onclick="copyConsistentAndInconsistentReturedModels()">复制可用原始模型</button>' +
+            '<button class="check-quota copy-btn" onclick="copyConsistentAndInconsistentReturedModels()">复制可用原始模型</button>' +
             '</div>' +
             '</div>' +
             '<table>' +
@@ -1201,11 +1187,11 @@
             let hitReferenceCount = 0;
             let color;
             for (let i = 0; i < 4; i++) {
-              if (responses[i] == referenceValue) {
+              if (responses[i] === referenceValue) {
                 hitReferenceCount++;
                 color = "green";
               }
-              else if (responses[i] == "该次调用响应失败"){
+              else if (responses[i] === "该次调用响应失败"){
                 color = "red"
               }
               else{
