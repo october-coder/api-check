@@ -297,10 +297,10 @@
             opacity: 0;
             position: absolute;
             background-color: #333;
-            color: #fff; 
+            color: #fff;
             padding: 5px 10px;
             border-radius: 3px;
-            transition: opacity 0.3s; 
+            transition: opacity 0.3s;
         }
         .verify-btn:hover::after {
             visibility: visible;
@@ -512,24 +512,16 @@
                 <br>
                 <div>仓库地址:  <a href="https://github.com/QAbot-zh/query-key" target="_blank" style="color: #1e88e5">QAbot-zh/query-key</a></div><div>点点star 可以自行部署</div>
                 <br>
+                <p><strong>启用新域名: </strong> <a href="https://check.crond.dev" target="_blank" style="color: #1e88e5">https://check.crond.dev</a></p>
+                <br>
                 <p><strong>如何使用 :</strong></p>
                 <ul>
-                    <div>📝 在表单中输入你的API URL和APIKey</div>
-                    <div>🔍 选择名称或输入您想要测试的模型</div>
-                    <div>🖱️ 测试全在本地进行</div>
-                    <div>🎉 等待结果并查看详细报告</div>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
                     <div>🕵️‍♀️ 使用“温度验证”功能确认API的真实性</div>
                     <div>📊 使用“函数验证”功能检测API是否支持FC</div>
                     <div>🔒 <strong> beta 功能：支持本地缓存API信息，数据仅本地保留，默认关闭</strong> </div>
                 </ul>
                 <br>
-                <p><strong>版本历史:</strong></p>
-                 <div><a href="https://linux.do/t/topic/199694" target="_blank" style="color: #1e88e5">v1.4版本介绍</a></div>
-                 <div><a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
-                 <div><a href="https://linux.do/t/topic/190955" target="_blank" style="color: #1e88e5">v1.2版本介绍</a></div>
-                 <div><a href="https://linux.do/t/topic/196537" target="_blank" style="color: #1e88e5">beta功能</a></div>
-                 <br>
                 <p><strong>Tips:</strong></p>
                 <div>🌱GPT系列，才有官转验证，系统判断仅供参考，原理请看 <a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
                 <div>🌡️ 温度验证：低温度参数下，大模型回复的稳定性。测试结果仅供参考，原理请看 <a href="https://linux.do/t/topic/195972" target="_blank" style="color: #1e88e5">温度验证</a></div>
@@ -1050,7 +1042,7 @@
     function displayResults(results) {
         const resultsDiv = document.getElementById('results');
         let content = '<h2>测试结果</h2>' +
-            '<h3>（结果仅供参考，防君子不防小人）</h3>' + 
+            '<h3>（结果仅供参考，防君子不防小人）</h3>' +
             '<div class="copy-buttons">' +
             '<div className="submit-container">' +
             '<button class="check-quota copy-btn" onclick="copyConsistentModels()">复制一致模型</button>' +
@@ -1083,7 +1075,7 @@
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? ` 
+                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? `
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
@@ -1103,7 +1095,7 @@
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? ` 
+                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? `
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
@@ -1165,7 +1157,7 @@
 
         for (const item of arr) {
             frequency[item] = (frequency[item] || 0) + 1;
-            
+
             if (frequency[item] > maxCount) {
                 maxCount = frequency[item];
                 mostFrequentElement = item;
@@ -1234,7 +1226,7 @@
 
             frequencyCheckResult = findMostFrequent(responses);
             const diffentCount = frequencyCheckResult.count;
-            
+
             if (diffentCount === responses.length) {
                 message += "所有响应相同，可能是官方API";
             } else {
