@@ -1,4 +1,13 @@
+<div align="center">
+
+<img src="./logo.png" alt="logo.png" style="zoom:30%;" />
+
 # API CHECKER 🔍
+
+</div>
+
+> [!TIP]
+> 点击体验 : https://check.crond.dev
 
 ## 纯前端 API 检测工具
 
@@ -8,6 +17,7 @@
 - 🖥️ 本地一键运行，同时支持 pages 在线托管
 
 ## 📜 版本历史
+
 ### v1.4.0
 
 - 🔍 新增温度验证功能
@@ -41,7 +51,9 @@
 - 🕵️ 验证是否为真正的官方API
 
 ## 📸 截图
+
   <details>
+
 
  <img src="https://tgstate.ikun123.com/d/BQACAgUAAx0EcyK3ugACGlFm0xxn52HBNMk72qxN8wUct0shpgAC3xEAAtbumVb7bUXddXAarzUE" alt="界面" style="zoom:25%;" />
 
