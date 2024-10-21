@@ -11,24 +11,29 @@
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 40px;
+            margin: 50px 10px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         .container {
-            width: 100%;
-            max-width: 600px;
+            display: flex;
+            flex-direction: column;
             margin: auto;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
         }
 
         .response-container {
-            width: 100%;
+            width: 90%;
             margin: 20px auto 0;
             max-width: 1000px;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             font-size: 16px;
+
         }
 
         input[type="text"], textarea {
@@ -39,6 +44,7 @@
         }
 
         textarea {
+            resize: vertical;
             height: 100px;
         }
         .button-container {
@@ -130,7 +136,6 @@
 
         h1 {
             font-weight: bold;
-            margin-bottom: 20px;
         }
 
         h2, h3 {
@@ -150,20 +155,21 @@
             display: flex;
             justify-content: space-between;
             margin-top: 10px;
+            margin-bottom: 15px
         }
 
         .model-timeout, .model-concurrency {
-            width: 48%;
+            height: 35px;
+            width: 40%;
         }
 
         .model-timeout input, .model-concurrency input {
             width: 100%;
+            height: 25px;
         }
 
         table {
-            width: 90%; /* 或任何其他固定宽度 */
-            margin-left: auto;
-            margin-right: auto;
+            width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
         }
@@ -413,6 +419,30 @@
             color: #333;
         }
 
+        .copyright {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .copyright img {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            margin-right: 5px;
+            vertical-align: middle;
+        }
+
+        .copyright a {
+            color: #1e88e5;
+            text-decoration: none;
+        }
+
+        .copyright a:hover {
+            text-decoration: underline;
+        }
+
     </style>
 </head>
 <body>
@@ -442,8 +472,8 @@
     </div>
 
     <form id="apiForm">
-            <textarea id="api_info" name="api_info"
-                      placeholder="懒人专用文本框，支持同时粘贴接口地址和密钥，智能提取，如：https://api.openai.com，sk-TodayIsThursdayVme50ForKFC"></textarea>
+        <textarea id="api_info" name="api_info"
+                  placeholder="懒人专用文本框，支持同时粘贴接口地址和密钥，智能提取，如：https://api.openai.com，sk-TodayIsThursdayVme50ForKFC"></textarea>
         <input type="text" id="api_url" name="api_url" placeholder="接口地址，如：https://api.openai.com" value="">
         <input type="text" id="api_key" name="api_key" placeholder="密钥，如：sk-TodayIsThursdayVme50ForKFC" value="">
         <div class="model-input-container" id="model-input-container">
@@ -455,13 +485,13 @@
         <div class="model-timeout-concurrency">
             <div class="model-timeout">
                 <label for="model_timeout">设置请求超时(秒):</label>
-                <input type="number" style="height: 30px;width: 70px" id="model_timeout" name="model_timeout" value="10"
-                       min="1">
+                <input type="number" id="model_timeout" name="model_timeout" value="10" min="1"
+                       style="max-width: 100px;">
             </div>
-            <div class="model-concurrency" style="height: 50px">
+            <div class="model-concurrency">
                 <label for="model_concurrency">设置请求并发数量:</label>
-                <input type="number" style="height: 30px;width: 70px" id="model_concurrency" name="model_concurrency"
-                       value="5" min="1">
+                <input type="number" id="model_concurrency" name="model_concurrency" value="5" min="1"
+                       style="max-width: 100px;">
             </div>
         </div>
         <div class="submit-container">
@@ -1029,12 +1059,10 @@
         const resultsDiv = document.getElementById('results');
         let content = '<h2>测试结果</h2>' +
             '<h3>（结果仅供参考，防君子不防小人）</h3>' +
-            '<div class="copy-buttons">' +
-            '<div className="submit-container">' +
-            '<button class="check-quota copy-btn" onclick="copyConsistentModels()">复制一致模型</button>' +
-            '<button class="check-quota copy-btn" onclick="copyConsistentAndInconsistentModels()">复制所有可用模型</button>' +
-            '<button class="check-quota copy-btn" onclick="copyConsistentAndInconsistentReturedModels()">复制可用原始模型</button>' +
-            '</div>' +
+            '<div class="submit-container">' +
+            '<input type="button" onclick="copyConsistentModels()" value="复制一致模型" class="check-quota">' +
+            '<input type="button" onclick="copyConsistentAndInconsistentModels()" value="复制一致模型" class="check-quota">' +
+            '<input type="button" onclick="copyConsistentAndInconsistentReturedModels()" value="复制可用原始模型" class="check-quota">' +
             '</div>' +
             '<table>' +
             '<tr>' +
@@ -1047,7 +1075,7 @@
         results.valid.forEach(function (r) {
             content += '<tr>' +
                 '<td class="td1 td1-ok">模型一致可用</ td>' +
-                '<td class="td2"><span class="copy-btn2"" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
+                '<td class="td2"><span class="copy-btn2" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
 
             let verifyButtons = `
