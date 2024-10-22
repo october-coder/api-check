@@ -447,13 +447,14 @@
 
         <!-- 历史记录下拉列表 -->
         <div style="display: flex; align-items: center; gap: 10px; max-width: 50%;">
-            <select id="history" onchange="selectHistory(this)">
+            <select id="history" style="width: 100%; max-width: 100%;" onchange="selectHistory(this)">
                 <option value="">选择历史记录</option>
             </select>
         </div>
     </div>
     <div class="button-container">
-        <!-- 删除缓存按钮 -->
+        <!-- 缓存设置按钮 -->
+        <button type="button" class="button styled-button" onclick="exportCacheToFile()"> 导出所有缓存 </button>
         <button type="button" class="button styled-button" onclick="confirmDeleteSelectedCache()"> 从缓存中删除当前API信息 </button>
         <button type="button" class="button styled-button" onclick="confirmClearAllCache()"> 删除所有缓存！！！ </button>
     </div>
@@ -577,6 +578,7 @@
     let cacheEnabled = false;
     // 获取历史记录相关元素
     var historyDropdown = document.getElementById('history');
+    var exportCacheToFileButton = document.querySelector('.button-container button[onclick="exportCacheToFile()"]');
     var deleteSelectedCacheButton = document.querySelector('.button-container button[onclick="confirmDeleteSelectedCache()"]');
     var clearAllCacheButton = document.querySelector('.button-container button[onclick="confirmClearAllCache()"]');
     
@@ -585,11 +587,13 @@
         if (enabled) {
             loadHistory();
             historyDropdown.style.display = 'flex';
+            exportCacheToFileButton.style.display = 'flex';
             deleteSelectedCacheButton.style.display = 'flex';
             clearAllCacheButton.style.display = 'flex';
         } else {
             clearHistoryDropdown(); 
             historyDropdown.style.display = 'none';
+            exportCacheToFileButton.style.display = 'none';
             deleteSelectedCacheButton.style.display = 'none';
             clearAllCacheButton.style.display = 'none';
         }
@@ -711,6 +715,23 @@
         localStorage.removeItem(CACHE_KEY);  // 删除所有缓存
         loadHistory();  // 清空下拉列表
     }
+
+    // 导出本地缓存到文件
+    function exportCacheToFile() {
+        const history = JSON.parse(localStorage.getItem(CACHE_KEY)) || []; // 获取缓存数据
+        const fileContent = JSON.stringify(history, null, 2); // 转换为 JSON 字符串
+        const blob = new Blob([fileContent], { type: 'application/json' }); // 创建 Blob 对象
+        const url = URL.createObjectURL(blob); // 创建下载链接
+        // 创建一个临时链接元素
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'cache_api_keys.json'; // 设置下载文件名
+        document.body.appendChild(a); // 将链接添加到文档
+        a.click(); // 模拟点击下载
+        document.body.removeChild(a); // 下载后移除链接
+        URL.revokeObjectURL(url); // 释放 URL 对象
+    }
+
     function getModelList() {
         const apiUrl = document.getElementById('api_url').value.replace(/\/+$/, '');
         const apiKey = document.getElementById('api_key').value;
@@ -1725,11 +1746,13 @@
         const enableCache = document.getElementById('enableCache');
         if (enableCache.checked) {
             historyDropdown.style.display = 'flex';
+            exportCacheToFileButton.style.display = 'flex';
             deleteSelectedCacheButton.style.display = 'flex';
             clearAllCacheButton.style.display = 'flex';
         }
         else{
             historyDropdown.style.display = 'none';
+            exportCacheToFileButton.style.display = 'none';
             deleteSelectedCacheButton.style.display = 'none';
             clearAllCacheButton.style.display = 'none';
         }
