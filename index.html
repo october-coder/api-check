@@ -460,15 +460,16 @@
         <!-- 历史记录下拉列表 -->
         <div style="display: flex; align-items: center; gap: 10px; max-width: 50%;">
             <select id="history" style="width: 100%; max-width: 100%;" onchange="selectHistory(this)">
-                <option value="">选择历史记录</option>
+                <option value="">选择缓存API</option>
             </select>
         </div>
     </div>
     <div class="button-container">
         <!-- 缓存设置按钮 -->
-        <button type="button" class="button styled-button" onclick="exportCacheToFile()"> 导出所有缓存 </button>
+        <button type="button" class="button styled-button" onclick="importCacheFromFile()"> 导入API文件 </button>
+        <button type="button" class="button styled-button" onclick="exportCacheToFile()"> 导出缓存API </button>
         <button type="button" class="button styled-button" onclick="confirmDeleteSelectedCache()"> 从缓存中删除当前API信息 </button>
-        <button type="button" class="button styled-button" onclick="confirmClearAllCache()"> 删除所有缓存！！！ </button>
+        <button type="button" class="button styled-button" onclick="confirmClearAllCache()"> 删除所有缓存 ！！！ </button>
     </div>
 
     <form id="apiForm">
@@ -580,6 +581,7 @@
     let cacheEnabled = false;
     // 获取历史记录相关元素
     var historyDropdown = document.getElementById('history');
+    var importCacheFromFileButton = document.querySelector('.button-container button[onclick="importCacheFromFile()"]');
     var exportCacheToFileButton = document.querySelector('.button-container button[onclick="exportCacheToFile()"]');
     var deleteSelectedCacheButton = document.querySelector('.button-container button[onclick="confirmDeleteSelectedCache()"]');
     var clearAllCacheButton = document.querySelector('.button-container button[onclick="confirmClearAllCache()"]');
@@ -589,19 +591,21 @@
         if (enabled) {
             loadHistory();
             historyDropdown.style.display = 'flex';
+            importCacheFromFileButton.style.display = 'flex';
             exportCacheToFileButton.style.display = 'flex';
             deleteSelectedCacheButton.style.display = 'flex';
             clearAllCacheButton.style.display = 'flex';
         } else {
             clearHistoryDropdown(); 
             historyDropdown.style.display = 'none';
+            importCacheFromFileButton.style.display = 'none';
             exportCacheToFileButton.style.display = 'none';
             deleteSelectedCacheButton.style.display = 'none';
             clearAllCacheButton.style.display = 'none';
         }
     }
     function clearHistoryDropdown() {
-        historyDropdown.innerHTML = '<option value="">选择历史记录</option>'; 
+        historyDropdown.innerHTML = '<option value="">选择缓存API</option>'; 
     }
 
     function saveToCache(apiUrl, apiKey) {
@@ -624,7 +628,7 @@
     }
 
     function updateHistoryDropdown(history) {
-        historyDropdown.innerHTML = '<option value="">选择历史记录</option>';
+        historyDropdown.innerHTML = `<option value="">选择缓存API（${history.length}）</option>`;
 
         if (history.length > 0) {
             history.forEach((entry, index) => {
@@ -732,6 +736,42 @@
         a.click(); // 模拟点击下载
         document.body.removeChild(a); // 下载后移除链接
         URL.revokeObjectURL(url); // 释放 URL 对象
+    }
+
+    // 导入文件到本地缓存
+    function importCacheFromFile() {
+        // 创建文件输入元素
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'application/json'; // 只接受 JSON 文件
+
+        input.onchange = function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const fileContent = e.target.result;
+                        const data = JSON.parse(fileContent);
+
+                        // 验证文件内容格式
+                        if (Array.isArray(data) && data.every(item => typeof item.apiUrl === 'string' && typeof item.apiKey === 'string')) {
+                            localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+                            loadHistory();
+                            alert('缓存导入成功');
+                        } else {
+                            alert('文件内容格式不正确');
+                        }
+                    } catch (error) {
+                        alert('文件解析失败');
+                    }
+                };
+                reader.readAsText(file);
+            }
+        };
+
+        // 模拟点击文件输入框
+        input.click();
     }
 
     function getModelList() {
@@ -1750,12 +1790,14 @@
         const enableCache = document.getElementById('enableCache');
         if (enableCache.checked) {
             historyDropdown.style.display = 'flex';
+            importCacheFromFileButton.style.display = 'flex';
             exportCacheToFileButton.style.display = 'flex';
             deleteSelectedCacheButton.style.display = 'flex';
             clearAllCacheButton.style.display = 'flex';
         }
         else{
             historyDropdown.style.display = 'none';
+            importCacheFromFileButton.style.display = 'none';
             exportCacheToFileButton.style.display = 'none';
             deleteSelectedCacheButton.style.display = 'none';
             clearAllCacheButton.style.display = 'none';
