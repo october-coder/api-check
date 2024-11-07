@@ -1,0 +1,18 @@
+{
+  "API_CHECKER_TITLE": "API CHECK",
+  "API_CHECKER_SUBTITLE": "（适配 one-api/new-api 等中转格式）",
+  "API_INFO_PLACEHOLDER": "懒人专用文本框，支持同时粘贴接口地址和密钥，智能提取，如：https://api.openai.com，sk-TodayIsThursdayVme50ForKFC",
+  "API_URL_PLACEHOLDER": "接口地址，如：https://api.openai.com",
+  "API_KEY_PLACEHOLDER": "密钥，如：sk-TodayIsThursdayVme50ForKFC",
+  "MODEL_NAME_PLACEHOLDER": "支持手动填入测试模型名称，用英文逗号分隔多个模型",
+  "GET_MODEL_LIST": "获取模型列表",
+  "SET_TIMEOUT": "设置请求超时(秒)",
+  "TIMEOUT_PLACEHOLDER": "例如：10",
+  "SET_CONCURRENCY": "设置请求并发数量",
+  "CONCURRENCY_PLACEHOLDER": "例如：5",
+  "TEST_MODELS": "测试模型",
+  "CHECK_QUOTA": "检查额度",
+  "CLEAR_FORM": "清空表单",
+  "GIVE_STAR": "给我一个星星",
+  "CONTRIBUTORS": "贡献者"
+}

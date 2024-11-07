@@ -1,0 +1,18 @@
+{
+  "API_CHECKER_TITLE": "API CHECK",
+  "API_CHECKER_SUBTITLE": "（适配 one-api/new-api 等中转格式）",
+  "API_INFO_PLACEHOLDER": "Intelligent extraction, e.g., https://api.openai.com, sk-TodayIsThursdayVme50ForKFC",
+  "API_URL_PLACEHOLDER": "API URL: https://api.openai.com",
+  "API_KEY_PLACEHOLDER": "API Key: sk-TodayIsThursdayVme50ForKFC",
+  "MODEL_NAME_PLACEHOLDER": "Support manually entering test model names, separated by commas in English",
+  "GET_MODEL_LIST": "Get Model List",
+  "SET_TIMEOUT": "Timeout (seconds)",
+  "TIMEOUT_PLACEHOLDER": "e.g., 10",
+  "SET_CONCURRENCY": "Concurrency",
+  "CONCURRENCY_PLACEHOLDER": "e.g., 5",
+  "TEST_MODELS": "Test Models",
+  "CHECK_QUOTA": "Check Quota",
+  "CLEAR_FORM": "Clear Form",
+  "GIVE_STAR": "Give me a Star",
+  "CONTRIBUTORS": "Contributors"
+}
