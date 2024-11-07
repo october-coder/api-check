@@ -1,3 +1,6 @@
+:root {
+    --vh: 1vh;
+}
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -14,14 +17,15 @@ body {
 body.dark-mode {
     background-color: #1e1e1e;
     color: #e0e0e0;
-    --background-color: rgba(30, 30, 30, 0.7);
+
+    --background-color: rgba(50, 49, 48, 0.7);
     --font-color: #e0e0e0;
     --input-background-color: #2e2e2e;
     --input-border-color: #1e88e5;
 }
 
 body.light-mode {
-    background-color: #ffffff;
+    background-color: #f8f8f8;
     color: #000000;
     --background-color: rgba(255, 255, 255, 0.7);
     --font-color: #000000;
@@ -57,7 +61,7 @@ a {
 }
 
 .light-mode {
-    --background-color: #ffffff;
+    --background-color: #f8f8f8;
     --font-color: #000000;
     --input-background-color: #ffffff;
     --input-border-color: #cccccc;
@@ -66,20 +70,7 @@ a {
     --button-text-color: #ffffff;
 }
 
-textarea, input {
-    background-color: var(--input-background-color);
-    color: var(--font-color);
-    border: 1px solid var(--input-border-color);
-}
 
-button {
-    background-color: var(--button-background-color);
-    color: var(--button-text-color);
-}
-
-button:hover {
-    background-color: var(--button-hover-background-color);
-}
 
 /* Center the footer content */
 footer {

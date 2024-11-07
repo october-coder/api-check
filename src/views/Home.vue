@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import ApiForm from '../components/ApiForm.vue';
+import ApiForm from '../components/Check.vue';
 
 export default {
   name: 'Home',

@@ -1,0 +1,3080 @@
+<template>
+  <ConfigProvider :theme="configProviderTheme">
+    <div class="wrapper">
+      <div class="page-content">
+        <div class="container" :class="{ 'shift-left': shouldShift }">
+          <div class="header">
+            <button id="themeToggle" :aria-label="t('SWITCH_THEME')" @click="handleToggleTheme">
+              <svg
+                  id="themeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="transparent"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-sun"
+              >
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+              </svg>
+            </button>
+
+            <div class="right-icons" @click="showLanguageMenu = false">
+              <div class="language-container" @click.stop="toggleLanguageMenu">
+                <button :aria-label="t('SWITCH_LANGUAGE')" class="language-btn">
+                  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M7.49996 1.80002C4.35194 1.80002 1.79996 4.352 1.79996 7.50002C1.79996 10.648 4.35194 13.2 7.49996 13.2C10.648 13.2 13.2 10.648 13.2 7.50002C13.2 4.352 10.648 1.80002 7.49996 1.80002ZM0.899963 7.50002C0.899963 3.85494 3.85488 0.900024 7.49996 0.900024C11.145 0.900024 14.1 3.85494 14.1 7.50002C14.1 11.1451 11.145 14.1 7.49996 14.1C3.85488 14.1 0.899963 11.1451 0.899963 7.50002Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                    ></path>
+                    <path
+                        d="M13.4999 7.89998H1.49994V7.09998H13.4999V7.89998Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                    ></path>
+                    <path
+                        d="M7.09991 13.5V1.5H7.89991V13.5H7.09991zM10.375 7.49998C10.375 5.32724 9.59364 3.17778 8.06183 1.75656L8.53793 1.24341C10.2396 2.82218 11.075 5.17273 11.075 7.49998 11.075 9.82724 10.2396 12.1778 8.53793 13.7566L8.06183 13.2434C9.59364 11.8222 10.375 9.67273 10.375 7.49998zM3.99969 7.5C3.99969 5.17611 4.80786 2.82678 6.45768 1.24719L6.94177 1.75281C5.4582 3.17323 4.69969 5.32389 4.69969 7.5 4.6997 9.67611 5.45822 11.8268 6.94179 13.2472L6.45769 13.7528C4.80788 12.1732 3.9997 9.8239 3.99969 7.5z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                    ></path>
+                    <path
+                        d="M7.49996 3.95801C9.66928 3.95801 11.8753 4.35915 13.3706 5.19448 13.5394 5.28875 13.5998 5.50197 13.5055 5.67073 13.4113 5.83948 13.198 5.89987 13.0293 5.8056 11.6794 5.05155 9.60799 4.65801 7.49996 4.65801 5.39192 4.65801 3.32052 5.05155 1.97064 5.8056 1.80188 5.89987 1.58866 5.83948 1.49439 5.67073 1.40013 5.50197 1.46051 5.28875 1.62927 5.19448 3.12466 4.35915 5.33063 3.95801 7.49996 3.95801zM7.49996 10.85C9.66928 10.85 11.8753 10.4488 13.3706 9.6135 13.5394 9.51924 13.5998 9.30601 13.5055 9.13726 13.4113 8.9685 13.198 8.90812 13.0293 9.00238 11.6794 9.75643 9.60799 10.15 7.49996 10.15 5.39192 10.15 3.32052 9.75643 1.97064 9.00239 1.80188 8.90812 1.58866 8.9685 1.49439 9.13726 1.40013 9.30601 1.46051 9.51924 1.62927 9.6135 3.12466 10.4488 5.33063 10.85 7.49996 10.85z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                    ></path>
+                  </svg>
+                </button>
+                <div v-if="showLanguageMenu" class="language-menu">
+                  <button class="language-menu-button" @click="setLanguage('zh')">{{ t('LANGUAGE_CHINESE') }}</button>
+                  <button class="language-menu-button" @click="setLanguage('en')">{{ t('LANGUAGE_ENGLISH') }}</button>
+                </div>
+              </div>
+              <a-tooltip :title="t('SETTINGS')" placement="bottom">
+                <a @click="openSettingsModal" class="icon-button">
+                  <SettingOutlined style="cursor: pointer;"/>
+                </a>
+              </a-tooltip>
+              <a-tooltip :title="t('GITHUB')" placement="bottom">
+                <a href="https://github.com/your-repo" target="_blank" class="icon-button">
+                  <GithubOutlined style="cursor: pointer;"/>
+                </a>
+              </a-tooltip>
+            </div>
+          </div>
+
+          <h1>{{ t('API_CHECKER_TITLE') }}</h1>
+          <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
+
+          <form @submit.prevent="handleSubmit" id="apiForm">
+            <textarea
+                v-model="apiInfo"
+                id="api_info"
+                name="api_info"
+                :placeholder="t('API_INFO_PLACEHOLDER')"
+            ></textarea>
+
+            <input
+                type="text"
+                v-model="apiUrl"
+                id="api_url"
+                name="api_url"
+                :placeholder="t('API_URL_PLACEHOLDER')"
+            />
+
+            <input
+                type="text"
+                v-model="apiKey"
+                id="api_key"
+                name="api_key"
+                :placeholder="t('API_KEY_PLACEHOLDER')"
+            />
+
+            <div class="model-input-container" id="model-input-container">
+              <textarea
+                  v-model="modelName"
+                  id="model_name"
+                  name="model_name"
+                  :placeholder="t('MODEL_NAME_PLACEHOLDER')"
+              ></textarea>
+              <a-button
+                  type="primary"
+                  :loading="spinning"
+                  @click="getModelList"
+                  class="get-models large-button"
+                  style="height: 80px;width: 180px"
+              >
+                {{ t('GET_MODEL_LIST') }}
+              </a-button>
+            </div>
+
+            <div id="modelCheckboxes"></div>
+            <div class="model-timeout-concurrency">
+              <div class="model-timeout">
+                <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
+                <input
+                    type="number"
+                    v-model="modelTimeout"
+                    id="model_timeout"
+                    name="model_timeout"
+                    min="1"
+                    :placeholder="t('TIMEOUT_PLACEHOLDER')"
+                />
+              </div>
+              <div class="model-concurrency">
+                <label for="model_concurrency">{{ t('SET_CONCURRENCY') }}:</label>
+                <input
+                    type="number"
+                    v-model="modelConcurrency"
+                    id="model_concurrency"
+                    name="model_concurrency"
+                    min="1"
+                    :placeholder="t('CONCURRENCY_PLACEHOLDER')"
+                />
+              </div>
+            </div>
+
+            <div class="submit-container">
+              <a-button
+                  type="primary"
+                  :loading="testModels_spinning"
+                  @click="testModels"
+                  class="submit-query"
+                  size="large"
+              >
+                {{ t('TEST_MODELS') }}
+              </a-button>
+
+              <a-button
+                  type="default"
+                  :loading="checkQuota_spinning"
+                  @click="checkQuota"
+                  class="check-quota"
+                  size="large"
+              >
+                {{ t('CHECK_QUOTA') }}
+              </a-button>
+
+              <a-button
+                  type="ghost"
+                  @click="clearForm"
+                  class="clear-form"
+                  size="large"
+              >
+                {{ t('CLEAR_FORM') }}
+              </a-button>
+            </div>
+          </form>
+        </div>
+        <div
+            class="container result-container"
+            v-if="showResultContainer"
+            :class="{ 'show': showResultContainer }"
+        >
+          <button class="close-button" @click="closeResults">×</button>
+          <div class="result-content" style="position: relative;">
+            <div v-if="verificationLoading" class="loading-overlay">
+              <a-spin size="large"/>
+            </div>
+
+            <div class="left-icons">
+              <a-tooltip :title="t('CHAT')" placement="bottom">
+                <span class="iconfont icon-button" @click="goChat">&#xe635;</span>
+              </a-tooltip>
+              <a-tooltip :title="t('SHARE')" placement="bottom">
+                <span class="iconfont icon-button" @click="goShare">&#xe68b;</span>
+              </a-tooltip>
+              <a-dropdown trigger="click">
+                <template #overlay>
+                  <a-menu>
+                    <a-menu-item key="1">
+                      <a @click="copyModels('valid')">{{ t('COPY_IDENTICAL_MODELS') }}</a>
+                    </a-menu-item>
+                    <a-menu-item key="2">
+                      <a @click="copyModels('available')">{{ t('COPY_AVAILABLE_MODELS') }}</a>
+                    </a-menu-item>
+                  </a-menu>
+                </template>
+                <a-tooltip :title="t('COPY')" placement="top" >
+                  <span class="iconfont icon-button">&#xe661;</span>
+                </a-tooltip>
+              </a-dropdown>
+            </div>
+
+
+            <div v-if="!isMobile" class="table-container">
+              <a-table
+                  :columns="columns"
+                  :data-source="tableData"
+                  :pagination="{ pageSize: 8 }"
+                  :row-key="record => record.key"
+                  size="small"
+                  class="result-table"
+              >
+                <template #bodyCell="{ text, record, column, index }">
+                  <template v-if="column.dataIndex === 'status'">
+                    {{ record.status }}
+                  </template>
+                  <template v-else-if="column.dataIndex === 'model'">
+                    <span>
+                      📦 {{ record.model }}
+                      <CopyOutlined
+                          style="margin-left: 8px; cursor: pointer;"
+                          @click="copyText(record.model)"
+                      />
+                    </span>
+                  </template>
+                  <template v-else-if="column.dataIndex === 'responseTime'">
+                    {{ record.responseTime }}
+                  </template>
+                  <template v-else-if="column.dataIndex === 'buttons'">
+                    <template v-if="record.buttons && record.buttons.length > 0">
+                      <a-popover
+                          trigger="hover"
+                          placement="top"
+                      >
+                        <template #content>
+                          <div class="verify-btn-group">
+                            <a-button
+                                v-for="(button, idx) in record.buttons"
+                                :key="idx"
+                                :type="button.label"
+                                size="small"
+                                @click="button.onClick"
+                                style="margin: 0 5px 5px 0;"
+                                block
+                                :style="{
+                                backgroundColor: buttonColors[button.label] || '',
+                                borderColor: buttonColors[button.label] || '',
+                                color: buttonColors[button.label] ? '#fff' : '',
+                              }"
+                            >
+                              {{ button.label }}
+                            </a-button>
+                          </div>
+                        </template>
+                        <a-button
+                            type="primary"
+                            size="small"
+                        >
+                          {{ t('VERIFY') }}
+                        </a-button>
+                      </a-popover>
+                    </template>
+                  </template>
+
+                  <template v-else-if="column.dataIndex === 'remark'">
+                    <a-tooltip :title="record.fullRemark || record.remark" placement="topLeft">
+                      <span v-html="record.remark"></span>
+                    </a-tooltip>
+                  </template>
+                  <template v-else>
+                    {{ text }}
+                  </template>
+                </template>
+              </a-table>
+            </div>
+            <div v-if="isMobile" class="list-container" style="margin: 0 16px;">
+              <div class="result-list">
+                <div
+                    class="list-item"
+                    v-for="item in paginatedData"
+                    :key="item.key"
+                >
+                  <div class="list-item-content">
+                    <div class="list-item-field">
+                      <span class="field-label">{{ t('MODEL_STATUS_LABEL') }}</span>
+                      <span class="field-value">{{ item.status }}</span>
+                    </div>
+                    <div class="list-item-field">
+                      <span class="field-label">{{ t('MODEL_NAME_LABEL') }}</span>
+                      <span class="field-value">
+                        📦 {{ item.model }}
+                        <CopyOutlined
+                            type="copy"
+                            style="margin-left: 8px; cursor: pointer;"
+                            @click="copyText(item.model)"
+                        />
+                      </span>
+                    </div>
+                    <div class="list-item-field">
+                      <span class="field-label">{{ t('RESPONSE_TIME_LABEL') }}</span>
+                      <span class="field-value">{{ item.responseTime }}</span>
+                    </div>
+                    <div class="list-item-field">
+                      <span class="field-label">{{ t('VERIFICATION_BUTTONS_LABEL') }}</span>
+                      <div class="verify-btn-group">
+                        <a-button
+                            v-for="(button, index) in item.buttons"
+                            :key="index"
+                            :type="button.type"
+                            size="small"
+                            @click="button.onClick"
+                            block
+                            style="margin-bottom: 5px;"
+                        >
+                          {{ button.label }}
+                        </a-button>
+                      </div>
+                    </div>
+                    <div
+                        class="list-item-field"
+                        v-if="item.remark"
+                    >
+                      <span class="field-label">{{ t('REMARK_LABEL') }}</span>
+                      <span class="field-value" v-html="item.remark"></span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <a-pagination
+                :current="currentPage"
+                :total="tableData.length"
+                :pageSize="pageSize"
+                @change="handlePageChange"
+                style="margin-top: 16px; text-align: right;"
+                v-if="isMobile"
+            />
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <a-modal
+        v-model:open="functionCallingModalVisible"
+        :title="t('FUNCTION_VERIFICATION_MODAL_TITLE')"
+        @ok="handleFunctionCallingOk"
+        @cancel="() => { functionCallingModalVisible.value = false; }"
+    >
+      <a-form :model="{ a: functionCallingA, b: functionCallingB }" layout="vertical">
+        <a-form-item :label="t('VALUE_A')">
+          <a-input-number v-model:value="functionCallingA" style="width: 100%;"/>
+        </a-form-item>
+        <a-form-item :label="t('VALUE_B')">
+          <a-input-number v-model:value="functionCallingB" style="width: 100%;"/>
+        </a-form-item>
+      </a-form>
+    </a-modal>
+    <a-modal
+        v-model:open="showSettingsModal1"
+        :title="t('SETTINGS_PANEL')"
+        :footer="null"
+        :width="600"
+        @cancel="closeSettingsModal"
+        class="settings-modal"
+        :centered="true"
+    >
+      <a-tabs>
+        <a-tab-pane key="1" :tab="t('LOCAL_CACHE')" style="overflow-x: hidden;">
+          <a-form @submit.prevent>
+            <a-row :gutter="16">
+              <a-col :span="16">
+                <a-form-item :label="t('API_URL')">
+                  <a-input v-model:value="settingsApiUrl" :placeholder="t('PLEASE_ENTER_API_URL')">
+                    <template #prefix>
+                      <UserOutlined class="site-form-item-icon"/>
+                    </template>
+                  </a-input>
+                </a-form-item>
+                <a-form-item :label="t('API_KEY')">
+                  <a-input v-model:value="settingsApiKey" :placeholder="t('PLEASE_ENTER_API_KEY')">
+                    <template #prefix>
+                      <LockOutlined class="site-form-item-icon"/>
+                    </template>
+                  </a-input>
+                </a-form-item>
+              </a-col>
+              <a-col :span="8">
+                <div style="display: flex; height: 100%;">
+                  <a-button
+                      type="primary"
+                      @click="saveToLocal"
+                      size="large"
+                      style="flex: 1; white-space: normal; word-break: break-word;height: 90%">
+                    {{ t('SAVE_TO_LOCAL_CACHE') }}
+                  </a-button>
+                </div>
+              </a-col>
+            </a-row>
+          </a-form>
+          <h3>{{ t('HISTORY_RECORDS') }}</h3>
+          <a-list
+              :data-source="localCacheList"
+              bordered
+              style="width: 100%;"
+              item-layout="horizontal"
+          >
+            <template #renderItem="{ item }">
+              <a-list-item>
+                <div>
+                  <div>{{ item.name }}</div>
+                  <div style="font-size: smaller; color: gray;">
+                    URL: {{ item.url }}
+                  </div>
+                  <div style="font-size: smaller; color: gray;">
+                    API Key: {{ maskApiKey(item.apiKey) }}
+                  </div>
+                </div>
+                <template #actions>
+                  <a @click="loadLocalRecord(item.id)">{{ t('IMPORT') }}</a>
+                  <a @click="deleteLocalRecord(item.id)">{{ t('DELETE') }}</a>
+                </template>
+              </a-list-item>
+            </template>
+          </a-list>
+          <div style="margin-top: 16px;">
+            <a-button @click="exportLocalCache" style="margin-right: 8px;">{{ t('EXPORT') }}</a-button>
+            <a-button @click="importLocalCache">{{ t('IMPORT') }}</a-button>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="2" :tab="t('CLOUD_CACHE')" style="overflow-x: hidden;">
+          <div v-if="!isCloudLoggedIn">
+            <a-form @submit.prevent>
+              <a-row :gutter="16" align="stretch">
+                <a-col :span="16">
+                  <a-form-item :label="t('CLOUD_URL')">
+                    <a-input v-model:value="cloudUrl" :placeholder="t('PLEASE_ENTER_CLOUD_URL')">
+                      <template #prefix>
+                        <UserOutlined class="site-form-item-icon"/>
+                      </template>
+                    </a-input>
+                  </a-form-item>
+                  <a-form-item :label="t('PASSWORD')">
+                    <a-input-password v-model:value="cloudPassword" :placeholder="t('PLEASE_ENTER_PASSWORD')">
+                      <template #prefix>
+                        <LockOutlined class="site-form-item-icon"/>
+                      </template>
+                    </a-input-password>
+                  </a-form-item>
+                </a-col>
+                <a-col :span="8">
+                  <a-button
+                      type="primary"
+                      @click="handleCloudLogin"
+                      size="large"
+                      style="width: 100%; height:90%; white-space: normal; word-break: break-word;">
+                    {{ t('LOGIN') }}
+                  </a-button>
+                </a-col>
+              </a-row>
+            </a-form>
+          </div>
+          <div v-else>
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px;">
+              <span>{{ t('LOGGED_IN_TO_CLOUD', {url: cloudUrl}) }}</span>
+              <a-button type="primary" @click="handleCloudLogout">
+                {{ t('LOGOUT') }}
+              </a-button>
+            </div>
+            <a-list
+                :data-source="cloudDataList"
+                bordered
+                style="width: 100%;"
+                item-layout="horizontal"
+            >
+              <template #renderItem="{ item }">
+                <a-list-item>
+                  <div>
+                    <div>{{ item.name }}</div>
+                    <div style="font-size: smaller; color: gray;">
+                      URL: {{ item.url }}
+                    </div>
+                    <div style="font-size: smaller; color: gray;">
+                      API Key: {{ maskApiKey(item.apiKey) }}
+                    </div>
+                  </div>
+                  <template #actions>
+                    <a @click="loadCloudRecord(item.id)">{{ t('IMPORT') }}</a>
+                    <a @click="deleteCloudRecord(item.id)">{{ t('DELETE') }}</a>
+                  </template>
+                </a-list-item>
+              </template>
+            </a-list>
+            <div style="margin-top: 16px;">
+              <a-button @click="exportCloudCache" style="margin-right: 8px;">{{ t('EXPORT') }}</a-button>
+              <a-button @click="importCloudCache" style="margin-right: 8px;">{{ t('IMPORT') }}</a-button>
+              <a-button type="primary" @click="confirmSaveCloudData">{{ t('CONFIRM_SAVE') }}</a-button>
+            </div>
+          </div>
+        </a-tab-pane>
+        <a-tab-pane key="3" :tab="t('ABOUT')">
+          <div style="padding: 12px;">
+            <a-row :gutter="[12, 12]" align="middle">
+              <a-col :xs="4" :sm="4" :md="6" :lg="6" :xl="6" style="text-align: center;">
+                <img src="@/assets/logo.png" alt="Logo" style="width: 60px;">
+              </a-col>
+              <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
+                <div style="text-align: left;">
+                  <h2 style="margin: 0; font-size: 20px;">{{ appInfo.name }}</h2>
+                  <p style="margin: 4px 0; font-size: 14px;">{{ appInfo.subtitle }}</p>
+                  <p style="margin: 4px 0; font-size: 12px; color: #666;">
+                    {{ t('VERSION') }}: {{ appInfo.version }}
+                  </p>
+                </div>
+              </a-col>
+              <a-col :xs="8" :sm="8" :md="6" :lg="6" :xl="6">
+                <div style="text-align: right;">
+                  <a-space direction="vertical" size="small" style="width: 100%;">
+                    <a-button type="default" size="default" block @click="openChangelog">
+                      {{ t('UPDATE_LOG') }}
+                    </a-button>
+                    <a-button type="primary" size="default" block @click="openWebsite">
+                      {{ t('OFFICIAL_WEBSITE') }}
+                    </a-button>
+                  </a-space>
+                </div>
+              </a-col>
+            </a-row>
+            <a-divider style="margin: 16px 0;"></a-divider>
+            <div style="text-align: left;">
+              <p v-for="(desc, index) in appDescription" :key="index" style="margin: 8px 0; font-size: 14px;">
+                {{ desc }}
+              </p>
+            </div>
+            <a-divider style="margin: 16px 0;"></a-divider>
+            <div style="text-align: left;">
+              <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('AUTHORS') }}</h3>
+              <p style="margin: 4px 0; font-size: 14px;">
+                <a :href="appInfo.author.url" target="_blank" style="color: #1890ff;">
+                  {{ appInfo.author.name }}
+                </a>
+                &
+                <a :href="appInfo.coauthor.url" target="_blank" style="color: #1890ff;">
+                  {{ appInfo.coauthor.name }}
+                </a>
+              </p>
+              <a-divider style="margin: 16px 0;"></a-divider>
+              <div v-if="appInfo.contributors && appInfo.contributors.length">
+                <h3 style="font-size: 18px; margin: 16px 0 8px 0;">{{ t('CONTRIBUTORS') }}</h3>
+                <div style="display: flex; flex-wrap: wrap;">
+                  <div
+                      v-for="(contributor, index) in appInfo.contributors"
+                      :key="index"
+                      style="margin: 8px; text-align: center;"
+                  >
+                    <a :href="contributor.url" target="_blank">
+                      <img
+                          :src="contributor.avatar"
+                          :alt="contributor.name"
+                          style="width: 45px; height: 45px; border-radius: 50%;"
+                      />
+                    </a>
+                    <p style="margin-top: 4px; font-size: 14px;">
+                      <a :href="contributor.url" target="_blank" style="color: #1890ff;">
+                        {{ contributor.name }}
+                      </a>
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- 版权和许可证信息 -->
+            <div style="margin-top: 12px; text-align: left;">
+              <p style="margin: 4px 0; font-size: 12px;">
+                &copy; {{ appInfo.year }} {{ appInfo.company }}. {{ t('ALL_RIGHTS_RESERVED') }} {{ t('LICENSE') }}:
+                {{ appInfo.license }}
+              </p>
+            </div>
+          </div>
+        </a-tab-pane>
+
+
+      </a-tabs>
+    </a-modal>
+
+    <a-modal
+        v-model:open="showModelModal"
+        :title="t('SELECT_MODEL_TITLE')"
+        :width="600"
+        @ok="handleModelModalOk"
+        @cancel="handleModelModalCancel"
+        :confirm-loading="spinning"
+        :ok-text="t('OK')"
+        :cancel-text="t('CANCEL')"
+        :closable="true "
+    >
+      <div>
+        <div style="margin-bottom: 16px;">{{ t('SELECTED_MODELS', {count: selectedModels.length}) }}</div>
+        <div class="model-filter-container" style="display: flex; align-items: center; margin-bottom: 16px;">
+          <a-input
+              v-model:value="prefixFilter"
+              :placeholder="t('FILTER_PLACEHOLDER')"
+              style="width: 200px; margin-right: 8px;"
+          />
+          <a-button type="primary" @click="filterModels" style="margin-right: 8px;">
+            {{ t('FILTER') }}
+          </a-button>
+          <a-button @click="clearFilter">{{ t('CLEAR') }}</a-button>
+        </div>
+        <div class="checkbox-container" style="margin-bottom: 16px;">
+          <a-checkbox @change="onSelectAll" style="margin-right: 16px;">
+            {{ t('SELECT_ALL') }}
+          </a-checkbox>
+          <a-checkbox @change="onSelectAllChatOnly">
+            {{ t('SELECT_ALL_CHAT_ONLY') }}
+          </a-checkbox>
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+          <a-checkbox-group v-model:value="selectedModels">
+            <a-row :gutter="[16, 16]">
+              <a-col
+                  v-for="model in sortedModels"
+                  :key="model"
+                  :span="12"
+              >
+                <a-checkbox :value="model" style="width: 100%">{{ model }}</a-checkbox>
+              </a-col>
+            </a-row>
+          </a-checkbox-group>
+        </div>
+      </div>
+    </a-modal>
+    <a-modal
+        v-model:open="isSummaryModalVisible"
+        :title="t('TEST_RESULT_SUMMARY')"
+        width="600px"
+        centered
+        @ok="handleSummaryOk"
+    >
+      <div v-html="summaryContent"></div>
+      <div ref="chartContainer" style="width: 80%; height: 250px; margin: 30px auto 30px;"></div>
+    </a-modal>
+    <!-- 保持模板中其他相关部分不变 -->
+    <a-modal
+        v-model:open="showSVGModal"
+        :title="t('SHARE_RESULTS')"
+        :footer="null"
+        @cancel="handleCloseSVGModal"
+    >
+      <div class="svg-container">
+        <a-image :width="200" :src="svgDataUrl" alt="SVG Image"/>
+      </div>
+      <div class="copy-close-container">
+        <a-button type="primary" @click="copyToClipboardHandler">{{ t('COPY_IMAGE') }}</a-button>
+        <a-button @click="handleCloseSVGModal">{{ t('CLOSE') }}</a-button>
+      </div>
+    </a-modal>
+  </ConfigProvider>
+</template>
+<script setup>
+import {CopyOutlined, SettingOutlined, GithubOutlined, LockOutlined, UserOutlined} from '@ant-design/icons-vue';
+import {computed, h, onMounted, reactive, ref, nextTick, onBeforeUnmount} from 'vue';
+import {message, Modal, ConfigProvider, theme} from 'ant-design-vue';
+import {useWindowSize} from '@vueuse/core';
+import {useI18n} from 'vue-i18n';
+
+
+import {TitleComponent, LegendComponent, TooltipComponent, RadarComponent} from 'echarts/components';
+import * as echarts from 'echarts/core';
+import {RadarChart} from 'echarts/charts';
+import {CanvasRenderer} from 'echarts/renderers';
+
+import {initializeTheme, initializeLanguage} from '../utils/initialization.js';
+import {fetchModelList, fetchQuotaInfo, testModelList} from '../utils/api.js';
+import {errorHandler, maskApiKey} from '../utils/normal.js';
+import {checkForUpdates} from '../utils/update.js';
+import ModelVerifier from '../utils/verify.js';
+import {toggleTheme} from '../utils/theme.js';
+import {createSVGDataURL} from '../utils/svg.js';
+import {appInfo} from '../utils/info.js';
+
+// 注册必须的组件
+echarts.use([
+  TitleComponent,
+  LegendComponent,
+  TooltipComponent,
+  RadarChart,
+  CanvasRenderer,
+]);
+
+const isDarkMode = ref(false);
+const configProviderTheme = computed(() => ({
+  algorithm: isDarkMode.value ? theme.darkAlgorithm : theme.defaultAlgorithm,
+}));
+
+const spinning = ref(false);
+const checkQuota_spinning = ref(false);
+const testModels_spinning = ref(false);
+const {width} = useWindowSize();
+const isMobile = computed(() => width.value <= 767);
+
+// 引入国际化资源
+const {t, locale} = useI18n();
+const results = reactive({
+  valid: [],
+  invalid: [],
+  inconsistent: [],
+  awaitOfficialVerification: [],
+});
+
+// 添加布尔变量，用于控制平移动画和结果容器的显示
+const shouldShift = ref(false);
+const showResultContainer = ref(false);
+const handlePageChange = (page) => {
+  currentPage.value = page;
+};
+
+// 关闭结果容器的函数
+function closeResults() {
+  // 隐藏结果容器
+  showResultContainer.value = false;
+  // 延迟重置 API 表单容器的位置，等待关闭动画完成
+  setTimeout(() => {
+    shouldShift.value = false;
+  }, 300); // 延迟时间应与过渡持续时间匹配
+}
+
+// 定义响应式状态
+const apiInfo = ref('');
+const apiUrl = ref('');
+const apiKey = ref('');
+const modelName = ref('');
+const modelTimeout = ref(10);
+const modelConcurrency = ref(5);
+const currentLanguage = ref(locale.value || 'zh');
+const showLanguageMenu = ref(false);
+const models = ref([]);
+const selectedModels = ref([]);
+const showModelModal = ref(false);
+const prefixFilter = ref('');
+const verificationLoading = ref(false);
+const functionCallingModalVisible = ref(false);
+const functionCallingA = ref(3);
+const functionCallingB = ref(5);
+const selectedModelForFunctionCalling = ref(null);
+const currentPage = ref(1);
+const pageSize = 3;
+const isSummaryModalVisible = ref(false);
+const chartContainer = ref(null);
+let chartInstance = null;
+const showSVGModal = ref(false);
+const svgDataUrl = ref('');
+const appDescription = computed(() => {
+  const currentLocale = locale.value || 'zh';
+  return appInfo.description[currentLocale] || appInfo.description['zh'];
+});
+
+// 打开官方网站的方法
+function openWebsite() {
+  window.open(appInfo.website, '_blank');
+}
+
+// 打开更新日志的方法
+function openChangelog() {
+  window.open(appInfo.changelogUrl, '_blank');
+}
+
+// 修改 paginatedData 的定义，使用 tableData.value
+const paginatedData = computed(() => {
+  const start = (currentPage.value - 1) * pageSize;
+  const end = currentPage.value * pageSize;
+  return tableData.value.slice(start, end);
+});
+// 设置面板相关状态
+const showSettingsModal1 = ref(false);
+const showLoginModal = ref(false);
+
+// 主题切换方法
+const handleToggleTheme = () => {
+  toggleTheme(isDarkMode);
+  document.body.classList.toggle('dark-mode', isDarkMode.value);
+  document.body.classList.toggle('light-mode', !isDarkMode.value);
+};
+
+// 语言切换菜单显示隐藏方法
+const toggleLanguageMenu = () => {
+  showLanguageMenu.value = !showLanguageMenu.value;
+};
+
+// 语言切换方法
+const setLanguage = (language) => {
+  locale.value = language;
+  currentLanguage.value = language;
+  localStorage.setItem('locale', language);
+  showLanguageMenu.value = false; // 切换语言后隐藏菜单
+};
+
+const buttonColors = {
+  [t('FUNCTION_VERIFICATION')]: '#1890ff', // 蓝色
+  [t('TEMPERATURE_VERIFICATION')]: '#fa8c16', // 橙色
+  [t('OFFICIAL_VERIFICATION')]: '#52c41a', // 绿色
+  [t('OTHER_VERIFICATION')]: '#f5222d', // 红色
+};
+// 页面加载时初始化主题和语言
+onMounted(() => {
+  const setVh = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+
+  // 初始化设置
+  setVh();
+
+  // 监听窗口尺寸变化，重新计算视口高度
+  window.addEventListener('resize', setVh);
+
+  // 在组件卸载前移除事件监听
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', setVh);
+  });
+  initializeTheme(isDarkMode);
+  initializeLanguage(locale, currentLanguage);
+  // 初始化本地缓存列表
+  const savedLocalDataList = localStorage.getItem('localCacheList');
+  if (savedLocalDataList) {
+    localCacheList.value = JSON.parse(savedLocalDataList);
+  } else {
+    localCacheList.value = [];
+  }
+  getQueryParams();
+
+
+  // 智能提取 api info
+  document.getElementById('api_info').addEventListener('input', function () {
+    let text = this.value;
+    let urlPattern = /(https?:\/\/[^\s，。、！,；;\n]+)/;
+    let keyPattern = /(sk-[a-zA-Z0-9]+)/;
+
+    let urlMatch = text.match(urlPattern);
+    let keyMatch = text.match(keyPattern);
+
+    if (urlMatch) {
+      // 去除末尾/后的空格 其他字符 保留到最后一个/前面
+      let cleanUrl = urlMatch[0].match(/(.*)\/.*/)[1];
+      // 如果. 存在则使用
+      if (cleanUrl.includes('.')) {
+        apiUrl.value = cleanUrl;
+      } else {
+        apiUrl.value = urlMatch[0];
+      }
+    }
+    if (keyMatch) {
+      apiKey.value = keyMatch[0];
+    }
+  });
+});
+onMounted(async () => {
+  const owner = appInfo.owner;
+  const repo = appInfo.repo;
+
+  const updateInfo = await checkForUpdates(appInfo.version, owner, repo, t);
+
+  if (updateInfo && updateInfo.hasUpdate) {
+    showUpdatePrompt(updateInfo);
+  }
+});
+
+// 显示更新提示的函数
+function showUpdatePrompt(updateInfo) {
+  Modal.confirm({
+    title: t('UPDATE_AVAILABLE_TITLE', {version: updateInfo.latestVersion}),
+    content: () => h('div', [
+      h('p', `${t('CURRENT_VERSION')}: ${appInfo.version}`),
+      h('p', `${t('LATEST_VERSION')}: ${updateInfo.latestVersion}`),
+      h('p', `${t('RELEASE_NOTES')}:`),
+      h('div', {style: 'white-space: pre-wrap;'}, updateInfo.releaseNotes),
+    ]),
+    okText: t('GO_TO_UPDATE'),
+    cancelText: t('CANCEL'),
+    onOk() {
+      // 打开 GitHub 发布页面
+      window.open(updateInfo.htmlUrl, '_blank');
+    },
+  });
+}
+
+// 函数：获取 URL 参数
+const getQueryParams = () => {
+  const params = new URLSearchParams(window.location.search);
+  const settings = params.get('settings');
+  if (settings) {
+    try {
+      const settingsObj = JSON.parse(decodeURIComponent(settings));
+      if (settingsObj.key) {
+        apiKey.value = settingsObj.key;
+      }
+      if (settingsObj.url) {
+        apiUrl.value = settingsObj.url;
+      }
+      if (settingsObj.models) {
+        modelName.value = settingsObj.models.join(',');
+      }
+      if (settingsObj.timeout) {
+        modelTimeout.value = settingsObj.timeout;
+      }
+      if (settingsObj.concurrency) {
+        modelConcurrency.value = settingsObj.concurrency;
+      }
+      if (!settingsObj.closeAnnouncement) {
+        showToast();
+      }
+      showSettingsModal();
+    } catch (e) {
+      console.error('解析URL参数失败:', e);
+    }
+  } else {
+    showToast();
+  }
+};
+
+// 使用 ant-design-vue 的 Modal 显示设置弹窗
+const showSettingsModal = () => {
+  const skMasked = apiKey.value.slice(0, 5) + '*****';
+
+  const messageContent = `
+        <div>
+          <p><strong>已填入预制设置</strong></p>
+          <div>🔑 密钥: ${skMasked}</div>
+          <div>🔗 接口地址: ${apiUrl.value}</div>
+          <div>📦 模型: ${modelName.value}</div>
+          <div>⏱ 请求超时: ${modelTimeout.value} 秒</div>
+          <div>🔁 并发数量: ${modelConcurrency.value}</div>
+        </div>
+      `;
+
+  Modal.info({
+    title: '预制设置',
+    content: h('div', {innerHTML: messageContent}),
+    width: 400,
+    centered: true,
+    okText: '确定',
+  });
+};
+
+// 显示提示消息
+const showToast = () => {
+  message.info('欢迎使用API CHECK！');
+};
+
+// 清除表单
+const clearForm = () => {
+  apiInfo.value = '';
+  apiUrl.value = '';
+  apiKey.value = '';
+  modelName.value = '';
+  modelTimeout.value = 10;
+  modelConcurrency.value = 5;
+};
+
+const handleSubmit = () => {
+  console.log('表单提交');
+};
+
+// 获取模型列表
+async function getModelList() {
+  spinning.value = true; // 开始加载动画
+  try {
+    const data = await fetchModelList(apiUrl.value, apiKey.value);
+    models.value = data.data.map((model) => model.id).sort();
+    showModelModal.value = true;
+  } catch (error) {
+    console.error('Error in getModelList:', error);
+    message.error('获取模型失败，请检查API地址或密钥是否正确');
+  } finally {
+    spinning.value = false; // 停止加载动画
+  }
+}
+
+function handleModelModalOk() {
+  modelName.value = selectedModels.value.join(',');
+  showModelModal.value = false;
+}
+
+function handleModelModalCancel() {
+  showModelModal.value = false;
+}
+
+function onSelectAll(e) {
+  if (e.target.checked) {
+    selectedModels.value = [...models.value];
+  } else {
+    selectedModels.value = [];
+  }
+}
+
+function onSelectAllChatOnly(e) {
+  if (e.target.checked) {
+    const notChatPattern = /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo)/;
+    selectedModels.value = models.value.filter(
+        (model) =>
+            !notChatPattern.test(model) && !/(image|audio|video|music|pdf|flux|suno|embed)/.test(model)
+    );
+  } else {
+    selectedModels.value = [];
+  }
+}
+
+function filterModels() {
+  let prefix = prefixFilter.value.trim().toLowerCase();
+  // 获取当前筛选结果
+  const filteredModels = models.value.filter((model) => model.toLowerCase().includes(prefix));
+  // 将新筛选的模型与已选择的模型合并，使用 Set 去重
+  selectedModels.value = Array.from(new Set([...selectedModels.value, ...filteredModels]));
+}
+
+const sortedModels = computed(() => {
+  const selectedSet = new Set(selectedModels.value);
+  return models.value.slice().sort((a, b) => {
+    const aSelected = selectedSet.has(a);
+    const bSelected = selectedSet.has(b);
+    if (aSelected && !bSelected) return -1; // a 已选中，排在前面
+    if (!aSelected && bSelected) return 1;  // b 已选中，a 未选中，b 排在前面
+    return 0; // 保持原有顺序
+  });
+});
+
+
+function clearFilter() {
+  prefixFilter.value = '';
+  selectedModels.value = [];
+}
+
+// 检查额度
+const checkQuota = async () => {
+  try {
+    checkQuota_spinning.value = true;
+    const {quotaInfo, usedInfo} = await fetchQuotaInfo(apiUrl.value, apiKey.value);
+
+    // 计算剩余额度
+    const quotaNumber = parseFloat(quotaInfo);
+    const usedNumber = parseFloat(usedInfo);
+    let remainInfo;
+    if (!isNaN(quotaNumber) && !isNaN(usedNumber)) {
+      remainInfo = `${(quotaNumber - usedNumber).toFixed(2)} $`;
+    } else {
+      remainInfo = '无法计算剩余额度';
+    }
+
+    const showInfo = `可用额度为: ${remainInfo}\n\n已用额度为: ${usedInfo} $\n\n总额度为: ${quotaInfo} $`;
+
+    Modal.info({
+      title: '检查额度',
+      content: h('div', {innerHTML: showInfo.replace(/\n/g, '<br/>')}),
+      centered: true,
+      width: 400,
+      okText: '确定',
+    });
+  } catch (error) {
+    console.error('Error in checkQuota:', error);
+    if (error.message.includes('Unexpected token')) {
+      Modal.error({
+        title: '检查额度失败',
+        content: '请检查API地址或密钥是否正确',
+        centered: true,
+        okText: '确定',
+      });
+    } else {
+      Modal.error({
+        title: '检查额度失败',
+        content: '检查额度失败',
+        centered: true,
+        okText: '确定',
+      });
+    }
+  } finally {
+    checkQuota_spinning.value = false;
+  }
+};
+
+// 添加 testModels 函数
+async function testModels() {
+  // 重置结果
+  results.valid = [];
+  results.invalid = [];
+  results.inconsistent = [];
+  results.awaitOfficialVerification = [];
+
+  const apiUrlValue = apiUrl.value;
+  const apiKeyValue = apiKey.value;
+  const modelNames = modelName.value.split(',').map((m) => m.trim()).filter((m) => m);
+  const timeout = parseInt(modelTimeout.value);
+  const concurrency = parseInt(modelConcurrency.value);
+
+  if (modelNames.length === 0) {
+    message.error('请输入至少一个模型名称或从列表中选择模型');
+    return;
+  }
+
+  testModels_spinning.value = true;
+
+  try {
+    const testResults = await testModelList(
+        apiUrlValue,
+        apiKeyValue,
+        modelNames,
+        timeout,
+        concurrency
+    );
+
+    // 处理测试结果
+    results.valid = testResults.valid;
+    results.invalid = testResults.invalid;
+    results.inconsistent = testResults.inconsistent;
+    results.awaitOfficialVerification = testResults.awaitOfficialVerification;
+
+    testModels_spinning.value = false;
+
+    showSummary(results);
+  } catch (error) {
+    testModels_spinning.value = false;
+    message.error('测试模型时发生错误: ' + error.message);
+  }
+}
+
+function showSummary(results) {
+  // 使用 reactive 的 'results' 对象
+  const resultsData = results;
+
+  // 计算总模型数和可用模型数
+  const totalModelsTested =
+      resultsData.valid.length +
+      resultsData.inconsistent.length +
+      resultsData.invalid.length;
+  const totalAvailableModels = resultsData.valid.length + resultsData.inconsistent.length;
+
+  // 计算可用模型比例
+  const availableModelsRatio = totalModelsTested
+      ? (totalAvailableModels / totalModelsTested) * 100
+      : 0;
+  let availableModelsScore = ((availableModelsRatio - 50) / (90 - 50)) * 100;
+  availableModelsScore = Math.max(0, Math.min(100, availableModelsScore)); // 限制在 0 到 100 之间
+
+  // 获取可用模型的响应时间
+  const availableModels = resultsData.valid.concat(resultsData.inconsistent);
+
+  const totalAvailable = availableModels.length;
+  const totalLatency = availableModels.reduce((sum, r) => sum + r.responseTime, 0);
+  const averageLatency = totalAvailable ? (totalLatency / totalAvailable).toFixed(2) : '0';
+
+  // 计算平均延时得分
+  let avgLatency = parseFloat(averageLatency);
+  avgLatency = Math.max(0.5, Math.min(3, avgLatency)); // 限制在 0.5 到 3 之间
+  let normalizedLatencyScore = ((3 - avgLatency) / (3 - 0.5)) * 100;
+  normalizedLatencyScore = Math.max(0, Math.min(100, normalizedLatencyScore)); // 限制在 0 到 100 之间
+
+  // 识别 GPT 和 Claude 模型
+  const isGpt = (model) => /^(gpt-|chatgpt-|o1-)/i.test(model);
+  const isClaude = (model) => /^claude-/i.test(model);
+
+  const gptModels = availableModels.filter((r) => isGpt(r.model));
+  const claudeModels = availableModels.filter((r) => isClaude(r.model));
+
+  const gptCount = gptModels.length;
+  const claudeCount = claudeModels.length;
+
+  // GPT 和 Claude 模型的平均用时
+  const gptTotalLatency = gptModels.reduce((sum, r) => sum + r.responseTime, 0);
+  const gptAverageLatency = gptCount ? (gptTotalLatency / gptCount).toFixed(2) : '0';
+
+  const claudeTotalLatency = claudeModels.reduce((sum, r) => sum + r.responseTime, 0);
+  const claudeAverageLatency = claudeCount ? (claudeTotalLatency / claudeCount).toFixed(2) : '0';
+
+  // GPT 和 Claude 模型数得分（占可用模型数的比例）
+  const gptCountScore = totalAvailable ? (gptCount / totalAvailable) * 100 : 0;
+  const claudeCountScore = totalAvailable ? (claudeCount / totalAvailable) * 100 : 0;
+
+  // 准备用于雷达图的数据
+  const radarChartData = [
+    availableModelsScore,
+    normalizedLatencyScore,
+    gptCountScore,
+    claudeCountScore,
+  ];
+
+  // 准备摘要内容，排版紧凑
+  let summaryHtml = `
+    <h3>测试总结</h3>
+    <p>
+      总共测试了 <strong>${totalModelsTested}</strong> 个模型，
+      可用模型总数：<strong>${totalAvailableModels}</strong>，
+      可用且一致的模型数：<strong>${resultsData.valid.length}</strong>，
+      可用但不一致的模型数：<strong>${resultsData.inconsistent.length}</strong>，
+      不可用的模型数：<strong>${resultsData.invalid.length}</strong>。
+    </p>
+    <p>
+      平均用时：<strong>${averageLatency} 秒</strong>。
+    </p>
+  `;
+  // 根据情况添加 GPT 和 Claude 模型统计
+  let modelLatencyHtml = '';
+  if (gptCount > 0) {
+    modelLatencyHtml += `<p>GPT 模型数：<strong>${gptCount}</strong>，平均用时：<strong>${gptAverageLatency} 秒</strong>。</p>`;
+  }
+  if (claudeCount > 0) {
+    modelLatencyHtml += `<p>Claude 模型数：<strong>${claudeCount}</strong>，平均用时：<strong>${claudeAverageLatency} 秒</strong>。</p>`;
+  }
+  if (modelLatencyHtml !== '') {
+    summaryHtml += '<h3>GPT 和 Claude 模型统计</h3>' + modelLatencyHtml;
+  }
+  summaryContent.value = summaryHtml;
+  isSummaryModalVisible.value = true;
+  // 等待下一次 DOM 更新后渲染雷达图
+  nextTick(() => {
+    renderRadarChart(radarChartData);
+  });
+}
+
+function handleSummaryOk() {
+  isSummaryModalVisible.value = false;
+  shouldShift.value = true;
+  showResultContainer.value = true;
+}
+
+const summaryContent = ref('');
+
+function renderRadarChart(data) {
+  if (!chartContainer.value) return;
+
+  // 销毁之前的实例
+  if (chartInstance) {
+    chartInstance.dispose();
+  }
+
+  chartInstance = echarts.init(chartContainer.value);
+
+  const option = {
+    title: {
+      text: '   ',
+      left: 'center',
+    },
+    tooltip: {
+      trigger: 'item',
+    },
+    radar: {
+      indicator: [
+        {name: '可用模型比例', max: 100},
+        {name: '平均延时（得分）', max: 100},
+        {name: 'GPT 模型数', max: 100},
+        {name: 'Claude 模型数', max: 100},
+      ],
+      shape: 'circle',
+      splitNumber: 5,
+      axisName: {
+        color: '#333',
+      },
+      splitLine: {
+        lineStyle: {
+          color: ['#ddd'],
+        },
+      },
+      splitArea: {
+        show: false,
+      },
+      axisLine: {
+        lineStyle: {
+          color: '#bbb',
+        },
+      },
+    },
+    series: [
+      {
+        name: 'API 评估',
+        type: 'radar',
+        data: [
+          {
+            value: data,
+            name: '评分',
+            areaStyle: {
+              color: 'rgba(0, 102, 204, 0.2)',
+            },
+          },
+        ],
+      },
+    ],
+  };
+
+  chartInstance.setOption(option);
+}
+
+// 定义 isGpt 和 isClaude 函数
+function isGpt(model) {
+  return /^(gpt-|chatgpt-|o1-)/i.test(model);
+}
+
+function isClaude(model) {
+  return /^claude-/i.test(model);
+}
+
+// 定义 columns
+const columns = [
+  {
+    title: '模型状态',
+    dataIndex: 'status',
+    key: 'status',
+    fixed: 'left',
+    width: 100,
+    customCell: () => ({attrs: {'data-label': t('MODEL_STATUS_LABEL')}}),
+    sorter: (a, b) => a.status.localeCompare(b.status),
+  },
+  {
+    title: '模型名称',
+    dataIndex: 'model',
+    key: 'model',
+    width: 180,
+    sorter: (a, b) => a.model.localeCompare(b.model),
+    customCell: () => ({attrs: {'data-label': t('MODEL_NAME_LABEL')}}),
+  },
+  {
+    title: '用时',
+    dataIndex: 'responseTime',
+    width: 50,
+    key: 'responseTime',
+    sorter: (a, b) => parseFloat(a.responseTime) - parseFloat(b.responseTime),
+    customCell: () => ({attrs: {'data-label': t('RESPONSE_TIME_LABEL')}}),
+  },
+  {
+    title: '备注',
+    dataIndex: 'remark',
+    key: 'remark',
+    width: 100,
+    ellipsis: true,
+    customCell: () => ({attrs: {'data-label': t('REMARK_LABEL')}}),
+  },
+  {
+    title: '验证',
+    dataIndex: 'buttons',
+    key: 'buttons',
+    width: 110,
+    fixed: 'right',
+    customCell: () => ({attrs: {'data-label': t('VERIFICATION_BUTTONS_LABEL')}}),
+  },
+];
+
+// 定义 tableData
+const tableData = computed(() => {
+  const data = [];
+
+  results.valid.forEach((item, index) => {
+    const buttons = [];
+    buttons.push({
+      label: t('FUNCTION_VERIFICATION'),
+      type: 'default',
+      onClick: () => verifyFunctionCalling(item.model),
+    });
+    if (isGpt(item.model) || isClaude(item.model)) {
+      buttons.push({
+        label: t('TEMPERATURE_VERIFICATION'),
+        type: 'primary',
+        onClick: () => verifyTemperature(item.model),
+      });
+      if (isGpt(item.model)) {
+        const officialVerificationDone =
+            results.awaitOfficialVerification &&
+            results.awaitOfficialVerification.some((r) => r.model === item.model);
+        const buttonType = officialVerificationDone ? 'success' : 'warning';
+        buttons.push({
+          label: t('OFFICIAL_VERIFICATION'),
+          type: buttonType,
+          onClick: () => verifyOfficial(item.model),
+        });
+      }
+    }
+    data.push({
+      key: `valid-${index}`,
+      status: t('MODEL_STATE_AVAILABLE'),
+      model: item.model,
+      responseTime: item.responseTime.toFixed(2),
+      buttons: buttons,
+      remark: '',
+    });
+  });
+
+  results.inconsistent.forEach((item, index) => {
+    const buttons = [];
+    buttons.push({
+      label: t('FUNCTION_VERIFICATION'),
+      type: 'default',
+      onClick: () => verifyFunctionCalling(item.model),
+    });
+    if (isGpt(item.model) || isClaude(item.model)) {
+      buttons.push({
+        label: t('TEMPERATURE_VERIFICATION'),
+        type: 'primary',
+        onClick: () => verifyTemperature(item.model),
+      });
+      if (isGpt(item.model)) {
+        const officialVerificationDone =
+            results.awaitOfficialVerification &&
+            results.awaitOfficialVerification.some((r) => r.model === item.model);
+        const buttonType = officialVerificationDone ? 'success' : 'warning';
+        buttons.push({
+          label: t('OFFICIAL_VERIFICATION'),
+          type: buttonType,
+          onClick: () => verifyOfficial(item.model),
+        });
+      }
+    }
+
+    // 根据返回的模型名称，判断是模型映射还是未匹配
+    let status = '';
+    let remark = '';
+    let fullRemark = '';
+
+    if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
+      status = t('MODEL_STATE_INCONSISTENT');
+      remark = '模型映射';
+      fullRemark = `模型映射到：${item.returnedModel}`;
+    } else {
+      status = '🤔未匹配';
+      remark = '未匹配';
+      fullRemark = `返回模型：${item.returnedModel}`;
+    }
+
+    data.push({
+      key: `inconsistent-${index}`,
+      status: status,
+      model: item.model,
+      responseTime: item.responseTime.toFixed(2),
+      buttons: buttons,
+      remark: remark,
+      fullRemark: fullRemark,
+    });
+  });
+
+  results.invalid.forEach((item, index) => {
+    let displayedRemark = '';
+    let fullRemark = item.response_text || item.error || '';
+    displayedRemark = errorHandler(fullRemark);
+    data.push({
+      key: `invalid-${index}`,
+      status: t('MODEL_STATE_UNAVAILABLE'),
+      model: item.model,
+      responseTime: '-',
+      buttons: [],
+      remark: displayedRemark,
+      fullRemark: fullRemark,
+    });
+  });
+
+  return data;
+});
+
+
+// 复制文本函数
+function copyText(text) {
+  navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        message.success(`"${text}" 已复制到剪贴板`);
+      })
+      .catch((err) => {
+        console.error('复制失败:', err);
+        message.error('复制失败，请手动复制');
+      });
+}
+// 修改 verifyTemperature 函数
+async function verifyTemperature(model) {
+  verificationLoading.value = true;
+  try {
+    const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
+    const result = await verifier.verifyTemperature(model);
+    verificationLoading.value = false;
+    // 使用弹窗显示结果
+    showTemperatureVerificationResult(result);
+  } catch (error) {
+    verificationLoading.value = false;
+    message.error('验证过程中发生错误：' + error.message);
+  } finally {
+    verificationLoading.value = false; // 结束加载动画
+  }
+}
+
+// 定义显示温度验证结果的函数
+function showTemperatureVerificationResult(result) {
+  Modal.info({
+    title: t('TEMPERATURE_VERIFICATION_RESULT'),
+    content: h('div', {
+      innerHTML: `
+          <h3>温度验证结果</h3>
+          <p><strong>当前待验证模型：${result.model}</strong></p>
+          <p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p>
+          <table>
+            <thead>
+              <tr>
+                <th>测试</th>
+                <th>响应</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.responses
+          .map(
+              (response, index) => `
+                  <tr>
+                    <td>测试 ${index + 1}</td>
+                    <td>${response}</td>
+                  </tr>
+                `
+          )
+          .join('')}
+            </tbody>
+          </table>
+          <p><strong>结论：</strong>${result.conclusion}</p>
+        `,
+    }),
+    width: 600,
+    okText: t('OK'),
+  });
+}
+
+// 修改 verifyOfficial 函数
+async function verifyOfficial(model) {
+  verificationLoading.value = true;
+  try {
+    const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
+    const result = await verifier.performOfficialVerification(model, 331);
+    verificationLoading.value = false;
+    // 使用弹窗显示结果
+    showOfficialVerificationResult(result);
+  } catch (error) {
+    verificationLoading.value = false;
+    message.error('验证过程中发生错误：' + error.message);
+  } finally {
+    verificationLoading.value = false;
+  }
+}
+
+// 定义显示官方验证结果的函数
+function showOfficialVerificationResult(result) {
+  Modal.info({
+    title: t('OFFICIAL_VERIFICATION_RESULT'),
+    content: h('div', {
+      innerHTML: `
+          <h3>官方验证结果</h3>
+          <p><strong>模型：${result.model}</strong></p>
+          <p>${result.conclusion}</p>
+          <table>
+            <thead>
+              <tr>
+                <th>测试</th>
+                <th>文本</th>
+                <th>系统指纹</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.texts
+          .map(
+              (text, index) => `
+                  <tr>
+                    <td>测试 ${index + 1}</td>
+                    <td>${text}</td>
+                    <td>${result.fingerprints[index]}</td>
+                  </tr>
+                `
+          )
+          .join('')}
+            </tbody>
+          </table>
+          <p>相似度结果：</p>
+          <ul>
+            ${Object.entries(result.similarity)
+          .map(
+              ([key, value]) => `
+                  <li>${key}: ${value}</li>
+                `
+          )
+          .join('')}
+          </ul>
+        `,
+    }),
+    width: 600,
+    okText: t('OK'),
+  });
+}
+
+// 修改 verifyFunctionCalling 函数
+async function verifyFunctionCalling(model) {
+  selectedModelForFunctionCalling.value = model;
+  functionCallingModalVisible.value = true;
+}
+
+function handleFunctionCallingOk() {
+  const a = functionCallingA.value;
+  const b = functionCallingB.value;
+  if (isNaN(a) || isNaN(b)) {
+    message.error('请输入有效的数字 a 和 b');
+    return;
+  }
+  functionCallingModalVisible.value = false;
+  performFunctionCallingVerification(selectedModelForFunctionCalling.value, a, b);
+}
+
+async function performFunctionCallingVerification(model, a, b) {
+  verificationLoading.value = true; // 开始加载动画
+  try {
+    const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
+    const result = await verifier.verifyFunctionCalling(model, a, b);
+    verificationLoading.value = false;
+    // 使用弹窗显示结果
+    showFunctionCallingResult(result);
+  } catch (error) {
+    verificationLoading.value = false;
+    message.error('验证过程中发生错误：' + error.message);
+  } finally {
+    verificationLoading.value = false; // 结束加载动画
+  }
+}
+
+// 定义显示函数调用验证结果的函数
+function showFunctionCallingResult(result) {
+  Modal.info({
+    title: t('FUNCTION_VERIFICATION_RESULT'),
+    content: h('div', {
+      innerHTML: `
+          <h3>函数调用验证结果</h3>
+          <p><strong>模型：${result.model}</strong></p>
+          <div style="display: flex; justify-content: space-between;">
+            <div style="width: 48%;">
+              <p><strong>标准响应：</strong></p>
+              <pre>${JSON.stringify(result.standardResponse, null, 4)}</pre>
+            </div>
+            <div style="width: 48%;">
+              <p><strong>模型响应：</strong></p>
+              <pre>${JSON.stringify(result.modelResponse, null, 4)}</pre>
+            </div>
+          </div>
+        `,
+    }),
+    width: 600,
+    okText: t('OK'),
+  });
+}
+
+// 云端缓存相关状态
+const isCloudLoggedIn = ref(false);
+const cloudUrl = ref('');
+const cloudPassword = ref('');
+let cloudAuthHeader = ''; // 存储 Authorization 头的值
+const cloudDataList = ref([]);
+
+// 本地缓存相关状态
+const settingsApiUrl = ref('');
+const settingsApiKey = ref('');
+const localCacheList = ref([]);
+
+// 打开设置面板时，自动将主表单中的 apiUrl 和 apiKey 赋值给设置面板的输入框
+function openSettingsModal() {
+  settingsApiUrl.value = apiUrl.value;
+  settingsApiKey.value = apiKey.value;
+
+  // 检查云端登录状态
+  const savedCloudUrl = localStorage.getItem('cloudUrl');
+  const savedCloudPassword = localStorage.getItem('cloudPassword');
+  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
+
+  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
+    cloudUrl.value = savedCloudUrl;
+    cloudPassword.value = savedCloudPassword;
+    isCloudLoggedIn.value = true;
+    cloudAuthHeader = `Bearer ${cloudPassword.value}`;
+    fetchCloudData();
+  }
+
+  showSettingsModal1.value = true;
+}
+
+
+// 关闭设置面板
+function closeSettingsModal() {
+  showSettingsModal1.value = false;
+}
+
+// 保存到本地缓存
+function saveToLocal() {
+  // 将设置面板中的值赋回主表单
+  apiUrl.value = settingsApiUrl.value;
+  apiKey.value = settingsApiKey.value;
+
+  // 获取已有的本地缓存列表
+  const existingList = JSON.parse(localStorage.getItem('localCacheList')) || [];
+  //查找是否有相同的 url 和 sk
+  const existingIndex = existingList.findIndex((existingItem) =>
+      normalizeUrl(existingItem.url) === normalizeUrl(apiUrl.value) && existingItem.apiKey.trim() === apiKey.value.trim()
+  );
+  if (existingIndex !== -1) {
+    message.error(t('RECORD_ALREADY_EXISTS'));
+    return;
+  }
+  // 加入时间戳
+  const id = Math.floor(Math.random() * 100);
+  // 创建新的缓存项
+  const newCacheItem = {
+    id: Date.now()+id ,
+    url: apiUrl.value,
+    apiKey: apiKey.value,
+    name: `配置 ${existingList.length + 1}$`,
+  };
+
+  // 添加新的缓存项到列表
+  existingList.push(newCacheItem);
+
+  // 更新本地缓存列表
+  localCacheList.value = existingList;
+  localStorage.setItem('localCacheList', JSON.stringify(existingList));
+
+  message.success(t('DATA_SAVED'));
+}
+
+// 导入本地缓存记录
+function loadLocalRecord(id) {
+  const record = localCacheList.value.find((item) => item.id === id);
+  if (record) {
+    apiUrl.value = record.url;
+    apiKey.value = record.apiKey;
+    message.success(t('CONFIG_IMPORTED'));
+  }
+}
+
+// 删除本地缓存记录
+function deleteLocalRecord(id) {
+  localCacheList.value = localCacheList.value.filter((item) => item.id !== id);
+  localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
+  message.success(t('RECORD_DELETED'));
+}
+
+// 导出本地缓存
+function exportLocalCache() {
+  // 导出的数据仅包含 url 和 sk
+  const dataToExport = localCacheList.value.map(item => ({
+    url: item.url,
+    sk: item.apiKey,
+  }));
+  const dataStr = JSON.stringify(dataToExport, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'api-check-local.json'; // 修改文件名
+  link.click();
+  URL.revokeObjectURL(url);
+  message.success(t('DATA_EXPORTED'));
+}
+
+
+// 导入本地缓存
+function importLocalCache() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        if (Array.isArray(importedData)) {
+          importedData.forEach((item) => {
+            // 规范化 URL
+            const importedUrl = normalizeUrl(item.url);
+            const importedSk = item.sk.trim();
+
+            // 查找是否有相同的 url 和 sk
+            const existingIndex = localCacheList.value.findIndex((existingItem) =>
+                normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedSk
+            );
+            //随机两位数字
+            const id = Math.floor(Math.random() * 100);
+            const newItem = {
+              id: Date.now()+id,
+              url: item.url,
+              apiKey: item.sk,
+              name: `导入的配置 ${localCacheList.value.length + 1}`,
+            };
+
+            if (existingIndex !== -1) {
+              // 存在相同的配置，进行覆盖
+              localCacheList.value[existingIndex] = newItem;
+            } else {
+              // 不存在，添加新的配置
+              localCacheList.value.push(newItem);
+            }
+          });
+
+          localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
+          message.success(t('DATA_IMPORTED'));
+        } else {
+          message.error(t('INVALID_IMPORT_FORMAT'));
+        }
+      } catch (error) {
+        message.error(t('IMPORT_PARSE_ERROR'));
+        console.error(error);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function normalizeUrl(url) {
+  return url.replace(/\/+$/, '').toLowerCase();
+}
+
+
+// 处理云端登录
+async function handleCloudLogin() {
+  console.log('cloudUrl:', cloudUrl.value);
+  console.log('cloudPassword:', cloudPassword.value);
+  if (!cloudUrl.value || !cloudPassword.value) {
+    message.error(t('PLEASE_ENTER_CLOUD_URL_AND_PASSWORD'));
+    return;
+  }
+  try {
+    // 向 /auth 接口发送 POST 请求
+    const response = await fetch(`${cloudUrl.value}/auth`, {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({password: cloudPassword.value}),
+    });
+    if (response.ok) {
+      isCloudLoggedIn.value = true;
+      cloudAuthHeader = `Bearer ${cloudPassword.value}`;
+      message.success(t('CLOUD_LOGIN_SUCCESS'));
+      // 登录后，获取云端数据
+      await fetchCloudData();
+
+      // 保存登录信息到 localStorage
+      localStorage.setItem('cloudUrl', cloudUrl.value);
+      localStorage.setItem('cloudPassword', cloudPassword.value);
+      localStorage.setItem('isCloudLoggedIn', 'true');
+    } else {
+      message.error(t('CLOUD_LOGIN_FAILED'));
+    }
+  } catch (error) {
+    message.error(t('CLOUD_LOGIN_ERROR'));
+    console.error(error);
+  }
+}
+
+// 处理云端登出
+function handleCloudLogout() {
+  isCloudLoggedIn.value = false;
+  cloudPassword.value = '';
+  cloudAuthHeader = '';
+  cloudDataList.value = [];
+  localStorage.removeItem('cloudUrl');
+  localStorage.removeItem('cloudPassword');
+  localStorage.removeItem('isCloudLoggedIn');
+}
+
+// 获取云端数据
+async function fetchCloudData() {
+  if (!isCloudLoggedIn.value) {
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
+    return;
+  }
+  try {
+    const response = await fetch(cloudUrl.value, {
+      headers: {'Authorization': cloudAuthHeader},
+    });
+    if (response.ok) {
+      const data = await response.json();
+      // 将数据转换为与本地缓存一致的格式
+      cloudDataList.value = data.map((item, index) => ({
+        id: Date.now() + index,
+        url: item.url,
+        apiKey: item.apiKey,
+        name: item.name || `配置 ${index + 1}`,
+        // 移除 description 字段，直接在渲染时显示更多信息
+      }));
+      message.success(t('CLOUD_DATA_LOADED'));
+    } else {
+      message.error(t('CLOUD_DATA_LOAD_FAILED'));
+    }
+  } catch (error) {
+    message.error(t('CLOUD_DATA_LOAD_ERROR'));
+    console.error(error);
+  }
+}
+
+// 保存数据到云端
+async function saveToCloud() {
+  if (!isCloudLoggedIn.value) {
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
+    return;
+  }
+  try {
+    const response = await fetch(cloudUrl.value, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': cloudAuthHeader,
+      },
+      body: JSON.stringify(cloudDataList.value),
+    });
+    if (response.ok) {
+      message.success(t('DATA_SAVED_TO_CLOUD'));
+    } else {
+      message.error(t('DATA_SAVE_TO_CLOUD_FAILED'));
+    }
+  } catch (error) {
+    message.error(t('DATA_SAVE_TO_CLOUD_ERROR'));
+    console.error(error);
+  }
+}
+
+// 确认保存数据到云端
+function confirmSaveCloudData() {
+  Modal.confirm({
+    title: t('CONFIRM_SAVE'),
+    content: t('CONFIRM_SAVE_PROMPT'),
+    okText: t('OK'),
+    cancelText: t('CANCEL'),
+    onOk() {
+      saveToCloud();
+    },
+  });
+}
+
+// 导入云端缓存记录
+function loadCloudRecord(id) {
+  const record = cloudDataList.value.find((item) => item.id === id);
+  if (record) {
+    apiUrl.value = record.url;
+    apiKey.value = record.apiKey;
+    message.success(t('CONFIG_IMPORTED'));
+  }
+}
+
+// 删除云端记录
+function deleteCloudRecord(id) {
+  cloudDataList.value = cloudDataList.value.filter((item) => item.id !== id);
+  message.success(t('RECORD_DELETED_PLEASE_SAVE'));
+}
+
+// 导出云端缓存
+function exportCloudCache() {
+  const dataToExport = cloudDataList.value.map(item => ({
+    url: item.url,
+    sk: item.apiKey,
+  }));
+  const dataStr = JSON.stringify(dataToExport, null, 2);
+  const blob = new Blob([dataStr], {type: 'application/json'});
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = 'api-check-cloud.json'; // 修改文件名
+  link.click();
+  URL.revokeObjectURL(url);
+  message.success(t('DATA_EXPORTED'));
+}
+
+// 导入云端缓存
+function importCloudCache() {
+  if (!isCloudLoggedIn.value) {
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
+    return;
+  }
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const importedData = JSON.parse(event.target.result);
+        if (Array.isArray(importedData)) {
+          importedData.forEach((item) => {
+            // 规范化 URL
+            const importedUrl = normalizeUrl(item.url);
+            const importedSk = item.sk.trim();
+
+            // 查找是否有相同的 url 和 sk
+            const existingIndex = cloudDataList.value.findIndex((existingItem) =>
+                normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedSk
+            );
+            const id = Math.floor(Math.random() * 100);
+
+            const newItem = {
+              id: Date.now()+id,
+              url: item.url,
+              apiKey: item.sk,
+              name: `导入的配置 ${cloudDataList.value.length + 1}`,
+            };
+
+            if (existingIndex !== -1) {
+              // 存在相同的配置，进行覆盖
+              cloudDataList.value[existingIndex] = newItem;
+            } else {
+              // 不存在，添加新的配置
+              cloudDataList.value.push(newItem);
+            }
+          });
+
+          message.success(t('DATA_IMPORTED_PLEASE_SAVE'));
+        } else {
+          message.error(t('INVALID_IMPORT_FORMAT'));
+        }
+      } catch (error) {
+        message.error(t('IMPORT_PARSE_ERROR'));
+        console.error(error);
+      }
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+
+// 页面加载时尝试读取本地缓存
+onMounted(() => {
+  // 尝试读取本地缓存列表
+  const savedLocalDataList = localStorage.getItem('localCacheList');
+  if (savedLocalDataList) {
+    localCacheList.value = JSON.parse(savedLocalDataList);
+  } else {
+    localCacheList.value = [];
+  }
+
+  // 检查云端登录状态
+  const savedCloudUrl = localStorage.getItem('cloudUrl');
+  const savedCloudPassword = localStorage.getItem('cloudPassword');
+  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
+
+  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
+    cloudUrl.value = savedCloudUrl;
+    cloudPassword.value = savedCloudPassword;
+    isCloudLoggedIn.value = true;
+    cloudAuthHeader = `Bearer ${cloudPassword.value}`;
+    // 自动获取云端数据
+    fetchCloudData();
+  }
+});
+
+
+// goChat
+function goChat() {
+  const url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+  window.open(url);
+}
+
+function goShare() {
+  // 生成 SVG Data URL
+  svgDataUrl.value = createSVGDataURL(results, apiUrl.value);
+  showSVGModal.value = true;
+}
+
+function handleCloseSVGModal() {
+  showSVGModal.value = false;
+}
+
+function copyToClipboardHandler() {
+  if (!svgDataUrl.value) {
+    message.error('请先生成SVG图片');
+    return;
+  }
+
+  // 创建一个临时的 Image 对象
+  const img = new Image();
+  img.onload = function () {
+    const canvas = document.createElement('canvas');
+    canvas.width = img.naturalWidth;
+    canvas.height = img.naturalHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+
+    canvas.toBlob(
+        function (blob) {
+          if (blob) {
+            const item = new ClipboardItem({'image/png': blob});
+            navigator.clipboard.write([item]).then(
+                function () {
+                  message.success('PNG图片已复制到剪贴板！');
+                },
+                function (err) {
+                  console.error('复制到剪贴板失败: ', err);
+                  message.error('复制到剪贴板失败');
+                }
+            );
+          } else {
+            message.error('转换图片失败');
+          }
+        },
+        'image/png'
+    );
+  };
+  img.onerror = function () {
+    message.error('加载SVG数据时发生错误');
+  };
+  img.src = svgDataUrl.value;
+}
+
+function copyModels(type) {
+  let models = [];
+  if (type === 'valid') {
+    models = results.valid.map((r) => r.model);
+  } else if (type === 'available') {
+    models = results.valid.map((r) => r.model);
+    models = models.concat(results.inconsistent.map((r) => r.model));
+    if (results.awaitOfficialVerification && results.awaitOfficialVerification.length) {
+      models = models.concat(results.awaitOfficialVerification.map((r) => r.model));
+    }
+  }
+  if (models.length === 0) {
+    message.info(t('NO_MODELS_TO_COPY'));
+    return;
+  }
+  const textToCopy = models.join('\n');
+  navigator.clipboard
+      .writeText(textToCopy)
+      .then(() => {
+        message.success(
+            t('COPIED_MODELS_TO_CLIPBOARD', {
+              type: type === 'valid' ? t('IDENTICAL_MODELS') : t('AVAILABLE_MODELS'),
+              count: models.length,
+            })
+        );
+      })
+      .catch((err) => {
+        console.error('复制失败:', err);
+        message.error(t('COPY_FAILED'));
+      });
+}
+
+</script>
+
+<style scoped>
+@font-face {
+  font-family: 'iconfont';
+  src: url('../assets/iconfont.woff2?t=1731088979023') format('woff2'),
+  url('../assets/iconfont.woff?t=1731088979023') format('woff'),
+  url('../assets/iconfont.ttf?t=1731088979023') format('truetype');
+}
+
+.iconfont {
+  font-family: "iconfont", serif !important;
+  font-size: 20px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  cursor: pointer;
+}
+
+.left-icons {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 30px;
+  /* 靠左对齐 */
+  justify-content: flex-start;
+}
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+/* 通用样式 */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(var(--vh, 1vh) * 100);
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+  overflow-y: auto;
+}
+
+.page-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中 */
+  align-items: center; /* 水平居中 */
+}
+
+.container {
+  width: 100%;
+  max-width: 600px; /* 根据需要设置最大宽度 */
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background-color: var(--background-color); /* 使用主题变量 */
+  color: var(--font-color);
+  border-radius: 10px; /* 圆角 */
+  border-top: 4px solid var(--border-color);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1); /* 添加阴影，使容器更突出 */
+  align-items: center;
+  transition: transform 0.3s ease-in-out;
+  margin: auto;
+  max-height: 95vh;
+}
+
+.copyright {
+  flex-shrink: 0; /* 防止被压缩或挤出可视区域 */
+  text-align: center;
+  padding: 10px 0;
+  color: var(--font-color);
+  font-size: 14px;
+}
+
+
+body.dark-mode {
+  --border-color: #444444;
+}
+
+body.light-mode {
+  --border-color: #cccccc;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--font-color);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #ff0000; /* 悬停时的颜色变化 */
+}
+
+.container.result-container {
+  opacity: 0;
+  transform: translateX(5%);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.container.result-container.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.container.shift-left {
+  transform: translateX(-5%); /* 向左移动 5% */
+}
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  min-width: 0; /* 防止子元素溢出 */
+}
+
+.header > * {
+  min-width: 0; /* 允许子元素缩小 */
+}
+
+
+/* 主题切换按钮 */
+
+#themeToggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+#themeToggle svg {
+  width: 24px;
+  height: 24px;
+  transition: transform 0.3s;
+  filter: drop-shadow(0 0 1px #000);
+}
+
+body.dark-mode #themeIcon {
+  transform: rotate(180deg);
+  filter: drop-shadow(0 0 4px #3f1);
+}
+
+/* 右侧图标容器 */
+
+.right-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+/* 语言切换按钮 */
+
+.language-container {
+  position: relative;
+}
+
+.language-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--font-color);
+  transition: color 0.3s;
+}
+
+.language-btn:hover {
+  color: #0366d6;
+}
+
+.language-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+.language-menu {
+  position: absolute;
+  top: 30px;
+  left: -30px;
+  background: white;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.language-menu-button {
+  display: block;
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  color: #333;
+  transition: background 0.3s;
+}
+
+.language-menu-button:hover {
+  background: #e0e0e0;
+}
+
+
+.github-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: currentColor;
+}
+
+/* 标题样式 */
+
+h1 {
+  font-weight: bold;
+  color: #007bff;
+  margin-bottom: 10px;
+}
+
+h3 {
+  margin-bottom: 20px;
+}
+
+/* 表单样式 */
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+input[type='text'],
+textarea,
+input[type='number'] {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  box-sizing: border-box;
+  border-radius: 3px;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
+  color: var(--font-color);
+}
+
+textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+.model-input-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.model-input-container textarea {
+  width: 70%;
+  height: 130px;
+  margin-right: 10px;
+}
+
+/* 调整后的设置超时时间和并发数布局 */
+.model-timeout-concurrency {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.model-timeout,
+.model-concurrency {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  width: 48%;
+}
+
+.model-timeout label,
+.model-concurrency label {
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+.model-timeout input,
+.model-concurrency input {
+  flex-grow: 1;
+  height: 35px;
+  padding: 5px;
+  border-radius: 3px;
+  border: 1px solid var(--input-border-color);
+  background-color: var(--input-background-color);
+  color: var(--font-color);
+}
+
+/* 按钮容器样式 */
+
+.submit-container {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: 10px;
+}
+
+.submit-container input[type='button'] {
+  width: 30%;
+  padding: 10px;
+  border: none;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 8px;
+  color: white;
+  font-size: 15px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.submit-query {
+  background-color: #007bff;
+}
+
+.check-quota {
+  background-color: #28a745;
+}
+
+.clear-form {
+  background-color: #dc3545;
+}
+
+.model-timeout label,
+.model-concurrency label {
+  margin-right: 5px;
+  font-size: 14px;
+}
+
+.model-timeout input,
+.model-concurrency input {
+  flex: 1;
+  padding: 5px;
+  font-size: 14px;
+}
+
+.submit-container input[type='button'] {
+  flex: 1;
+  min-width: 0;
+  padding: 8px;
+  font-size: 14px;
+  height: 50px;
+  margin-right: 25px;
+}
+
+.submit-container input[type='button']:last-child {
+  margin-right: 0;
+}
+
+.model-input-container textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.submit-container input[type='button'] {
+  width: 100%;
+}
+
+/* 主题样式 */
+body.dark-mode {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  --background-color: #2e2e2e; /* 修改为不透明的深灰色 */
+  --font-color: #e0e0e0;
+  --input-background-color: #3c3c3c;
+  --input-border-color: #555555;
+}
+
+body.light-mode {
+  background-color: #ffffff;
+  color: #000000;
+  --background-color: #f8f8f8; /* 修改为深灰色 */
+  --font-color: #000000;
+  --input-background-color: #ffffff;
+  --input-border-color: #cccccc;
+}
+
+
+body.light-mode .submit-query {
+  background-color: #007bff;
+}
+
+body.light-mode .submit-query:hover {
+  background-color: #006ae6;
+}
+
+body.light-mode .check-quota {
+  background-color: #28a745;
+  color: white;
+}
+
+body.light-mode .check-quota:hover {
+  background-color: #218838;
+}
+
+body.light-mode .clear-form {
+  background-color: #dc3545;
+}
+
+body.light-mode .clear-form:hover {
+  background-color: #c82333;
+}
+
+/* 响应操作按钮的悬停效果 */
+
+input[type='button']:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+input[type='button']:active {
+  transform: translateY(0);
+}
+
+/* 适配黑色模式的模态框样式 */
+
+.checkbox-container a-checkbox {
+  display: inline-block;
+  margin-right: 16px;
+  margin-bottom: 8px;
+}
+
+/* 确保复选框在正确的模式下的可读性 */
+
+.ant-checkbox + span {
+  color: var(--font-color) !important;
+}
+
+
+/* 语言切换按钮和 GitHub 按钮的样式 */
+.language-btn svg,
+.github-btn svg {
+  transition: fill 0.3s;
+}
+
+.language-btn:hover svg,
+.github-btn:hover svg {
+  fill: #0366d6;
+}
+
+/* 表单输入占位符颜色 */
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--font-color);
+}
+
+@media (pointer: coarse) {
+  /* 针对触摸设备的优化 */
+  .submit-container input[type='button'] {
+    padding: 12px;
+  }
+}
+
+input[type='text'],
+textarea,
+input[type='number'] {
+  font-size: 14px;
+  font-family: 'SmileySans Oblique', sans-serif;
+}
+
+
+input[type='text']::placeholder,
+textarea::placeholder,
+input[type='number']::placeholder {
+  font-style: italic;
+  color: #888;
+}
+
+/* 当输入框有内容时，增加字体的区分度 */
+input[type='text']:not(:placeholder-shown),
+textarea:not(:placeholder-shown),
+input[type='number']:not(:placeholder-shown) {
+  font-weight: 500;
+  color: var(--font-color);
+}
+
+/* 响应式设计 */
+@media (max-width: 600px) {
+  .container {
+    max-width: 95%;
+  }
+
+  .model-input-container,
+  .model-timeout-concurrency,
+  .submit-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .model-input-container textarea {
+    width: 60%;
+    margin-right: 5px;
+  }
+
+  .model-timeout,
+  .model-concurrency {
+    width: 48%;
+    margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+  }
+}
+
+@media (min-width: 768px) {
+  .page-content {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 20px auto;
+  }
+
+  .container,
+  .container.result-container {
+    max-width: 600px;
+    flex: 0 1 auto;
+    min-height: 0; /* 允许容器根据内容收缩 */
+    margin: 0 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .container.result-container {
+    opacity: 0;
+    transform: translateX(0%);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+  }
+
+  .container.result-container.show {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .container:not(:last-child) {
+    margin-bottom: 0;
+  }
+
+  .container.shift-left {
+    transform: translateX(0%); /* 将左移距离调整为20% */
+  }
+
+  .container:not(:last-child) {
+    margin-bottom: 0;
+  }
+}
+
+/* 移动端样式 */
+@media (max-width: 767px) {
+  .page-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex-grow: 0;
+    overflow-y: auto;
+  }
+
+  .container {
+    max-width: 95%;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .container.shift-left,
+  .container.result-container {
+    transform: none;
+    opacity: 1;
+  }
+
+  /* 添加以下内容，确保 .page-content 仍然占据可用空间，并且内容可滚动 */
+  .page-content {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+}
+
+/* 调整表格容器 */
+.table-container {
+  width: 100%;
+}
+
+.result-table .ant-table-cell {
+  padding: 8px;
+  white-space: normal; /* 允许内容换行 */
+  word-break: break-all; /* 长单词会换行 */
+}
+
+.result-table .ant-table {
+  margin: 0; /* 去除外边距 */
+}
+
+.result-table .ant-table-thead > tr > th {
+  padding: 8px;
+}
+
+.result-table .ant-table-row {
+  word-break: break-all;
+}
+
+/* 更新 h1 元素的样式，使闪光效果适应文字边界，并调整闪光颜色 */
+h1 {
+  position: relative;
+  display: inline-block;
+  font-weight: bold;
+  color: #007bff;
+  overflow: hidden; /* 确保伪元素不超出文字区域 */
+}
+
+h1::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%; /* 初始位置在左侧不可见区域 */
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(255, 255, 255, 0.5) 50%,
+      transparent 100%
+  ); /* 定义闪光的渐变效果 */
+  transform: skewX(-30deg); /* 倾斜闪光，以增加动感 */
+}
+
+h1:hover::after {
+  animation: shine 0.75s forwards; /* 悬停时触发动画 */
+}
+
+@keyframes shine {
+  to {
+    left: 100%; /* 最终位置在右侧不可见区域 */
+  }
+}
+
+
+/* 调整按钮样式 */
+.verify-btn-group .ant-btn {
+  margin-bottom: 5px;
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  color: var(--font-color);
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.close-button:hover {
+  color: #ff4d4f;
+}
+
+/* 黑色模式适配 */
+body.dark-mode {
+  --bg-color: #2e2e2e;
+  --font-color: #e0e0e0;
+  --border-color: #555;
+}
+
+body.light-mode {
+  --bg-color: #ffffff;
+  --font-color: #000000;
+  --border-color: #ddd;
+}
+
+.result-table {
+  background-color: var(--bg-color);
+  color: var(--font-color);
+}
+
+.result-table .ant-table-thead > tr > th {
+  background-color: var(--bg-color);
+  color: var(--font-color);
+}
+
+.result-table .ant-table-tbody > tr > td {
+  background-color: var(--bg-color);
+  color: var(--font-color);
+}
+
+
+/* 移动端样式调整 */
+@media (max-width: 767px) {
+  .result-table .ant-table-thead {
+    display: none;
+  }
+
+  .result-table .ant-table-row {
+    display: block;
+    margin-bottom: 16px;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .result-table .ant-table-row > td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px 0;
+    border: none;
+  }
+
+  .result-table .ant-table-cell {
+    background-color: var(--background-color);
+    color: var(--font-color);
+  }
+
+  .result-table .ant-table-cell-fix-right {
+    background-color: var(--background-color);
+  }
+
+  .result-table .ant-table-cell::before {
+    content: attr(data-label);
+    font-weight: bold;
+    margin-right: 8px;
+    color: var(--font-color);
+  }
+
+  .result-table .ant-table-cell {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px;
+  }
+
+  /* 调整按钮在移动端的显示 */
+  .verify-btn-group {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.list-item {
+  border-bottom: 1px solid var(--border-color);
+  padding: 8px 0;
+}
+
+.list-item-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.list-item-field {
+  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  padding: 8px 0;
+  display: flex;
+  align-items: center;
+}
+
+.field-label {
+  font-weight: bold;
+  margin-right: 8px;
+  min-width: 100px;
+}
+
+.field-value {
+  flex: 1;
+  word-break: break-all;
+}
+
+/* 调整按钮在移动端的显示 */
+.verify-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  width: 80px;
+}
+
+.list-item {
+  border: 1px solid var(--border-color, #e0e0e0); /* 使用CSS变量，提供默认值 */
+  padding: 12px;
+  margin-bottom: 16px;
+  border-radius: 8px;
+  background-color: var(--background-color, #fff);
+}
+
+/* 去除最后一个字段的下边框 */
+.list-item-field:last-child {
+  border-bottom: none;
+}
+
+/* 字段标签的样式 */
+.field-label {
+  font-weight: 600;
+  margin-right: 8px;
+  color: var(--font-color, #333);
+}
+
+/* 字段值的样式 */
+.field-value {
+  flex: 1;
+  color: var(--font-color, #333);
+}
+
+/* 深色模式下的样式 */
+body.dark-mode .list-item {
+  background-color: var(--background-color, #2b2b2b);
+  border-color: var(--border-color, #444);
+}
+
+body.dark-mode .list-item-field {
+  border-bottom-color: var(--border-color, #444);
+}
+
+body.dark-mode .field-label {
+  color: var(--font-color, #ddd);
+}
+
+body.dark-mode .field-value {
+  color: var(--font-color, #ccc);
+}
+
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--overlay-background-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+/* 根据主题切换背景色 */
+body.dark-mode {
+  --overlay-background-color: rgba(0, 0, 0, 0.3);
+}
+
+body.light-mode {
+  --overlay-background-color: rgba(255, 255, 255, 0.7);
+}
+
+.result-content {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 0;
+}
+
+.table-container {
+  flex: 0 1 auto; /* 防止表格容器过度拉伸 */
+  display: flex;
+  flex-direction: column;
+}
+
+/* 确保表格不会过度拉伸 */
+.result-table .ant-table-wrapper,
+.result-table .ant-table,
+.result-table .ant-table-container {
+  flex: 0 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-table .ant-table-body {
+  flex: 0 1 auto;
+  overflow-y: auto; /* 当内容超出时，出现滚动条 */
+}
+
+.result-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-table .ant-table {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-table .ant-table-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.result-table .ant-table-body {
+  flex: 1;
+  overflow-y: auto; /* 表格主体部分滚动 */
+}
+
+.svg-container {
+  text-align: center;
+  margin-top: 20px;
+}
+.copy-close-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px; /* 根据需要调整顶部间距 */
+}
+
+.copy-close-container .ant-btn {
+  flex: 0 0 auto; /* 防止按钮过度拉伸 */
+}
+
+.copy-close-container .ant-btn:first-child {
+  margin-right: auto; /* 将第一个按钮（复制按钮）推到最左侧 */
+}
+
+.copy-close-container .ant-btn:last-child {
+  margin-left: auto; /* 将最后一个按钮（关闭按钮）推到最右侧 */
+}
+
+</style>
+

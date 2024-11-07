@@ -16,10 +16,23 @@ export default defineConfig({
     ],
     server: {
         port: 3000,
+        host: "0.0.0.0"
     },
     resolve: {
         alias: {
             '@': '/src',
+        },
+    },
+    css: {
+        loaderOptions: {
+            less: {
+                lessOptions: {
+                    modifyVars: {
+                        'hack': `true; @import "~ant-design-vue/lib/style/themes/dark.less";`,
+                    },
+                    javascriptEnabled: true,
+                },
+            },
         },
     },
 
