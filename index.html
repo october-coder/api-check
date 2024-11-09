@@ -976,7 +976,7 @@
 
             async function testModel(model) {
                 const controller = new AbortController();
-                const id = setTimeout(() => controller.abort(), timeout);
+                const id = setTimeout(() => controller.abort(), model.startsWith('o1-') ? timeout * 6 : timeout);
                 const startTime = Date.now();
 
                 let response_text;
@@ -985,7 +985,7 @@
                         model: model,
                         messages: [{role: "user", content: "写一个10个字的冷笑话"}]
                     };
-                    if (/^(gpt-|chatgpt-|o1-)/.test(model)) {
+                    if (/^(gpt-|chatgpt-)/.test(model)) {
                         requestBody.seed = 331;
                     }
                     const response = await fetch(`${apiUrl}/v1/chat/completions`, {
@@ -1000,13 +1000,16 @@
 
                     const endTime = Date.now();
                     const responseTime = (endTime - startTime) / 1000; // 转换为秒
-
+                    let has_o1_reason = false;
                     if (response.ok) {
                         const data = await response.json();
                         const returnedModel = data.model || "no returned model by rick"; // 确保 returnedModel 有效
+                        if (returnedModel.startsWith("o1-") && data?.usage?.completion_tokens_details?.reasoning_tokens>0){
+                            has_o1_reason = true;
+                        }
                         if (returnedModel === model) {
-                            results.valid.push({model, responseTime});
-                            if (/^(gpt-|chatgpt-|o1-)/.test(model)) {
+                            results.valid.push({model, responseTime, has_o1_reason});
+                            if (/^(gpt-|chatgpt-)/.test(model)) {
                                 if (data.system_fingerprint) {
                                     results.awaitOfficialVerification.push({
                                         model,
@@ -1016,7 +1019,7 @@
                             }
                             console.log(`测试 API 节点：${apiUrl} 测试模型：${model} 模型一致，响应时间：${responseTime.toFixed(2)} 秒`);
                         } else {
-                            results.inconsistent.push({model, returnedModel, responseTime});
+                            results.inconsistent.push({model, returnedModel, responseTime, has_o1_reason});
                             console.log(`测试 API 节点：${apiUrl} 测试模型：${model} 模型不一致，期望：${model}，实际：${returnedModel}，响应时间：${responseTime.toFixed(2)} 秒`);
                         }
                     } else {
@@ -1116,38 +1119,48 @@
                 '<td class="td2"><span class="copy-btn2" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
 
-            let verifyButtons = `
+            let verifyButtons = r.model.startsWith('o1-') ? 'o1模型不支持函数、温度、种子功能' : `
                 <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
                     函数验证
                 </button>
             `;
-            if (/^(gpt-|chatgpt-|o1-)/.test(r.model) || r.model.startsWith('claude-')) {
+            if (/^(gpt-|chatgpt-)/.test(r.model) || r.model.startsWith('claude-')) {
                 let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
                 verifyButtons += `
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? `
+                    ${/^(gpt-|chatgpt-)/.test(r.model) ? ` 
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
                     ` : ''}
                 `;
             }
-            content += `<td class="td4"><div class="verify-btn-group">${verifyButtons}</div></td>`;
+            let o1_response = '';
+            if (r.model.startsWith('o1-')) {
+                if (r.has_o1_reason) {
+                    o1_response = `<span style="color: green; font-weight: bold;">返回响应中包含非空 reasoning_tokens，api 可靠</span>`;
+                } else {
+                    o1_response = `<span style="color: red; font-weight: bold;">返回响应中不包含 reasoning_tokens 或为空，api 非官</span>`;
+                }
+            }
+            content += `<td class="td4"><div class="verify-btn-group">${verifyButtons}</div><br><div class="o1-response">${o1_response}</div></td>`;
         });
 
         results.inconsistent.forEach(function (r) {
-            let verifyButtons = `<button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
-                            函数验证
-                        </button>`
-            if (/^(gpt-|chatgpt-|o1-)/.test(r.model) || r.model.startsWith('claude-')) {
+            let verifyButtons = r.model.startsWith('o1-') ? 'o1模型不支持函数、温度、种子功能' : `
+                <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
+                    函数验证
+                </button>
+            `
+            if (/^(gpt-|chatgpt-)/.test(r.model) || r.model.startsWith('claude-')) {
                 let officialButtonClass = results.awaitOfficialVerification.some(item => item.model === r.model) ? "green" : "yellow";
                 verifyButtons += `
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-|o1-)/.test(r.model) ? `
+                    ${/^(gpt-|chatgpt-)/.test(r.model) ? ` 
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
@@ -1157,6 +1170,15 @@
             let highlightedReturnModel = r.returnedModel;
             if (r.returnedModel.startsWith(`${r.model}-`)){
                 highlightedReturnModel = `<span style="color: green; font-weight: bold;">${r.model}</span>${r.returnedModel.slice(r.model.length)}<br>可能是带版本号模型映射`;
+            }
+            
+            let o1_response = '';
+            if (r.model.startsWith('o1-')) {
+                if (r.has_o1_reason) {
+                    o1_response = `<span style="color: green; font-weight: bold;">返回响应中包含非空 reasoning_tokens，api 可靠</span>`;
+                } else {
+                    o1_response = `<span style="color: red; font-weight: bold;">返回响应中不包含 reasoning_tokens 或为空，api 非官</span>`;
+                }
             }
             content += `
                 <tr>
@@ -1169,6 +1191,8 @@
                     ${verifyButtons}
                         <br>
                         ${r.returnedModel ? '返回模型: ' + highlightedReturnModel : '该接口未返回模型名称'}
+                        <br>
+                        <div class="o1-response">${o1_response}</div>
                     </td>
                 </tr>
             `;
