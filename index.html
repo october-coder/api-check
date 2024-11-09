@@ -4,14 +4,16 @@
     <meta charset="UTF-8">
     <title>API CHECKER</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" href="https://openai.com/favicon.ico" type="image/x-icon">
+    <meta name="description" content="API CHECKER by rick and megasoft">
+    <meta name="keywords" content="API CHECKER , rick, megasoft,DEV API, LINUXDO">
+    <link rel="icon" href="./logo.png" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/layui/2.6.8/css/layui.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/layui/2.6.8/layui.min.js"></script>
 
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 50px 10px;
+            margin: 40px 10px;
             padding: 20px;
             box-sizing: border-box;
         }
@@ -22,8 +24,7 @@
             margin: auto;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            width: 90%;
-            max-width: 600px;
+            max-width: 580px;
         }
 
         .response-container {
@@ -83,15 +84,31 @@
             border: none;
             cursor: pointer;
             margin-top: 10px;
+            margin-right: 15px;
+            margin-left: 15px;
         }
 
-        .copy-btn {
-            margin-left: 10%;
-            width: 20%;
+
+        .copy-container {
+            display: flex;
+            justify-content: flex-end;
+            flex-wrap: wrap;
         }
 
-        .copy-btn2 {
-            width: 20%;
+        .copy-container button.copy-all-btn {
+            width: auto;
+            padding: 10px 15px;
+            border: none;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-left: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border-radius: 4px;
+        }
+
+        .copy-container button.copy-all-btn:hover {
+            background-color: #45a049;
         }
 
         .submit-query {
@@ -122,7 +139,7 @@
 
         .model-input-container textarea[type="text"] {
             width: 70%;
-            height: 200px;
+            height: 130px;
             margin-right: 10px;
         }
 
@@ -216,13 +233,21 @@
             max-height: 100px;
         }
 
-        /* 可以根据需要为 td3 添加样式 */
+
         .td3 {
-            width: 100px; /* 或者设置一个具体的宽度 */
+            width: 100px;
         }
 
         .copy-buttons {
             margin: 10px 0;
+        }
+
+        button {
+            border-radius: 5px;
+        }
+
+        input {
+            border-radius: 3px;
         }
 
         .copyright {
@@ -248,9 +273,7 @@
         .copyright a:hover {
             text-decoration: underline;
         }
-        /*.verify-btn-group {*/
-        /*    display: line-block;*/
-        /*}*/
+
         .verify-btn {
             padding: 3px 8px;
             margin-left: 8px;
@@ -258,29 +281,32 @@
             border: none;
             border-radius: 3px;
             color: white;
-            background-color: #28a745;
             display: inline-block;
             font-size: 14px;
             line-height: 1.5;
+            transition: background-color 0.3s;
         }
+
         .verify-btn.blue {
-          background-color: #3498db;
-          color: white;
+            background-color: #3498db;
+            color: white;
         }
+
         .verify-btn.blue:hover {
-          background-color: #2980b9;
+            background-color: #2980b9;
         }
 
         .verify-btn.cyan {
             background-color: #1abc9c;
             color: white;
         }
+
         .verify-btn.cyan:hover {
             background-color: #16a085;
         }
 
         .verify-btn::after {
-            content: attr(data-tooltip); /* 获取 data-tooltip 属性的值作为提示文本 */
+            content: attr(data-tooltip);
             visibility: hidden;
             opacity: 0;
             position: absolute;
@@ -290,6 +316,7 @@
             border-radius: 3px;
             transition: opacity 0.3s;
         }
+
         .verify-btn:hover::after {
             visibility: visible;
             opacity: 1;
@@ -443,12 +470,444 @@
             text-decoration: underline;
         }
 
+        .container {
+            text-align: center;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        #themeToggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        #themeToggle svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s;
+            filter: drop-shadow(0 0 1px #000);
+        }
+
+        body.dark-mode #themeIcon {
+            transform: rotate(180deg);
+            filter: drop-shadow(0 0 4px #3f1);
+        }
+        body.dark-mode {
+            background-color: #121212;
+            color: #e0e0e0;
+        }
+
+        body.light-mode .verify-btn.blue {
+            background-color: #3498db;
+        }
+
+        body.light-mode .verify-btn.blue:hover {
+            background-color: #2980b9;
+        }
+
+        body.light-mode .verify-btn.cyan {
+            background-color: #1abc9c;
+        }
+
+        body.light-mode .verify-btn.cyan:hover {
+            background-color: #16a085;
+        }
+
+        body.light-mode .verify-btn.green,
+        body.light-mode .verify-btn.yellow {
+            background-color: #28a745;
+        }
+
+        body.light-mode .verify-btn.green:hover,
+        body.light-mode .verify-btn.yellow:hover {
+            background-color: #218838;
+        }
+
+        body.dark-mode .verify-btn.blue {
+            background-color: #2196f3;
+        }
+
+        body.dark-mode .verify-btn.blue:hover {
+            background-color: #1976d2;
+        }
+
+        body.dark-mode .verify-btn.cyan {
+            background-color: #00bcd4;
+        }
+
+        body.dark-mode .verify-btn.cyan:hover {
+            background-color: #0097a7;
+        }
+
+        body.dark-mode .verify-btn.green {
+            background-color: #4caf50;
+        }
+
+        body.dark-mode .verify-btn.green:hover {
+            background-color: #388e3c;
+        }
+
+        body.dark-mode .verify-btn.yellow {
+            background-color: #ff9800;
+        }
+
+        body.dark-mode .verify-btn.yellow:hover {
+            background-color: #f57c00;
+        }
+
+        .verify-btn::after {
+            content: attr(data-tooltip);
+            visibility: hidden;
+            opacity: 0;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 3px;
+            font-size: 12px;
+            white-space: nowrap;
+            transition: opacity 0.3s;
+            z-index: 1000;
+            margin-top: -25px;
+            margin-left: -50%;
+        }
+
+        body.dark-mode .container, body.dark-mode .response-container {
+            background-color: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            color: #e0e0e0;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+        }
+
+        body.dark-mode h1, body.dark-mode h2, body.dark-mode h3 {
+            color: #1e88e5;
+        }
+
+        body.dark-mode input[type="text"], body.dark-mode textarea {
+            background-color: #2e2e2e;
+            color: #e0e0e0;
+            border: 1px solid #1e88e5;
+        }
+
+        body.dark-mode th {
+            background-color: #3e3e3e;
+        }
+
+        body.light-mode {
+            background-color: #ffffff;
+            color: #000000;
+        }
+
+        body.light-mode .container, body.light-mode .response-container {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            color: #000000;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode h1, body.light-mode h2, body.light-mode h3 {
+            color: #333333;
+        }
+
+        body.light-mode input[type="text"], body.light-mode textarea {
+            background-color: #ffffff;
+            color: #000000;
+            border: 1px solid #cccccc;
+        }
+
+        body.light-mode th {
+            background-color: #f1f1f1;
+        }
+
+        .modern-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .modern-button.get-models {
+            background-color: #fe9307;
+            color: white;
+            height: 100px;
+        }
+
+        .modern-button.save-api {
+            background-color: #059669;
+            color: white;
+        }
+
+        .modern-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .modern-button:active {
+            transform: translateY(0);
+        }
+
+        .response-container {
+            display: none;
+            padding: 20px;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+
+        }
+
+        .response-container.show {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .dark-mode .layui-layer-content {
+            background-color: #333;
+            color: #fff;
+        }
+
+        .dark-mode .layui-layer-title {
+            background-color: #444;
+            color: #fff;
+        }
+
+        .dark-mode .layui-layer-btn a {
+            background-color: #555;
+            color: #fff;
+        }
+
+        .dark-mode .layui-layer-btn .layui-layer-btn0 {
+            background-color: #666;
+            color: #fff;
+        }
+
+        th {
+            color: #007bff;
+        }
+
+        body.dark-mode .layui-layer {
+            background-color: #1e1e1e !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .layui-layer-title {
+            background-color: #2d2d2d !important;
+            color: #e0e0e0 !important;
+            border-bottom: 1px solid #3d3d3d !important;
+        }
+
+        body.dark-mode .layui-layer-btn {
+            background-color: #1e1e1e !important;
+            border-top: 1px solid #3d3d3d !important;
+        }
+
+        body.dark-mode .layui-layer-btn a {
+            background-color: #4a4a4a !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #5a5a5a !important;
+        }
+
+        body.dark-mode .layui-layer-btn .layui-layer-btn0 {
+            background-color: #1e88e5 !important;
+            color: #ffffff !important;
+        }
+
+        body.dark-mode .layui-layer-content {
+            background-color: #1e1e1e !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .layui-layer-loading {
+            background-color: transparent !important;
+        }
+
+        body.dark-mode .layui-layer-dialog .layui-layer-content {
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .layui-input {
+            background-color: #2e2e2e !important;
+            color: #e0e0e0 !important;
+            border: 1px solid #3d3d3d !important;
+        }
+
+        body.dark-mode .layui-form-checkbox[lay-skin=primary] span {
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode .layui-form-checked[lay-skin=primary] i {
+            border-color: #1e88e5 !important;
+            background-color: #1e88e5 !important;
+        }
+
+        body.dark-mode #modelList {
+            background-color: #1e1e1e !important;
+        }
+
+        body.dark-mode table {
+            border-color: #3d3d3d !important;
+        }
+
+        body.dark-mode th {
+            background-color: #2d2d2d !important;
+            color: #1e88e5 !important;
+            border-color: #3d3d3d !important;
+        }
+
+        body.dark-mode td {
+            border-color: #3d3d3d !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.dark-mode pre {
+            background-color: #2e2e2e !important;
+            border-color: #3d3d3d !important;
+            color: #e0e0e0 !important;
+        }
+
+        body.light-mode .layui-layer {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        body.light-mode .layui-layer-title {
+            background-color: #f8f8f8 !important;
+            color: #000000 !important;
+            border-bottom: 1px solid #eee !important;
+        }
+
+        body.light-mode .layui-layer-btn {
+            background-color: #ffffff !important;
+            border-top: 1px solid #eee !important;
+        }
+
+        body.light-mode .layui-layer-content {
+            background-color: #ffffff !important;
+            color: #000000 !important;
+        }
+
+        .response-container {
+            transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
+        }
+
+        body.dark-mode #prefixFilter {
+            background-color: #2e2e2e;
+            color: #e0e0e0;
+            border: 1px solid #3d3d3d;
+        }
+
+        body.dark-mode .model-filter-container button {
+            background-color: #1e88e5;
+            color: #ffffff;
+        }
+
+        body.dark-mode .model-filter-container button.clear {
+            background-color: #d32f2f;
+        }
+
+        body.dark-mode .verify-btn {
+            background-color: #1e88e5;
+            color: #ffffff;
+        }
+
+        body.dark-mode .verify-btn:hover {
+            background-color: #1976d2;
+        }
+        .copy-all-btn {
+            background-color: #4CAF50; /* 绿色背景 */
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .copy-all-btn:hover {
+            background-color: #45a049;
+        }
+
+        .model-name {
+            display: flex;
+            align-items: center;
+        }
+
+        .copy-icon {
+            margin-left: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #555;
+            transition: color 0.3s;
+        }
+
+        .copy-icon:hover {
+            color: #000;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
     </style>
 </head>
 <body>
 <div class="container">
+    <div class="header">
+        <div>
+            <button id="themeToggle" aria-label="toggle theme">
+                <svg id="themeIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
+                     fill="transparent" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                     stroke-linejoin="round" class="lucide lucide-sun">
+                    <circle cx="12" cy="12" r="4"></circle>
+                    <path d="M12 2v2"></path>
+                    <path d="M12 20v2"></path>
+                    <path d="m4.93 4.93 1.41 1.41"></path>
+                    <path d="m17.66 17.66 1.41 1.41"></path>
+                    <path d="M2 12h2"></path>
+                    <path d="M20 12h2"></path>
+                    <path d="m6.34 17.66-1.41 1.41"></path>
+                    <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+            </button>
+        </div>
+    </div>
     <h1>API CHECKER</h1>
-    <h3>（适配 oneapi/newapi 等中转格式）</h3>
+    <h3>（适配 one-api/new-api 等中转格式）</h3>
 
     <!-- 添加缓存开关和下拉列表 -->
     <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; margin-top: 15px; gap: 15px;">
@@ -471,7 +930,6 @@
         <button type="button" class="button styled-button" onclick="confirmDeleteSelectedCache()"> 从缓存中删除当前API信息 </button>
         <button type="button" class="button styled-button" onclick="confirmClearAllCache()"> 删除所有缓存 ！！！ </button>
     </div>
-
     <form id="apiForm">
         <textarea id="api_info" name="api_info"
                   placeholder="懒人专用文本框，支持同时粘贴接口地址和密钥，智能提取，如：https://api.openai.com，sk-TodayIsThursdayVme50ForKFC"></textarea>
@@ -480,7 +938,7 @@
         <div class="model-input-container" id="model-input-container">
             <textarea type="text" id="model_name" name="model_name"
                       placeholder="支持手动填入测试模型名称，用英文逗号分隔多个模型"></textarea>
-            <input type="button" value="获取模型列表" style="height: 50px" onclick="getModelList()">
+            <button type="button" class="modern-button get-models" onclick="getModelList()">获取模型列表</button>
         </div>
         <div id="modelCheckboxes"></div>
         <div class="model-timeout-concurrency">
@@ -496,60 +954,363 @@
             </div>
         </div>
         <div class="submit-container">
-            <input type="button" value="测试模型" onclick="testModels()" class="submit-query">
-            <input type="button" value="检查额度" onclick="checkQuota()" class="check-quota">
-            <input type="button" value="清空表单" onclick="clearForm()" class="clear-form">
+            <input type="button" value="测试模型" onclick="testModels()" class="modern-button  submit-query">
+            <input type="button" value="检查额度" onclick="checkQuota()" class="modern-button check-quota">
+            <input type="button" value="清空表单" onclick="clearForm()" class="modern-button  clear-form">
         </div>
     </form>
 </div>
 <div class="copyright">
     <!--    不要删除 感谢 Rick 和 Megasoft 的贡献-->
-    <p> © 2024 linuxdoer 版权所有<br>点点 star 自行部署 <a href="https://github.com/QAbot-zh/query-key" target="_blank">github仓库</a>
+    <p> © 2024 linuxdoer 版权所有<br>点点star 自行部署 <a href="https://github.com/QAbot-zh/query-key" target="_blank">github仓库</a>
         <br>贡献者：<a href="https://linux.do/u/rick" target="_blank"><img
-            src="https://linux.do/user_avatar/linux.do/rick/288/137821_2.png" alt="rick">rick </a>和<a
-            href="https://linux.do/u/zhong_little" target="_blank"><img
-            src="https://linux.do/user_avatar/linux.do/zhong_little/288/104887_2.png" alt="Megasoft">Megasoft</a>和<a
-            href="https://linux.do/u/fangyuan99" target="_blank"><img
-            src="https://linux.do/letter_avatar_proxy/v4/letter/f/b3f665/144.png" alt="fangyuan99">fangyuan99</a>和<a
-            href="https://github.com/juzeon" target="_blank"><img
-            src="https://avatars.githubusercontent.com/u/12206799?s=60&v=4" alt="juzeon">juzeon</a></p>
+                src="https://linux.do/user_avatar/linux.do/rick/288/137821_2.png" alt="rick">rick </a><a
+                href="https://linux.do/u/zhong_little" target="_blank"><img
+                src="https://linux.do/user_avatar/linux.do/zhong_little/288/104887_2.png"
+                alt="Megasoft">Megasoft</a><a
+                href="https://linux.do/u/fangyuan99" target="_blank"><img
+                src="https://linux.do/letter_avatar_proxy/v4/letter/f/b3f665/144.png"
+                alt="fangyuan99">fangyuan99</a><a
+                href="https://github.com/juzeon" target="_blank"><img
+                src="https://avatars.githubusercontent.com/u/12206799?s=60&v=4" alt="juzeon">juzeon</a></p>
 </div>
 <div id="results" class="response-container"></div>
 
 <script>
+    // 检测是否处于黑暗模式
+    function detectDarkMode() {
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+        }
+        updateToastStyle(isDarkMode);
+    }
+
+    // 切换主题
+    function toggleTheme() {
+        const isDarkMode = document.body.classList.contains('dark-mode');
+        if (isDarkMode) {
+            document.body.classList.remove('dark-mode');
+            document.body.classList.add('light-mode');
+            document.getElementById('themeIcon').innerHTML = `
+                <circle cx="12" cy="12" r="4"></circle>
+                <path d="M12 2v2"></path>
+                <path d="M12 20v2"></path>
+                <path d="m4.93 4.93 1.41 1.41"></path>
+                <path d="m17.66 17.66 1.41 1.41"></path>
+                <path d="M2 12h2"></path>
+                <path d="M20 12h2"></path>
+                <path d="m6.34 17.66-1.41 1.41"></path>
+                <path d="m19.07 4.93-1.41 1.41"></path>
+            `;
+            // 更新报告区域样式为亮色模式
+            const resultsDiv = document.getElementById('results');
+            if (resultsDiv) {
+                resultsDiv.style.backgroundColor = '#ffffff';
+                resultsDiv.style.color = '#000000';
+                // 更新表格中所有的 th 和 td 边框颜色
+                resultsDiv.querySelectorAll('th, td').forEach(element => {
+                    element.style.borderColor = '#ddd';
+                });
+                // 更新表格标题背景色
+                resultsDiv.querySelectorAll('th').forEach(th => {
+                    th.style.backgroundColor = '#f2f2f2';
+                });
+            }
+        } else {
+            document.body.classList.remove('light-mode');
+            document.body.classList.add('dark-mode');
+            document.getElementById('themeIcon').innerHTML = `
+                <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            `;
+            // 更新报告区域样式为暗色模式
+            const resultsDiv = document.getElementById('results');
+            if (resultsDiv) {
+                resultsDiv.style.backgroundColor = '#2e2e2e';
+                resultsDiv.style.color = '#e0e0e0';
+                // 更新表格中所有的 th 和 td 边框颜色
+                resultsDiv.querySelectorAll('th, td').forEach(element => {
+                    element.style.borderColor = '#555';
+                });
+                // 更新表格标题背景色
+                resultsDiv.querySelectorAll('th').forEach(th => {
+                    th.style.backgroundColor = '#3e3e3e';
+                });
+            }
+        }
+        updateToastStyle(!isDarkMode);
+    }
+
+
+    // 更新公告样式
+    function updateToastStyle(isDarkMode) {
+        const toasts = document.querySelectorAll('.custom-toast, .custom-set-toast');
+        toasts.forEach(toast => {
+            if (isDarkMode) {
+                toast.style.backgroundColor = 'rgba(30, 30, 30, 0.8)';
+                toast.style.color = 'white';
+                toast.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.1)';
+            } else {
+                toast.style.backgroundColor = 'rgba(255, 255, 255, 0.8)';
+                toast.style.color = 'black';
+                toast.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+            }
+        });
+    }
+
+    // 监听系统主题变化
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+        if (event.matches) {
+            document.body.classList.add('dark-mode');
+            document.body.classList.remove('light-mode');
+            updateToastStyle(true);
+        } else {
+            document.body.classList.add('light-mode');
+            document.body.classList.remove('dark-mode');
+            updateToastStyle(false);
+        }
+    });
+
+    // 页面加载时检测
+    window.onload = function () {
+        detectDarkMode();
+        document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+
+        const enableCache = document.getElementById('enableCache');
+        if (enableCache.checked) {
+            historyDropdown.style.display = 'flex';
+            importCacheFromFileButton.style.display = 'flex';
+            exportCacheToFileButton.style.display = 'flex';
+            deleteSelectedCacheButton.style.display = 'flex';
+            clearAllCacheButton.style.display = 'flex';
+        }
+        else{
+            historyDropdown.style.display = 'none';
+            importCacheFromFileButton.style.display = 'none';
+            exportCacheToFileButton.style.display = 'none';
+            deleteSelectedCacheButton.style.display = 'none';
+            clearAllCacheButton.style.display = 'none';
+        }
+    };
+</script>
+<script>
+    // 在页面加载时调用getQueryParams函数自动填充表单
+    document.addEventListener('DOMContentLoaded', () => {
+        getQueryParams();
+        detectDarkMode();
+    });
+
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const settings = params.get('settings');
+        if (settings) {
+            try {
+                const settingsObj = JSON.parse(decodeURIComponent(settings));
+                if (settingsObj.key) {
+                    document.getElementById('api_key').value = settingsObj.key;
+                }
+                if (settingsObj.url) {
+                    document.getElementById('api_url').value = settingsObj.url;
+                }
+                if (settingsObj.models) {
+                    document.getElementById('model_name').value = settingsObj.models.join(',');
+                }
+                if (settingsObj.timeout) {
+                    document.getElementById('model_timeout').value = settingsObj.timeout;
+                }
+                if (settingsObj.concurrency) {
+                    document.getElementById('model_concurrency').value = settingsObj.concurrency;
+                }
+                if (!settingsObj.closeAnnouncement) {
+                    showToast();
+                }
+                showSettingsToast();
+            } catch (e) {
+                console.error('解析URL参数失败:', e);
+            }
+        } else {
+            showToast();
+        }
+    }
+
+    // 显示设置弹窗
+    function showSettingsToast() {
+        const skMasked = document.getElementById('api_key').value.slice(0, 5) + '*****';
+
+        const message = `
+        <div>
+            <p><strong>已填入预制设置</strong></p>
+            <br>
+            <div>🔑 密钥: ${skMasked}</div>
+            <div>🔗 接口地址: ${document.getElementById('api_url').value}</div>
+            <div>📦 模型: ${document.getElementById('model_name').value}</div>
+            <div>⏱ 请求超时: ${document.getElementById('model_timeout').value} 秒</div>
+            <div>🔁 并发数量: ${document.getElementById('model_concurrency').value}</div>
+        </div>
+    `;
+        const set_toast = document.createElement('div');
+        set_toast.className = 'custom-set-toast';
+        set_toast.innerHTML = `${message}`;
+        // 添加样式使其居中并有高斯模糊和透明效果
+        set_toast.style.position = 'fixed';
+        set_toast.style.top = '50%';
+        set_toast.style.left = '50%';
+        set_toast.style.transform = 'translate(-50%, -50%)';
+        set_toast.style.backgroundColor = 'rgba(255, 255, 255, 0.7)';
+        set_toast.style.backdropFilter = 'blur(10px)';
+        set_toast.style.color = 'black';
+        set_toast.style.padding = '20px';
+        set_toast.style.borderRadius = '10px';
+        set_toast.style.boxShadow = '0 0 10px rgba(0, 0, 0, 0.1)';
+        set_toast.style.zIndex = '1000';
+        set_toast.style.textAlign = 'center';
+
+        // 检测黑暗模式
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (isDarkMode) {
+            set_toast.style.backgroundColor = 'rgba(30, 30, 30, 0.7)';
+            set_toast.style.color = 'white';
+            set_toast.style.boxShadow = '0 0 10px rgba(255, 255, 255, 0.1)';
+        }
+
+        document.body.appendChild(set_toast);
+
+        // 2秒后自动关闭
+        setTimeout(() => {
+            set_toast.style.display = 'none';
+        }, 2000);
+    }
+
     // 显示公告
     function showToast() {
         const message = `
             <div>
-                <p><strong>API CHECKER v1.4</strong></p>
+                <p><strong>API CHECKER v${VERSION}</strong></p>
                 <br>
-                <div>仓库地址:  <a href="https://github.com/QAbot-zh/query-key" target="_blank" style="color: #1e88e5">QAbot-zh/query-key</a></div><div>点点star 可以自行部署</div>
+                <div>仓库地址:  <a href="https://github.com/QAbot-zh/query-key" target="_blank" style="color: #1e88e5">QAbot-zh/query-key</a></div><div>点点 star 可以自行部署</div>
                 <br>
                 <p><strong>如何使用 :</strong></p>
                 <ul>
                     <div>🕵️ 使用“官转验证”功能确认API的真实性</div>
-                    <div>🕵️‍♀️ 使用“温度验证”功能确认API的真实性</div>
-                    <div>📊 使用“函数验证”功能检测API是否支持FC</div>
-                    <div>🔒 <strong> <a href="https://github.com/QAbot-zh/query-key/tree/beta-feature/localStorage" target="_blank" style="color: #1e88e5"> beta 功能</a>：支持本地缓存API信息，数据仅本地保留，默认关闭，欢迎部署</strong> </div>
+                    <div>🧊 使用“温度验证”功能确认API的一致性</div>
+                    <div>📊 使用“函数验证”功能检测API的FC支持</div>
+                    <div>🔒 <strong> <a href="https://github.com/QAbot-zh/query-key/tree/beta-feature/localStorage" target="_blank" style="color: #1e88e5"> beta 功能</a>：本地缓存API信息，数据仅本地保留，默认关闭，欢迎部署</strong> </div>
                 </ul>
-                <br>
-                <p><strong>Tips:</strong></p>
-                <div>🌱GPT系列，才有官转验证，系统判断仅供参考，原理请看 <a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
-                <div>🌡️ 温度验证：低温度参数下，大模型回复的稳定性。测试结果仅供参考，原理请看 <a href="https://linux.do/t/topic/195972" target="_blank" style="color: #1e88e5">温度验证</a></div>
             </div>
-        `;
+            <br>
+            <p class="collapsible"><span class="triangle"></span> <strong>版本历史:</strong></p>
+            <div class="content">
+                <ul>
+                    <div><a href="https://linux.do/t/topic/199694" target="_blank" style="color: #1e88e5">v1.4版本介绍</a></div>
+                    <div><a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
+                    <div><a href="https://linux.do/t/topic/190955" target="_blank" style="color: #1e88e5">v1.2版本介绍</a></div>
+                    <div><a href="https://linux.do/t/topic/196537" target="_blank" style="color: #1e88e5">beta功能</a></div>
+                </ul>
+            </div>
+            <br>
+            <p class="collapsible"><span class="triangle"></span> <strong>Tips:</strong></p>
+            <div class="content">
+                <div>🌱 仅GPT系列，可实现官转验证，系统判断仅供参考，原理请查阅 <a href="https://linux.do/t/topic/191420" target="_blank" style="color: #1e88e5">v1.3版本介绍</a></div>
+                <div>🌡️ 温度验证：低温度参数下，大模型回复的稳定性。测试结果仅供参考，原理请查阅 <a href="https://linux.do/t/topic/195972" target="_blank" style="color: #1e88e5">温度验证</a></div>
+            </div>
+        </div>
+    `;
         const toast = document.createElement('div');
-        toast.className = 'toast';
+        toast.className = 'custom-toast';
         toast.innerHTML = `${message}
-                           <button onclick="this.parentElement.style.display='none';" aria-label="close">
-                               <svg aria-hidden="true" viewBox="0 0 14 16" width="14" height="16">
-                                   <path fill-rule="evenodd" d="M7.71 8.23l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75L1 11.98l3.75-3.75L1 4.48 2.48 3l3.75 3.75L9.98 3l1.48 1.48-3.75 3.75z"></path>
-                               </svg>
-                           </button>`;
+                       <button onclick="this.parentElement.style.display='none';" aria-label="close">
+                           <svg aria-hidden="true" viewBox="0 0 14 16" width="14" height="16">
+                               <path fill-rule="evenodd" d="M7.71 8.23l3.75 3.75-1.48 1.48-3.75-3.75-3.75 3.75L1 11.98l3.75-3.75L1 4.48 2.48 3l3.75 3.75L9.98 3l1.48 1.48-3.75 3.75z"></path>
+                           </svg>
+                       </button>`;
         document.body.appendChild(toast);
+
+        // 添加样式
+        const style = document.createElement('style');
+        style.innerHTML = `
+        .collapsible {
+            cursor: pointer;
+            user-select: none;
+        }
+        .content {
+            display: none;
+            overflow: hidden;
+        }
+        .triangle::before {
+            content: "▶";
+            display: inline-block;
+            transform: rotate(0deg);
+            transition: transform 0.3s;
+        }
+        .active .triangle::before {
+            transform: rotate(90deg);
+        }
+        .custom-toast {
+            position: fixed;
+            top: 10px;
+            right: -100%;
+            background-color: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            color: black;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            text-align: left;
+            width: 300px;
+            max-width: 50%;
+            animation: slideIn 1s forwards;
+        }
+        .custom-toast button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+        .custom-toast button svg {
+            fill: currentColor;
+        }
+        @keyframes slideIn {
+            from {
+                right: -100%;
+            }
+            to {
+                right: 10px;
+            }
+        }
+    `;
+        document.head.appendChild(style);
+
+        // 检测黑暗模式并添加样式
+        const isDarkMode = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        updateToastStyle(isDarkMode);
+
+        // 监听系统主题变化
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            updateToastStyle(event.matches);
+        });
+
+        // 添加折叠事件
+        const collapsibles = document.getElementsByClassName("collapsible");
+        for (let i = 0; i < collapsibles.length; i++) {
+            collapsibles[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                const content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
     }
 
-    showToast();
     // 智能提取API信息
     document.getElementById('api_info').addEventListener('input', function () {
         let text = this.value;
@@ -798,7 +1559,12 @@
                 })
                 .catch(error => {
                     layer.closeAll('loading');
-                    layer.alert('获取模型列表失败: ' + error.message);
+                    console.error('Error in checkQuota:', error);
+                    if(error.message.includes('Unexpected token')) {
+                        layer.alert('检查额度失败，请检查API地址或密钥是否正确');
+                    }else {
+                        layer.alert('检查额度失败，请检查API地址或密钥是否正确');
+                    }
                 });
         });
     }
@@ -812,23 +1578,23 @@
             let content = '<div style="padding: 20px;"><form class="layui-form">';
             content += '<div id="selectedCount">已选择 0 个模型</div>';
             content += `
-                <div class="model-filter-container">
-                    <input type="text" id="prefixFilter" placeholder="输入模型前缀筛选">
-                    <button type="button" onclick="filterModels()">筛选</button>
-                    <button type="button" class="clear" onclick="clearFilter()">清空</button>
-                </div>
-                <div class="checkbox-container">
-                    <label><input type="checkbox" lay-skin="primary" lay-filter="checkAll" title="全选"></label>
-                    <label><input type="checkbox" lay-skin="primary" lay-filter="checkAllChatOnly" title="全选（过滤音/图/视/嵌入模型）"></label>
-                </div>
-            `;
+            <div class="model-filter-container">
+                <input type="text" id="prefixFilter" placeholder="输入模型前缀筛选">
+                <button type="button" onclick="filterModels()">筛选</button>
+                <button type="button" class="clear" onclick="clearFilter()">清空</button>
+            </div>
+            <div class="checkbox-container">
+                <label><input type="checkbox" lay-skin="primary" lay-filter="checkAll" title="全选"></label>
+                <label><input type="checkbox" lay-skin="primary" lay-filter="checkAllChatOnly" title="全选（过滤音/图/视/嵌入模型）"></label>
+            </div>
+        `;
             content += '<div id="modelList">';
             models.forEach((model, index) => {
                 content += `
-                    <div class="layui-form-item model-item" data-model="${model}">
-                        <input type="checkbox" name="models[${index}]" value="${model}" title="${model}" lay-skin="primary">
-                    </div>
-                `;
+                <div class="layui-form-item model-item" data-model="${model}">
+                    <input type="checkbox" name="models[${index}]" value="${model}" title="${model}" lay-skin="primary">
+                </div>
+            `;
             });
             content += '</div></form></div>';
 
@@ -841,6 +1607,12 @@
                 success: function (layero, index) {
                     form.render('checkbox');
                     setupEventListeners(layero, form);
+
+                    // 检查黑暗模式
+                    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        layero[0].style.backgroundColor = '#121212';
+                        layero[0].style.color = '#e0e0e0';
+                    }
                 },
                 yes: function (index, layero) {
                     const selectedModels = layero.find('input[name^="models"]:checked').map(function () {
@@ -1003,7 +1775,7 @@
                     let has_o1_reason = false;
                     if (response.ok) {
                         const data = await response.json();
-                        const returnedModel = data.model || "no returned model by rick"; // 确保 returnedModel 有效
+                        const returnedModel = data.model || "no returned model "; // 确保 returnedModel 有效
                         if (returnedModel.startsWith("o1-") && data?.usage?.completion_tokens_details?.reasoning_tokens>0){
                             has_o1_reason = true;
                         }
@@ -1097,27 +1869,33 @@
 
     // 显示测试结果
     function displayResults(results) {
+        window.currentResults = results; // 保存当前结果以供复制使用
         const resultsDiv = document.getElementById('results');
-        let content = '<h2>测试结果</h2>' +
-            '<h3>（结果仅供参考，防君子不防小人）</h3>' +
-            '<div class="submit-container">' +
-            '<input type="button" onclick="copyConsistentModels()" value="复制一致模型" class="check-quota">' +
-            '<input type="button" onclick="copyConsistentAndInconsistentModels()" value="复制一致模型" class="check-quota">' +
-            '<input type="button" onclick="copyConsistentAndInconsistentReturedModels()" value="复制可用原始模型" class="check-quota">' +
+
+        // 显示容器
+        resultsDiv.classList.add('show'); // 使用动画效果
+
+        let content = '<h2>&#128203;测试报告</h2>' +
+            '<div class="copy-container">' +  // 修改类名为 copy-container
+            '<button onclick="copyModels(\'valid\')" class="copy-all-btn">复制一致模型</button>' +
+            '<button onclick="copyModels(\'inconsistent\')" class="copy-all-btn">复制可用模型</button>' +
             '</div>' +
+
             '<table>' +
             '<tr>' +
-            '<th class="td1">状态</th>' +
-            '<th class="td2">模型名称</th>' +
+            '<th class="td1">模型状态</th>' +
+            '<th class="td2">模型名称 </th>' +
             '<th class="td3">响应时间 (秒)</th>' +
             '<th class="td4">备注</th>' +
             '</tr>';
 
+        // 遍历并添加结果行
         results.valid.forEach(function (r) {
             content += '<tr>' +
-                '<td class="td1 td1-ok">模型一致可用</ td>' +
-                '<td class="td2"><span class="copy-btn2" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
-                '<td class="td3">' + r.responseTime.toFixed(2) + '</td>'
+                '<td class="td1 td1-ok">一致可用</td>' +
+                '<td class="td2"><span class="model-name">' + r.model +
+                ' <span class="copy-icon" onclick="copyText(\'' + r.model + '\')"></span></span></td>' +
+                '<td class="td3">' + r.responseTime.toFixed(2) + '</td>';
 
             let verifyButtons = r.model.startsWith('o1-') ? 'o1模型不支持函数、温度、种子功能' : `
                 <button class="verify-btn cyan" data-tooltip="校验函数功能是否可用,将发起1次请求" onclick="verifyFunctionCalling('${r.model}')">
@@ -1130,7 +1908,7 @@
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-)/.test(r.model) ? ` 
+                    ${/^(gpt-|chatgpt-)/.test(r.model) ? `
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
@@ -1160,7 +1938,7 @@
                     <button class="verify-btn blue" data-tooltip="低温度参数下预测序列下一个值,将发起4次请求" onclick="verifyTemperature('${r.model}')">
                         温度验证
                     </button>
-                    ${/^(gpt-|chatgpt-)/.test(r.model) ? ` 
+                    ${/^(gpt-|chatgpt-)/.test(r.model) ? `
                         <button class="verify-btn ${officialButtonClass}" data-tooltip="相同种子参数下校验回复相似性和系统指纹,将发起4次请求" onclick="verifyOfficial('${r.model}')">
                             官转验证
                         </button>
@@ -1168,10 +1946,10 @@
                 `;
             }
             let highlightedReturnModel = r.returnedModel;
-            if (r.returnedModel.startsWith(`${r.model}-`)){
+            if (r.returnedModel.startsWith(`${r.model}-`)) {
                 highlightedReturnModel = `<span style="color: green; font-weight: bold;">${r.model}</span>${r.returnedModel.slice(r.model.length)}<br>可能是带版本号模型映射`;
             }
-            
+
             let o1_response = '';
             if (r.model.startsWith('o1-')) {
                 if (r.has_o1_reason) {
@@ -1182,7 +1960,7 @@
             }
             content += `
                 <tr>
-                    <td class="td1 td1-no" >模型不一致/映射，tnnd掺假？</td>
+                    <td class="td1 td1-no" >未匹配/模型映射</td>
                     <td class="td2">
                         <span class="copy-btn2"" onclick="copyText('${r.model}')">${r.model}</span>
                     </td>
@@ -1200,7 +1978,7 @@
 
         results.invalid.forEach(function (r) {
             content += '<tr>' +
-                '<td class="td1 td1-error">模型不可用!!!，干啥呢</td>' +
+                '<td class="td1 td1-error">调用失败</td>' +
                 '<td class="td2"><span class="copy-btn2" onclick="copyText(\'' + r.model + '\')">' + r.model + '</span></td>' +
                 '<td class="td3">-</td>' +
                 '<td class="td4">' + (r.response_text || r.error) + '</td>' +
@@ -1209,6 +1987,55 @@
 
         content += '</table>';
         resultsDiv.innerHTML = content;
+
+        if (document.body.classList.contains('dark-mode')) {
+            resultsDiv.style.backgroundColor = '#2e2e2e';
+            resultsDiv.style.color = '#e0e0e0';
+            resultsDiv.querySelectorAll('th, td').forEach(element => {
+                element.style.borderColor = '#555';
+            });
+            resultsDiv.querySelectorAll('th').forEach(th => {
+                th.style.backgroundColor = '#3e3e3e';
+            });
+        } else {
+            resultsDiv.style.backgroundColor = '#ffffff';
+            resultsDiv.style.color = '#000000';
+            resultsDiv.querySelectorAll('th, td').forEach(element => {
+                element.style.borderColor = '#ddd';
+            });
+            resultsDiv.querySelectorAll('th').forEach(th => {
+                th.style.backgroundColor = '#f2f2f2';
+            });
+        }
+    }
+
+    function copyText(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            // 复制成功，可以提示用户
+            alert(`"${text}" 已复制到剪贴板`);
+        }).catch(err => {
+            console.error('复制失败:', err);
+        });
+    }
+
+    function copyModels(type) {
+        let models = [];
+        if (type === 'valid') {
+            models = window.currentResults.valid.map(r => r.model);
+        } else if (type === 'inconsistent') {
+            models = window.currentResults.inconsistent.map(r => r.model);
+            models = models.concat(window.currentResults.awaitOfficialVerification.map(r => r.model));
+        }
+        if (models.length === 0) {
+            alert('没有可复制的模型');
+            return;
+        }
+        const textToCopy = models.join('\n');
+        navigator.clipboard.writeText(textToCopy).then(() => {
+            alert(`已复制 ${type === 'valid' ? '一致模型' : '可用模型'} (${models.length}) 个到剪贴板`);
+        }).catch(err => {
+            console.error('复制失败:', err);
+        });
     }
 
     async function verifyOfficial(model) {
@@ -1226,6 +2053,7 @@
             });
         });
     }
+
     function findMostFrequent(arr) {
         const frequency = {};
         let maxCount = 0;
@@ -1242,96 +2070,99 @@
 
         return { element: mostFrequentElement, count: maxCount };
     }
+
     async function verifyTemperature(model) {
         layui.use("layer", function () {
-          const layer = layui.layer;
-          layer.load();
+            const layer = layui.layer;
+            layer.load();
         });
 
         try {
-          const results = await Promise.all(
-            [1, 2, 3, 4].map(() => sendTemperatureVerificationRequest(model))
-          );
-          const responses = results.map((result) =>
-            result.choices
-              ? result?.choices?.[0]?.message?.content?.trim()
-              : "该次调用响应异常"
-          );
-          const referenceMap = {
-            "gpt-4o-mini": 32,
-            "gpt-4o": 59,
-            "claude-3-5": 51,
-            "claude-3.5": 51
-          };
-          const matchedKey = Object.keys(referenceMap).find(key => model.startsWith(key));
-          let referenceValue = matchedKey ? referenceMap[matchedKey] : null;
+            const results = await Promise.all(
+                [1, 2, 3, 4].map(() => sendTemperatureVerificationRequest(model))
+            );
+            const responses = results.map((result) =>
+                result.choices
+                    ? result?.choices?.[0]?.message?.content?.trim()
+                    : "该次调用响应异常"
+            );
+            const referenceMap = {
+                "gpt-4o-mini": 32,
+                "gpt-4o": 59,
+                "claude-3-5": 51,
+                "claude-3.5": 51
+            };
+            const matchedKey = Object.keys(referenceMap).find(key => model.startsWith(key));
+            let referenceValue = matchedKey ? referenceMap[matchedKey] : null;
 
-          layui.use("layer", function () {
-            const layer = layui.layer;
-            layer.closeAll("loading");
+            layui.use("layer", function () {
+                const layer = layui.layer;
+                layer.closeAll("loading");
 
-            let message = `<strong>当前待验证模型：${model}</strong><p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p>`;
-            message +=
-              '<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">' +
-              '<tr><th style="border: 1px solid #ddd; padding: 4px;">测试</th><th style="border: 1px solid #ddd; padding: 4px;">响应</th></tr>';
-            let hitReferenceCount = 0;
-            let color;
-            for (let i = 0; i < 4; i++) {
-              if (responses[i] === referenceValue) {
-                hitReferenceCount++;
-                color = "green";
-              }
-              else if (responses[i] === "该次调用响应失败"){
-                color = "red"
-              }
-              else{
-                color = "black";
-              }
-              message +=
-                "<tr>" +
-                '<td style="border: 1px solid #ddd; padding: 4px;">测试 ' +
-                (i + 1) +
-                "</td>" +
-                `<td style="border: 1px solid #ddd; padding: 4px; color: ${color};">` +
-                responses[i] +
-                "</td>" +
-                "</tr>";
-            }
-
-            message += "</table><strong>结论：</strong>";
-
-            frequencyCheckResult = findMostFrequent(responses);
-            const diffentCount = frequencyCheckResult.count;
-
-            if (diffentCount === responses.length) {
-                message += "所有响应相同，可能是官方API";
-            } else {
-                message += `响应结果重复度：${diffentCount}/${responses.length}`;
-                // 检查模型前缀是否符合条件
-                if (/^(gpt-4o|claude-3-5|claude-3.5)/.test(model)) {
-                    message += `，参考值命中率：${hitReferenceCount}/${responses.length}`;
+                let message = `<strong>当前待验证模型：${model}</strong><p>参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)</p>`;
+                message +=
+                    '<table style="width:100%; border-collapse: collapse; margin-bottom: 20px;">' +
+                    '<tr><th style="border: 1px solid #ddd; padding: 4px;">测试</th><th style="border: 1px solid #ddd; padding: 4px;">响应</th></tr>';
+                let hitReferenceCount = 0;
+                let color;
+                for (let i = 0; i < 4; i++) {
+                    if (responses[i] === referenceValue) {
+                        hitReferenceCount++;
+                        color = "green";
+                    } else if (responses[i] === "该次调用响应失败") {
+                        color = "red";
+                    } else {
+                        color = "black";
+                    }
+                    message +=
+                        "<tr>" +
+                        '<td style="border: 1px solid #ddd; padding: 4px;">测试 ' +
+                        (i + 1) +
+                        "</td>" +
+                        `<td style="border: 1px solid #ddd; padding: 4px; color: ${color};">` +
+                        responses[i] +
+                        "</td>" +
+                        "</tr>";
                 }
-                message += "，可能不是官方API";
-            }
 
-            message += "<br>";
+                message += "</table><strong>结论：</strong>";
 
-            layer.alert(message, {
-              title: "温度验证结果（<strong>无参考值模型请自行根据结果重复度判断</strong>）",
-              area: ["600px", "400px"],
+                const frequencyCheckResult = findMostFrequent(responses);
+                const diffentCount = frequencyCheckResult.count;
+
+                if (diffentCount === responses.length) {
+                    message += "所有响应相同，可能是官方API";
+                } else {
+                    message += `响应结果重复度：${diffentCount}/${responses.length}`;
+                    // 检查模型前缀是否符合条件
+                    if (/^(gpt-4o|claude-3-5|claude-3.5)/.test(model)) {
+                        message += `，参考值命中率：${hitReferenceCount}/${responses.length}`;
+                    }
+                    message += "，可能不是官方API";
+                }
+
+                message += "<br>";
+
+                // 弹窗配置
+                const isMobile = window.innerWidth <= 768;
+                const alertOptions = {
+                    title: "温度验证结果（<strong>无参考值模型请自行根据结果重复度判断</strong>）",
+                    area: isMobile ? ['95%', '50%'] : ["650px", "400px"] // 手机设备上设置较小的弹窗尺寸
+                };
+
+                layer.alert(message, alertOptions);
             });
-          });
         } catch (error) {
-          console.error("Error in verifyTemperature:", error);
-          layui.use("layer", function () {
-            const layer = layui.layer;
-            layer.closeAll("loading");
-            layer.alert("验证过程中发生错误: " + error.message, {
-              title: "错误",
+            console.error("Error in verifyTemperature:", error);
+            layui.use("layer", function () {
+                const layer = layui.layer;
+                layer.closeAll("loading");
+                layer.alert("验证过程中发生错误: " + error.message, {
+                    title: "错误",
+                });
             });
-          });
         }
-      }
+    }
 
     async function sendTemperatureVerificationRequest(model) {
         const apiUrl = document
@@ -1340,36 +2171,36 @@
         const apiKey = document.getElementById("api_key").value;
         try {
             const response = await fetch(`${apiUrl}/v1/chat/completions`, {
-            method: "POST",
-            headers: {
-                Authorization: `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                messages: [
-                {
-                    role: "system",
-                    content:
-                    "You're an associative thinker. The user gives you a sequence of 6 numbers. Your task is to figure out and provide the 7th number directly, without explaining how you got there.",
+                method: "POST",
+                headers: {
+                    Authorization: `Bearer ${apiKey}`,
+                    "Content-Type": "application/json",
                 },
-                {
-                    role: "user",
-                    content: "5, 15, 77, 19, 53, 54,",
-                },
-                ],
-                temperature: 0.01,
-                model: model,
-            }),
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            role: "system",
+                            content:
+                                "You're an associative thinker. The user gives you a sequence of 6 numbers. Your task is to figure out and provide the 7th number directly, without explaining how you got there.",
+                        },
+                        {
+                            role: "user",
+                            content: "5, 15, 77, 19, 53, 54,",
+                        },
+                    ],
+                    temperature: 0.01,
+                    model: model,
+                }),
             });
 
             if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
 
             return await response.json();
         } catch (error) {
             console.error("Error in sendTemperatureVerificationRequest:", error);
-            return { error: error.message };
+            return {error: error.message};
         }
     }
 
@@ -1422,7 +2253,7 @@
 
                 let title = '验证结果';
                 let message = '';
-                if (validFingerprintsCount >=3 && similarityCount >= 3) {
+                if (validFingerprintsCount >= 3 && similarityCount >= 3) {
                     title = '恭喜你，大概率是官方API呀！';
                     message += '<strong>Tips: 这是官方API！</strong>';
                 } else if (validFingerprintsCount >= 2 && similarityCount >= 2) {
@@ -1452,8 +2283,16 @@
                 message += '相似度结果：<br>' +
                     Object.entries(similarity).map(([key, value]) => `${key}: ${value}`).join('<br>');
 
+                // 弹窗配置
+                const isMobile = window.innerWidth <= 768;
+                const alertOptions = {
+                    title: title,
+                    area: isMobile ? ['95%', '60%'] : ['650px', '400px'], // 手机设备上设置较小的弹窗尺寸
+                    content: message,
+                    shadeClose: true
+                };
 
-                layer.alert(message, {title: title, area: ['600px', '400px']});
+                layer.alert(message, alertOptions);
             });
         } catch (error) {
             console.error('Error in performOfficialVerification:', error);
@@ -1502,12 +2341,12 @@
     async function verifyFunctionCalling(model) {
         console.log("开始验证函数调用");
         layui.use('layer', function () {
-        const layer = layui.layer;
+            const layer = layui.layer;
 
-        layer.open({
-            title: '请输入两个整数 a 和 b',
-            area: ['400px', '250px'],
-            content: `
+            layer.open({
+                title: '请输入两个整数 a 和 b',
+                area: ['400px', '250px'],
+                content: `
                 <div style="padding: 10px;">
                     <div style="margin-bottom: 10px;">
                         <label style="display: inline-block; width: 100px;">请输入整数 a:</label>
@@ -1519,22 +2358,23 @@
                     </div>
                 </div>
             `,
-            btn: ['确定', '取消'],
-            yes: function (index, layero) {
-                const a = parseInt(document.getElementById('inputA').value);
-                const b = parseInt(document.getElementById('inputB').value);
+                btn: ['确定', '取消'],
+                yes: function (index, layero) {
+                    const a = parseInt(document.getElementById('inputA').value);
+                    const b = parseInt(document.getElementById('inputB').value);
 
-                if (isNaN(a) || isNaN(b)) {
-                    layer.msg('请输入有效的整数 a 和 b');
-                    return;
+                    if (isNaN(a) || isNaN(b)) {
+                        layer.msg('请输入有效的整数 a 和 b');
+                        return;
+                    }
+
+                    layer.close(index);
+                    performFunctionCallingVerification(model, a, b);
                 }
-
-                layer.close(index);
-                performFunctionCallingVerification(model, a, b);
-            }
+            });
         });
-    });
     }
+
     async function sendFunctionCallingRequest(model, a, b) {
         const apiUrl = document.getElementById('api_url').value.replace(/\/+$/, '');
         const apiKey = document.getElementById('api_key').value;
@@ -1555,18 +2395,18 @@
                             "name": "add_numbers",
                             "description": "Adds two numbers together",
                             "parameters": {
-                            "type": "object",
-                            "properties": {
-                                "a": {
-                                "type": "number",
-                                "description": "The first number"
+                                "type": "object",
+                                "properties": {
+                                    "a": {
+                                        "type": "number",
+                                        "description": "The first number"
+                                    },
+                                    "b": {
+                                        "type": "number",
+                                        "description": "The second number"
+                                    }
                                 },
-                                "b": {
-                                "type": "number",
-                                "description": "The second number"
-                                }
-                            },
-                            "required": ["a", "b"]
+                                "required": ["a", "b"]
                             }
                         }
                     ],
@@ -1586,6 +2426,7 @@
             return {error: error.message};
         }
     }
+
     async function performFunctionCallingVerification(model, a, b) {
         layui.use('layer', function () {
             const layer = layui.layer;
@@ -1651,14 +2492,32 @@
                         </tbody>
                     </table>
                 `;
-                layer.alert(message, {title: title, area: ['800px', '600px']});
+                const isMobile = window.innerWidth <= 768;
+                const alertOptions = {
+                    title: title,
+                    area: isMobile ? ['95%', '80%'] : ['650px', '400px'], // 手机设备上设置较小的弹窗尺寸
+                    content: message,
+                    shadeClose: true
+                };
+
+                layer.alert(message, alertOptions);
             });
         } catch (error) {
-            console.error('Error in performOfficialVerification:', error);
+            console.error('Error in performFunctionCallingVerification:', error);
             layui.use('layer', function () {
                 const layer = layui.layer;
                 layer.closeAll('loading');
-                layer.alert('验证过程中发生错误: ' + error.message, {title: '错误'});
+                const message = '验证过程中发生错误: ' + error.message;
+                const title = '错误';
+                const isMobile = window.innerWidth <= 768;
+                const alertOptions = {
+                    title: title,
+                    area: isMobile ? ['95%', '80%'] : ['650px', '400px'], // 手机设备上设置较小的弹窗尺寸
+                    content: message,
+                    shadeClose: true
+                };
+
+                layer.alert(message, alertOptions);
             });
         }
     }
@@ -1695,20 +2554,6 @@
             similarity34: calculateSimilarity(text3, text4).toFixed(4)
         };
     }
-
-
-    // 复制文本功能
-    function copyText(text) {
-        navigator.clipboard.writeText(text).then(() => {
-            layui.use('layer', function () {
-                const layer = layui.layer;
-                layer.msg('模型名已复制到剪贴板');
-            });
-        }).catch(err => {
-            console.error('复制失败:', err);
-        });
-    }
-
 
     // 检查额度
     function checkQuota() {
@@ -1756,11 +2601,23 @@
 
                     const showInfo = `可用额度为: ${remainInfo}\n\n已用额度为: ${usedInfo}\n\n总额度为: ${quotaInfo}`;
                     layer.closeAll('loading');
-                    layer.alert(showInfo);
+                    // 弹窗内容
+                    const content = `<div>${showInfo}</div>`;
+
+                    const alertOptions = {
+                        title: '检查额度',
+                        area: ['300px', '200px']
+                    };
+                    layer.alert(content, alertOptions);
                 })
                 .catch(error => {
                     layer.closeAll('loading');
-                    layer.alert('检查额度失败: ' + error.message);
+                    console.error('Error in checkQuota:', error);
+                    if(error.message.includes('Unexpected token')) {
+                        layer.alert('检查额度失败，请检查API地址或密钥是否正确');
+                    }else {
+                        layer.alert('检查额度失败');
+                    }
                 });
         });
     }
@@ -1772,61 +2629,25 @@
         document.getElementById('history').selectedIndex = 0; 
     }
 
-    // 复制一致模型
-    function copyConsistentModels() {
-        const models = results.valid.map(function (r) {
-            return r.model;
-        });
-        copyText(models.join(','));
-    }
+    // 代码版本
+    const VERSION = '1.5.0';
+    const banner = `
 
-    // 复制所有可用模型去重
-    function copyConsistentAndInconsistentModels() {
-        const models = results.valid.map(function (r) {
-            return r.model;
-        })
-            .concat(results.inconsistent.map(function (r) {
-                return r.model;
-            }));
-        const uniqueModels = Array.from(new Set(models)); // 去重
-        copyText(uniqueModels.join(','));
-    }
+    ___    ____  ____   ________  ________________ __ ______
+   /   |  / __ \\/  _/  / ____/ / / / ____/ ____/ //_// ____/
+  / /| | / /_/ // /   / /   / /_/ / __/ / /   / ,<  / __/
+ / ___ |/ ____// /   / /___/ __  / /___/ /___/ /| |/ /___
+/_/  |_/_/   /___/   \\____/_/ /_/_____/\\____/_/ |_/_____/
 
 
-    // 复制一致和不一致模型的原始模型的函数名称 去重
-    function copyConsistentAndInconsistentReturedModels() {
-        const models = results.valid.map(function (r) {
-            return r.model;
-        })
-            .concat(results.inconsistent.map(function (r) {
-                return r.returnedModel;
-            }));
-        let uniqueModels = Array.from(new Set(models)); // 去重
-        //去除undefined
-        uniqueModels = uniqueModels.filter(function (s) {
-            return s && s.trim();
-        });
-        copyText(uniqueModels.join(','));
-    }
 
-    // 页面加载时检查缓存
-    window.onload = function () {
-        const enableCache = document.getElementById('enableCache');
-        if (enableCache.checked) {
-            historyDropdown.style.display = 'flex';
-            importCacheFromFileButton.style.display = 'flex';
-            exportCacheToFileButton.style.display = 'flex';
-            deleteSelectedCacheButton.style.display = 'flex';
-            clearAllCacheButton.style.display = 'flex';
-        }
-        else{
-            historyDropdown.style.display = 'none';
-            importCacheFromFileButton.style.display = 'none';
-            exportCacheToFileButton.style.display = 'none';
-            deleteSelectedCacheButton.style.display = 'none';
-            clearAllCacheButton.style.display = 'none';
-        }
-    };
+    `;
+    const message = `hello ? ️`;
+    console.log(`%c  API CHECK v${VERSION} %c  http://check.crond.dev `, "color: #fadfa3; background: #030307; padding:5px 0;", "background: #fadfa3; padding:5px 0;");
+    console.log(banner);
+    console.log(message +location.href);
+    console.log("RICK: https://blog.rick.icu");
+    console.log("Megasoft: https://linux.do/u/zhong_little");
 </script>
 </body>
 </html>
