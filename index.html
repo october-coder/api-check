@@ -1642,7 +1642,7 @@
 
         form.on('checkbox(checkAllChatOnly)', function (data) {
             const child = layero.find('input[name^="models"]');
-            const notChatPattern = /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo)/;
+            const notChatPattern = /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
             child.each(function (index, item) {
                 const modelName = item.value;
                 item.checked = data.elem.checked && !notChatPattern.test(modelName) && !/(image|audio|video|music|pdf|flux|suno|embed)/.test(modelName);
