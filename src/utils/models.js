@@ -17,3 +17,23 @@ export const priorityModelList = [
     "gpt-4o-mini-2024-07-18",
     "llama-3.1-405b"
 ];
+export const cantFunctionModelList = [
+    // 无法使用函数验证列表
+    "o1-mini",
+    "o1-mini-2024-09-12",
+    "o1-preview",
+    "o1-preview-2024-09-12",
+];
+export  const cantTemperatureModelList = [
+    "o1-mini",
+    "o1-mini-2024-09-12",
+    "o1-preview",
+    "o1-preview-2024-09-12",
+];
+export const cantOfficialModelList = [
+    // 无法使用官方验证列表
+    "o1-mini",
+    "o1-mini-2024-09-12",
+    "o1-preview",
+    "o1-preview-2024-09-12",
+];

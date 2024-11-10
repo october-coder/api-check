@@ -40,7 +40,7 @@
   "VERIFICATION_BUTTONS_LABEL": "Verification:",
   "REMARK_LABEL": "Remark:",
   "FUNCTION_VERIFICATION": "Function",
-  "TEMPERATURE_VERIFICATION": "Temperature ",
+  "TEMPERATURE_VERIFICATION": "Tempera",
   "OFFICIAL_VERIFICATION": "Official ",
   "OTHER_VERIFICATION": "Other Verification",
   "SETTINGS_PANEL": "Settings Panel",
@@ -72,8 +72,8 @@
   "COPY_MODELS": "Copy Models",
   "GO_CHAT": "Go to Chat",
   "MODEL_STATE_AVAILABLE": "Available",
-  "MODEL_STATE_INCONSISTENT": "Inconsistent",
-  "MODEL_STATE_UNAVAILABLE": "Unavailable",
+  "MODEL_STATE_INCONSISTENT": "Inconsist",
+  "MODEL_STATE_UNAVAILABLE": "Unavailab",
   "AVERAGE_LATENCY": "Average Latency",
   "CHAT_MODEL_COUNT": "Chat Model Count",
   "GITHUB": "GitHub",
@@ -142,5 +142,11 @@
   "COPY_FAILED": "Copy failed, please copy manually",
   "RECORD_ALREADY_EXISTS": "Record already exists",
   "SPONSORS": "Sponsors",
-  "PRESET_SETTINGS": "Preset Settings"
+  "PRESET_SETTINGS": "Preset Settings",
+  "OFFICIAL_VERIFICATION_DONE": "Official",
+  "OFFICIAL_VERIFICATION_PENDING": "Official",
+  "MODEL_MAPPING": "Model Mapping",
+  "MAPPED_TO_MODEL": "Mapped to",
+  "RETURNED_MODEL": "Returned Model",
+  "NO_MATCH": "No match"
 }
