@@ -152,5 +152,14 @@
   "NO_MATCH": "未匹配",
   "MODEL": "模型",
   "STANDARD_RESPONSE": "标准响应",
-  "MODEL_RESPONSE": "模型响应"
+  "MODEL_RESPONSE": "模型响应",
+  "REPO_ADDRESS": "仓库地址",
+  "STAR_PROJECT": "点点 star，可以自行部署",
+  "NEW_DOMAIN": "启用新域名",
+  "HOW_TO_USE": "如何使用 :",
+  "VERSION_HISTORY": "版本历史",
+  "INTRODUCTION": "介绍",
+  "DETAIL_INTRODUCTION": "详细介绍",
+  "SEE_MORE_INTRODUCTION": "查看更多介绍",
+  "PLEASE_WAIT_FOR_TESTING": "请等待测试完成后再分享。"
 }

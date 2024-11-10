@@ -198,10 +198,15 @@
                   <MessageOutlined/>
                 </a>
               </a-tooltip>
-              <a-tooltip :title="t('SHARE')" placement="bottom">
-                <a @click="goShare" class="icon-button">
+              <a-tooltip :title="!testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')" placement="bottom">
+                <a-button
+                    @click="goShare"
+                    class="icon-button"
+                    :disabled="!testingComplete"
+                    type="text"
+                    icon>
                   <ShareAltOutlined/>
-                </a>
+                </a-button>
               </a-tooltip>
 
               <a-dropdown trigger="click">
@@ -379,14 +384,12 @@
         </a-row>
       </a-form>
     </a-modal>
-
     <a-modal
         v-model:open="showAppSettingsModal"
         :title="t('SETTINGS_PANEL')"
         :footer="null"
         :width="600"
         @cancel="closeSettingsModal"
-        class="settings-modal"
         :centered="true"
         :destroyOnClose="true"
     >
@@ -712,7 +715,7 @@ import {
   MessageOutlined
 } from '@ant-design/icons-vue';
 import {computed, h, onMounted, reactive, ref, nextTick, onBeforeUnmount} from 'vue';
-import {message, Modal, ConfigProvider, theme, Table as aTable} from 'ant-design-vue';
+import {message, Modal, ConfigProvider, theme, Table as aTable, notification, Collapse} from 'ant-design-vue';
 import {useWindowSize} from '@vueuse/core';
 import {useI18n} from 'vue-i18n';
 
@@ -729,7 +732,7 @@ import {checkForUpdates} from '../utils/update.js';
 import ModelVerifier from '../utils/verify.js';
 import {toggleTheme} from '../utils/theme.js';
 import {createSVGDataURL} from '../utils/svg.js';
-import {appInfo} from '../utils/info.js';
+import {appInfo, announcement} from '../utils/info.js';
 import {cantFunctionModelList, cantTemperatureModelList, cantOfficialModelList} from "../utils/models.js";
 
 // 注册必须的组件
@@ -785,7 +788,7 @@ const apiKey = ref('');
 const modelName = ref('');
 const modelTimeout = ref(10);
 const modelConcurrency = ref(5);
-const currentLanguage = ref(locale.value || 'zh');
+const currentLanguage = computed(() => (locale.value.startsWith('zh') ? 'zh' : 'en'));
 const showLanguageMenu = ref(false);
 const models = ref([]);
 const selectedModels = ref([]);
@@ -803,6 +806,7 @@ const chartContainer = ref(null);
 let chartInstance = null;
 const showSVGModal = ref(false);
 const svgDataUrl = ref('');
+const testingComplete = ref(false);
 
 const appDescription = computed(() => {
   const currentLocale = locale.value || 'zh';
@@ -811,7 +815,7 @@ const appDescription = computed(() => {
 
 // 打开官方网站的方法
 function openWebsite() {
-  window.open(appInfo.website, '_blank');
+  window.open(appInfo.officialUrl, '_blank');
 }
 
 // 打开更新日志的方法
@@ -828,12 +832,6 @@ const paginatedData = computed(() => {
 // 设置面板相关状态
 const showAppSettingsModal = ref(false);
 
-function getButtonColor(button) {
-  const color = buttonColors[button.label] || '';
-  console.log('Button label:', button.label, 'Color:', color);
-  return color;
-}
-
 // 主题切换方法
 const handleToggleTheme = () => {
   toggleTheme(isDarkMode);
@@ -849,7 +847,6 @@ const toggleLanguageMenu = () => {
 // 语言切换方法
 const setLanguage = (language) => {
   locale.value = language;
-  currentLanguage.value = language;
   localStorage.setItem('locale', language);
   showLanguageMenu.value = false; // 切换语言后隐藏菜单
 };
@@ -878,10 +875,8 @@ onMounted(() => {
 
   // 初始化设置
   setVh();
-
   // 监听窗口尺寸变化，重新计算视口高度
   window.addEventListener('resize', setVh);
-
   // 在组件卸载前移除事件监听
   onBeforeUnmount(() => {
     window.removeEventListener('resize', setVh);
@@ -896,8 +891,9 @@ onMounted(() => {
     localCacheList.value = [];
   }
   getQueryParams();
+});
 
-
+onMounted(() => {
   // 智能提取 api info
   document.getElementById('api_info').addEventListener('input', function () {
     let text = this.value;
@@ -923,17 +919,6 @@ onMounted(() => {
   });
 });
 
-onMounted(async () => {
-  const owner = appInfo.owner;
-  const repo = appInfo.repo;
-
-  const updateInfo = await checkForUpdates(appInfo.version, owner, repo, t);
-
-  if (updateInfo && updateInfo.hasUpdate) {
-    showUpdatePrompt(updateInfo);
-  }
-});
-
 // 显示更新提示的函数
 function showUpdatePrompt(updateInfo) {
   Modal.confirm({
@@ -954,9 +939,11 @@ function showUpdatePrompt(updateInfo) {
 }
 
 // 函数：获取 URL 参数
-const getQueryParams = () => {
+const getQueryParams = async () => {
   const params = new URLSearchParams(window.location.search);
   const settings = params.get('settings');
+  const owner = appInfo.owner;
+  const repo = appInfo.repo;
   if (settings) {
     try {
       const settingsObj = JSON.parse(decodeURIComponent(settings));
@@ -976,14 +963,22 @@ const getQueryParams = () => {
         modelConcurrency.value = settingsObj.concurrency;
       }
       if (!settingsObj.closeAnnouncement) {
-        showToast();
+        showAnnouncement();
+        const updateInfo = await checkForUpdates(appInfo.version, owner, repo, t);
+        if (updateInfo && updateInfo.hasUpdate) {
+          showUpdatePrompt(updateInfo);
+        }
       }
       showSettingsModal();
     } catch (e) {
       console.error('解析URL参数失败:', e);
     }
   } else {
-    showToast();
+    showAnnouncement();
+    const updateInfo = await checkForUpdates(appInfo.version, owner, repo, t);
+    if (updateInfo && updateInfo.hasUpdate) {
+      showUpdatePrompt(updateInfo);
+    }
   }
 };
 
@@ -1011,10 +1006,115 @@ const showSettingsModal = () => {
   });
 };
 
-// 显示提示消息
-const showToast = () => {
-  message.info('欢迎使用API CHECK！');
-};
+
+function showAnnouncement() {
+  const isOfficialSite = window.location.hostname === 'check.crond.dev';
+  const lang = currentLanguage.value;
+  let descriptionNodes = [];
+  descriptionNodes.push(
+      h(
+          'div',
+          {
+            style: 'font-weight: bold; font-size: 16px; margin-bottom: 8px;',
+          },
+          `${appInfo.name} v${appInfo.version}`
+      )
+  );
+  descriptionNodes.push(h('br'));
+  descriptionNodes.push(
+      h('div', [
+        t('REPO_ADDRESS'),
+        ': ',
+        h(
+            'a',
+            {
+              href: appInfo.githubUrl,
+              target: '_blank',
+              style: 'color: #1890ff;',
+            },
+            appInfo.owner + "/" + appInfo.repo
+        ),
+      ])
+  );
+  descriptionNodes.push(h('div', t('STAR_PROJECT')));
+  descriptionNodes.push(h('br'));
+  descriptionNodes.push(
+      h('div', [
+        t('NEW_DOMAIN'),
+        ': ',
+        h(
+            'a',
+            {
+              href: appInfo.officialUrl,
+              target: '_blank',
+              style: 'color: #1890ff;',
+            },
+            appInfo.officialUrl
+        ),
+      ])
+  );
+  if (isOfficialSite) {
+    descriptionNodes.push(h('br'));
+    announcement.officialContent[lang].forEach((line) => {
+      descriptionNodes.push(h('div', line));
+    });
+  }
+  descriptionNodes.push(h('br'));
+  descriptionNodes.push(h('div', {style: 'font-weight: bold;'}, t('HOW_TO_USE')));
+  announcement.howToUse[lang].forEach((line) => {
+    descriptionNodes.push(h('div', line));
+  });
+
+  descriptionNodes.push(h('br'));
+  const collapsePanels = [
+    h(
+        Collapse.Panel,
+        {header: t('VERSION_HISTORY'), key: '2'},
+        {
+          default: () => {
+            return announcement.updateLog[lang].map((log) =>
+                h('div', [
+                  h('strong', `${log.version} - ${log.date}`),
+                  h(
+                      'ul',
+                      {
+                        style: 'padding-left: 20px; margin: 4px 0;',
+                      },
+                      log.content.map((item) => h('li', {style: 'margin: 2px 0;'}, item))
+                  ),
+                ])
+            );
+          },
+        }
+    ),
+  ];
+  descriptionNodes.push(
+      h(
+          Collapse,
+          {
+            accordion: true,
+            class: 'announcement-collapse', // 添加类名
+            style: 'margin-bottom: 8px;',
+          },
+          {
+            default: () => collapsePanels,
+          }
+      )
+  );
+  // 显示通知
+  notification.open({
+    message: null,
+    description: h('div', descriptionNodes),
+    placement: 'topRight',
+    duration: 0,
+    onClose: () => {
+      localStorage.setItem('announcementShown', 'true');
+    },
+    style: {
+      width: '350px', // 调整通知的宽度
+    },
+  });
+}
 
 // 清除表单
 const clearForm = () => {
@@ -1181,7 +1281,7 @@ async function testModels() {
   totalModels.value = selectedModels.value.length;
   completedModels.value = 0;
   progressPercent.value = 0;
-
+  testingComplete.value = false;
   testModels_spinning.value = true;
 
   try {
@@ -1195,6 +1295,9 @@ async function testModels() {
           updateTableData(progress);
           completedModels.value += 1;
           progressPercent.value = Math.round((completedModels.value / totalModels.value) * 100);
+          if (completedModels.value >= totalModels.value) {
+            testingComplete.value = true;
+          }
         }
     );
     testModels_spinning.value = false;
@@ -1202,6 +1305,9 @@ async function testModels() {
   } catch (error) {
     testModels_spinning.value = false;
     message.error('测试模型时发生错误: ' + error.message);
+  } finally {
+    testModels_spinning.value = false;
+    testingComplete.value = true;
   }
 }
 
@@ -2089,6 +2195,7 @@ function goChat() {
 
 function goShare() {
   // 生成 SVG Data URL
+
   svgDataUrl.value = createSVGDataURL(results, apiUrl.value);
   showSVGModal.value = true;
 }
@@ -2916,6 +3023,12 @@ body.light-mode {
     justify-content: center; /* 使按钮在水平方向居中 */
     gap: 5px;
   }
+
+  input[type='text'],
+  textarea,
+  input[type='number'] {
+    font-size: 16px; /* 在移动设备上将字体大小设置为 16px */
+  }
 }
 
 .list-item {
@@ -3091,6 +3204,35 @@ body.light-mode {
   margin-left: auto; /* 将最后一个按钮（关闭按钮）推到最右侧 */
 }
 
+/* 折叠面板标题样式 */
+.announcement-collapse .ant-collapse-header {
+  font-weight: bold;
+  font-size: 14px;
+  padding: 8px;
+}
 
+/* 折叠面板内容样式 */
+.announcement-collapse .ant-collapse-content {
+  padding: 8px;
+}
+
+/* 调整折叠面板的边框和背景 */
+.announcement-collapse .ant-collapse {
+  border: none;
+  background-color: transparent;
+}
+
+.announcement-collapse .ant-collapse-item {
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.announcement-collapse .ant-collapse-content > .ant-collapse-content-box {
+  padding: 0 8px;
+}
+
+/* 调整列表项的样式 */
+.announcement-collapse li {
+  margin: 4px 0;
+}
 </style>
 

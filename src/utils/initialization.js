@@ -15,9 +15,7 @@ export function initializeLanguage(locale, currentLanguage) {
     const savedLocale = localStorage.getItem('locale');
     if (savedLocale) {
         locale.value = savedLocale;
-        currentLanguage.value = savedLocale;
     } else {
         locale.value = 'zh'; // 默认语言为中文
-        currentLanguage.value = 'zh';
     }
 }

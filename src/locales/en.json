@@ -151,5 +151,14 @@
   "NO_MATCH": "No match",
   "MODEL": "Model",
   "STANDARD_RESPONSE": "Standard Response",
-  "MODEL_RESPONSE": "Model Response"
+  "MODEL_RESPONSE": "Model Response",
+  "REPO_ADDRESS": "Repository Address",
+  "STAR_PROJECT": "Give a star, you can deploy it yourself",
+  "NEW_DOMAIN": "New domain",
+  "HOW_TO_USE": "How to Use:",
+  "VERSION_HISTORY": "Version History",
+  "SEE_MORE_INTRODUCTION": "See More Introduction",
+  "INTRODUCTION": "Introduction",
+  "DETAIL_INTRODUCTION": "Detailed Introduction",
+  "PLEASE_WAIT_FOR_TESTING": "Please wait for testing to complete before sharing."
 }
