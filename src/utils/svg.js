@@ -1,8 +1,8 @@
-import { errorHandler } from "./normal.js";
-import { commonModelList, priorityModelList } from "./models.js";
+import {errorHandler} from "./normal.js";
+import {commonModelList, priorityModelList} from "./models.js";
 
 // 设置其他模型的最大显示数量
-const MAX_OTHER_MODELS = 30;
+const MAX_OTHER_MODELS = 20;
 
 // 设置未展示模型的最大显示行数
 const MAX_UNDISPLAYED_MODEL_LINES = 2;
@@ -20,15 +20,18 @@ function processResults(results) {
             lowerModel.includes("gpt")
         );
     }
+
     function isClaude(model) {
         return (
             /^claude-/i.test(model) ||
             model.toLowerCase().includes("claude")
         );
     }
+
     function isDeepSeek(model) {
         return model.toLowerCase().includes("deepseek");
     }
+
     function isPriorityModel(model) {
         return priorityModelList.includes(model.toLowerCase());
     }
@@ -87,13 +90,13 @@ function processResults(results) {
     const allModels = [];
 
     results.valid.forEach((r) => {
-        allModels.push({ ...r, status: "valid" });
+        allModels.push({...r, status: "valid"});
     });
     results.inconsistent.forEach((r) => {
-        allModels.push({ ...r, status: "inconsistent" });
+        allModels.push({...r, status: "inconsistent"});
     });
     results.invalid.forEach((r) => {
-        allModels.push({ ...r, status: "invalid" });
+        allModels.push({...r, status: "invalid"});
     });
 
     // 常用模型列表，不截断，全部展示，无论状态
@@ -164,8 +167,6 @@ function processResults(results) {
     });
 
     // 处理其他类别的模型（如 Claude、DeepSeek）
-    // 将其他模型中剩余的模型再次分类
-
     let claudeModels = [];
     let deepSeekModels = [];
     let remainingModels = [];
@@ -273,6 +274,7 @@ function allocateModelsProportionally(totalModelsPerStatus, maxModels) {
         }
     });
 
+    // 调整分配数量以符合总模型数量限制
     // 如果分配的总数超过最大值，减少分配
     while (totalAssigned > maxModels) {
         // 按照 remainders 从小到大排序
@@ -329,40 +331,28 @@ export function createSVGDataURL(results, title) {
     }
 
     if (processedData.otherModels.length > 0) {
-        displayedLines += 2; // 空行 + "普通模型"标题
-        displayedLines += processedData.otherModels.length; // 普通模型的行数
+        displayedLines += 2; // 空行 + "其他模型"标题
+        displayedLines += processedData.otherModels.length; // 其他模型的行数
     }
 
-    // 增加省略部分标题的行数
+    // 如果有未展示的可用模型或调用失败的模型，增加 "省略部分" 标题行
     if (processedData.undisplayedAvailableModels.length > 0 ||
         processedData.failedModels.length > 0) {
         displayedLines += 2; // 空行 + "省略部分"标题
-
-        // 根据未展示的模型数量，增加对应的行数
-        let omittedLines = 0;
-
-        if (processedData.undisplayedAvailableModels.length > 0) {
-            omittedLines += MAX_UNDISPLAYED_MODEL_LINES;
-        }
-
-        if (processedData.failedModels.length > 0) {
-            omittedLines += MAX_UNDISPLAYED_MODEL_LINES;
-        }
-
-        displayedLines += omittedLines;
     }
 
-    // 计算内容高度
-    const contentHeight = displayedLines * lineHeight;
+    // 如果有未展示的可用模型，增加两行
+    if (processedData.undisplayedAvailableModels.length > 0) {
+        displayedLines += MAX_UNDISPLAYED_MODEL_LINES;
+    }
 
-    // 定义内容框的Y坐标
-    const contentBoxY = 50;
+    // 如果有未展示的调用失败的模型，增加两行
+    if (processedData.failedModels.length > 0) {
+        displayedLines += MAX_UNDISPLAYED_MODEL_LINES;
+    }
 
-    // 定义内容框的高度，增加上下间距
-    const contentBoxHeight = contentHeight + 40; // 上下各20像素的间距
-
-    // 计算 SVG 高度，增加底部的空间用于版权信息
-    const svgHeight = contentBoxY + contentBoxHeight + 70; // 底部增加70像素的间距
+    // 计算 SVG 高度
+    const svgHeight = displayedLines * lineHeight + 150; // 额外的空间用于顶部和底部
 
     // **计算动态 SVG 宽度**
 
@@ -404,16 +394,18 @@ export function createSVGDataURL(results, title) {
     // 应用背景渐变
     svgContent += `<rect x="0" y="0" width="${svgWidth}" height="${svgHeight}" fill="url(#backgroundGradient)" />`;
 
-    // 绘制内容背景矩形
+    const contentBoxY = 50; // 调整内容框的Y坐标，以上移内容
+    const contentBoxHeight = svgHeight - 100; // 调整内容框高度
+
     svgContent += `<rect x="${marginX}" y="${contentBoxY}" width="${
         svgWidth - 2 * marginX
     }" height="${contentBoxHeight}" rx="10" fill="#2d2d2d" />`;
 
-    // 图标和标题
+    // 标题和图标
     const icons = [
-        { cx: marginX + 20, cy: contentBoxY + 25, r: 6, fill: "#ff5f56" },
-        { cx: marginX + 40, cy: contentBoxY + 25, r: 6, fill: "#ffbd2e" },
-        { cx: marginX + 60, cy: contentBoxY + 25, r: 6, fill: "#27c93f" },
+        {cx: marginX + 20, cy: contentBoxY + 25, r: 6, fill: "#ff5f56"},
+        {cx: marginX + 40, cy: contentBoxY + 25, r: 6, fill: "#ffbd2e"},
+        {cx: marginX + 60, cy: contentBoxY + 25, r: 6, fill: "#27c93f"},
     ];
     icons.forEach((icon) => {
         svgContent += `<circle cx="${icon.cx}" cy="${icon.cy}" r="${icon.r}" fill="${icon.fill}" />`;
@@ -424,7 +416,9 @@ export function createSVGDataURL(results, title) {
         contentBoxY + 30
     }" fill="#ffffff" font-size="20" font-family="Arial, sans-serif" font-weight="bold" text-anchor="middle">API CHECK</text>`;
 
-    let y = contentBoxY + 60; // 调整内容的起始Y坐标
+    let y = contentBoxY + 30;
+
+    y += lineHeight; // 添加一个空行
 
     // 添加来源和时间，左对齐
     y += lineHeight;
@@ -434,7 +428,7 @@ export function createSVGDataURL(results, title) {
     // 显示统计信息，左对齐
     y += lineHeight;
 
-    const summaryText = `📊 共测试 ${processedData.summary.totalTested} 个模型，💡 可用率 ${processedData.summary.availableRatio}% ，⏱ 平均响应时间 ${processedData.summary.averageLatency}s  🧠 GPT ${processedData.summary.gptCount}  Claude ${processedData.summary.claudeCount} 个`;
+    const summaryText = `📊 共测试 ${processedData.summary.totalTested} 个模型，💡 可用率 ${processedData.summary.availableRatio}% ，⏱ 平均响应时间 ${processedData.summary.averageLatency}s  ，🧠 GPT ${processedData.summary.gptCount}  Claude ${processedData.summary.claudeCount} `;
     svgContent += drawText(fromX, y, summaryText, "14", "#FFFFFF", "bold");
 
     y += lineHeight; // 添加一个空行
@@ -536,10 +530,10 @@ export function createSVGDataURL(results, title) {
         });
     }
 
-    // 绘制普通模型（原“其他模型”）
+    // 绘制其他模型
     if (processedData.otherModels.length > 0) {
         y += lineHeight; // 空行
-        svgContent += drawText(col1X, y, "📋 普通模型：", "16", "#FFA500", "bold");
+        svgContent += drawText(col1X, y, "🚀 其他模型：", "16", "#FFA500", "bold");
         y += lineHeight;
 
         processedData.otherModels.forEach((r) => {
@@ -648,16 +642,17 @@ export function createSVGDataURL(results, title) {
             (r) => r.model
         );
         const lineWidth = svgWidth - 2 * marginX;
-        const maxCharsPerLine = Math.floor(lineWidth / textWidthPerChar);
-        const maxChars = maxCharsPerLine * maxLines;
+        const textPerLine = Math.floor(lineWidth / textWidthPerChar);
+        // 修改 maxChars 计算方式，使其在第二行达到一半时截断
+        const maxChars = Math.floor(textPerLine * 1.5);
         const prefix = "😀 可用模型：";
         let contentText = prefix + undisplayedModelNames.join("、");
 
-        if (contentText.length <= maxChars) {
-            // 文本在限制的行数内，正常显示
+        if (getTextWidth(contentText) <= maxChars * textWidthPerChar) {
+            // 文本在限制的字符数内，正常显示
             let undisplayedTextLines = wrapText(
                 contentText,
-                maxCharsPerLine
+                textPerLine
             );
 
             undisplayedTextLines.forEach((line) => {
@@ -672,11 +667,11 @@ export function createSVGDataURL(results, title) {
             });
         } else {
             // 文本超过限制，需要截断并添加省略信息
-            let availableChars = maxCharsPerLine * maxLines - prefix.length;
+            let availableChars = maxChars - Math.ceil(getTextWidth(prefix) / textWidthPerChar);
             let displayedNames = [];
             let totalLength = 0;
             for (let name of undisplayedModelNames) {
-                let nameLength = name.length + 1; // 加上分隔符“、”
+                let nameLength = name.length + 1; // 加1考虑“、”
                 if (totalLength + nameLength <= availableChars) {
                     displayedNames.push(name);
                     totalLength += nameLength;
@@ -688,7 +683,7 @@ export function createSVGDataURL(results, title) {
             let finalText = prefix + displayedNames.join("、") + `...（省略${omittedCount}个模型）`;
             let undisplayedTextLines = wrapText(
                 finalText,
-                maxCharsPerLine
+                textPerLine
             );
             undisplayedTextLines.forEach((line) => {
                 svgContent += drawText(
@@ -708,16 +703,17 @@ export function createSVGDataURL(results, title) {
         const maxLines = MAX_UNDISPLAYED_MODEL_LINES;
         let failedModelNames = processedData.failedModels.map((r) => r.model);
         const lineWidth = svgWidth - 2 * marginX;
-        const maxCharsPerLine = Math.floor(lineWidth / textWidthPerChar);
-        const maxChars = maxCharsPerLine * maxLines;
+        const textPerLine = Math.floor(lineWidth / textWidthPerChar);
+        // 修改 maxChars 计算方式，使其在第二行达到一半时截断
+        const maxChars = Math.floor(textPerLine * 1.5);
         const prefix = "😞 调用失败：";
         let contentText = prefix + failedModelNames.join("、");
 
-        if (contentText.length <= maxChars) {
-            // 文本在限制的行数内，正常显示
+        if (getTextWidth(contentText) <= maxChars * textWidthPerChar) {
+            // 文本在限制的字符数内，正常显示
             let failedTextLines = wrapText(
                 contentText,
-                maxCharsPerLine
+                textPerLine
             );
 
             failedTextLines.forEach((line) => {
@@ -732,11 +728,11 @@ export function createSVGDataURL(results, title) {
             });
         } else {
             // 文本超过限制，需要截断并添加省略信息
-            let availableChars = maxCharsPerLine * maxLines - prefix.length;
+            let availableChars = maxChars - Math.ceil(getTextWidth(prefix) / textWidthPerChar);
             let displayedNames = [];
             let totalLength = 0;
             for (let name of failedModelNames) {
-                let nameLength = name.length + 1; // 加上分隔符“、”
+                let nameLength = name.length + 1; // 加1考虑“、”
                 if (totalLength + nameLength <= availableChars) {
                     displayedNames.push(name);
                     totalLength += nameLength;
@@ -748,7 +744,7 @@ export function createSVGDataURL(results, title) {
             let finalText = prefix + displayedNames.join("、") + `...（省略${omittedCount}个模型）`;
             let failedTextLines = wrapText(
                 finalText,
-                maxCharsPerLine
+                textPerLine
             );
             failedTextLines.forEach((line) => {
                 svgContent += drawText(
@@ -792,30 +788,26 @@ function drawText(
     return `<text x="${x}" y="${y}" fill="${fill}" font-size="${fontSize}" font-family="Arial, sans-serif" font-weight="${fontWeight}">${textContent}</text>`;
 }
 
+// 计算文本宽度的函数
+function getTextWidth(text) {
+    const textWidthPerChar = 8; // 每个字符约占8像素宽度
+    return text.length * textWidthPerChar;
+}
+
 // 自动换行的函数
 function wrapText(text, maxCharsPerLine) {
     let lines = [];
     let currentLine = "";
-    let tokens = text.split("、");
+    let tokens = text.split(/(?<=、)/); // 保留分割符“、”
     tokens.forEach((token, index) => {
-        // 如果单个模型名称长度大于一行的最大字符数
-        if (token.length > maxCharsPerLine) {
-            // 如果当前行不为空，先将当前行加入 lines
+        const tokenLength = token.length;
+        if ((currentLine.length + tokenLength) <= maxCharsPerLine) {
+            currentLine += token;
+        } else {
             if (currentLine) {
                 lines.push(currentLine);
-                currentLine = "";
             }
-            // 将长的模型名称单独作为一行
-            lines.push(token);
-        } else {
-            if ((currentLine.length + token.length + 1) <= maxCharsPerLine) {
-                currentLine += (currentLine ? "、" : "") + token;
-            } else {
-                if (currentLine) {
-                    lines.push(currentLine);
-                }
-                currentLine = token;
-            }
+            currentLine = token;
         }
     });
     if (currentLine) {

@@ -215,7 +215,7 @@
                 </a-tooltip>
               </a-dropdown>
             </div>
-
+            <a-progress :percent="progressPercent" show-info size="small"/>
 
             <div v-if="!isMobile" class="table-container">
               <a-table
@@ -231,12 +231,8 @@
                     {{ record.status }}
                   </template>
                   <template v-else-if="column.dataIndex === 'model'">
-                    <span>
-                      📦 {{ record.model }}
-                      <CopyOutlined
-                          style="margin-left: 8px; cursor: pointer;"
-                          @click="copyText(record.model)"
-                      />
+                    <span @click="copyText(item.model)">
+                      {{ record.model }}
                     </span>
                   </template>
                   <template v-else-if="column.dataIndex === 'responseTime'">
@@ -303,13 +299,8 @@
                     </div>
                     <div class="list-item-field">
                       <span class="field-label">{{ t('MODEL_NAME_LABEL') }}</span>
-                      <span class="field-value">
-                        📦 {{ item.model }}
-                        <CopyOutlined
-                            type="copy"
-                            style="margin-left: 8px; cursor: pointer;"
-                            @click="copyText(item.model)"
-                        />
+                      <span class="field-value" @click="copyText(item.model)">
+                         {{ item.model }}
                       </span>
                     </div>
                     <div class="list-item-field">
@@ -372,7 +363,7 @@
       </a-form>
     </a-modal>
     <a-modal
-        v-model:open="showSettingsModal1"
+        v-model:open="showAppSettingsModal"
         :title="t('SETTINGS_PANEL')"
         :footer="null"
         :width="600"
@@ -381,7 +372,7 @@
         :centered="true"
     >
       <a-tabs>
-        <a-tab-pane key="1" :tab="t('LOCAL_CACHE')" style="overflow-x: hidden;">
+        <a-tab-pane key="1" :tab="t('LOCAL_CACHE')" style="overflow-x: hidden;" tabPosition="left">
           <a-form @submit.prevent>
             <a-row :gutter="16">
               <a-col :span="16">
@@ -765,6 +756,7 @@ const chartContainer = ref(null);
 let chartInstance = null;
 const showSVGModal = ref(false);
 const svgDataUrl = ref('');
+
 const appDescription = computed(() => {
   const currentLocale = locale.value || 'zh';
   return appInfo.description[currentLocale] || appInfo.description['zh'];
@@ -787,7 +779,7 @@ const paginatedData = computed(() => {
   return tableData.value.slice(start, end);
 });
 // 设置面板相关状态
-const showSettingsModal1 = ref(false);
+const showAppSettingsModal = ref(false);
 const showLoginModal = ref(false);
 
 // 主题切换方法
@@ -1091,6 +1083,11 @@ const checkQuota = async () => {
     checkQuota_spinning.value = false;
   }
 };
+let modelNames=[]
+const tableData = ref([]);
+const totalModels = ref(0);
+const completedModels = ref(0);
+const progressPercent = ref(0);
 
 // 添加 testModels 函数
 async function testModels() {
@@ -1100,9 +1097,12 @@ async function testModels() {
   results.inconsistent = [];
   results.awaitOfficialVerification = [];
 
-  const apiUrlValue = apiUrl.value;
+  // 清空表格数据
+  tableData.value = [];
+
+  const apiUrlValue = apiUrl.value.replace(/\/+$/, '');
   const apiKeyValue = apiKey.value;
-  const modelNames = modelName.value.split(',').map((m) => m.trim()).filter((m) => m);
+  const modelNames = selectedModels.value;
   const timeout = parseInt(modelTimeout.value);
   const concurrency = parseInt(modelConcurrency.value);
 
@@ -1111,31 +1111,63 @@ async function testModels() {
     return;
   }
 
+  // 显示结果容器
+  shouldShift.value = true;
+  showResultContainer.value = true;
+
+  // 初始化进度
+  totalModels.value = selectedModels.value.length;
+  completedModels.value = 0;
+  progressPercent.value = 0;
+
   testModels_spinning.value = true;
 
   try {
-    const testResults = await testModelList(
+    await testModelList(
         apiUrlValue,
         apiKeyValue,
         modelNames,
         timeout,
-        concurrency
+        concurrency,
+        (progress) => {
+          // 更新表格数据
+          updateTableData(progress);
+          // 更新进度
+          completedModels.value += 1;
+          progressPercent.value = Math.round((completedModels.value / totalModels.value) * 100);
+        }
     );
-
-    // 处理测试结果
-    results.valid = testResults.valid;
-    results.invalid = testResults.invalid;
-    results.inconsistent = testResults.inconsistent;
-    results.awaitOfficialVerification = testResults.awaitOfficialVerification;
 
     testModels_spinning.value = false;
 
+    // 所有模型测试完成后，显示摘要
     showSummary(results);
+
   } catch (error) {
     testModels_spinning.value = false;
     message.error('测试模型时发生错误: ' + error.message);
   }
 }
+
+function updateTableData(progress) {
+  const { type, data } = progress;
+
+  // 根据类型，将结果添加到对应的数组
+  if (type === 'valid') {
+    results.valid.push(data);
+  } else if (type === 'invalid') {
+    results.invalid.push(data);
+  } else if (type === 'inconsistent') {
+    results.inconsistent.push(data);
+  }
+
+  // 重新计算表格数据
+  tableData.value = computeTableData();
+
+  // 更新进度
+  progressPercent.value = Math.round((completedModels.value / totalModels.value) * 100);
+}
+
 
 function showSummary(results) {
   // 使用 reactive 的 'results' 对象
@@ -1357,9 +1389,117 @@ const columns = [
 ];
 
 // 定义 tableData
-const tableData = computed(() => {
+// const tableData = computed(() => {
+//   const data = [];
+//
+//   results.valid.forEach((item, index) => {
+//     const buttons = [];
+//     buttons.push({
+//       label: t('FUNCTION_VERIFICATION'),
+//       type: 'default',
+//       onClick: () => verifyFunctionCalling(item.model),
+//     });
+//     if (isGpt(item.model) || isClaude(item.model)) {
+//       buttons.push({
+//         label: t('TEMPERATURE_VERIFICATION'),
+//         type: 'primary',
+//         onClick: () => verifyTemperature(item.model),
+//       });
+//       if (isGpt(item.model)) {
+//         const officialVerificationDone =
+//             results.awaitOfficialVerification &&
+//             results.awaitOfficialVerification.some((r) => r.model === item.model);
+//         const buttonType = officialVerificationDone ? 'success' : 'warning';
+//         buttons.push({
+//           label: t('OFFICIAL_VERIFICATION'),
+//           type: buttonType,
+//           onClick: () => verifyOfficial(item.model),
+//         });
+//       }
+//     }
+//     data.push({
+//       key: `valid-${index}`,
+//       status: t('MODEL_STATE_AVAILABLE'),
+//       model: item.model,
+//       responseTime: item.responseTime.toFixed(2),
+//       buttons: buttons,
+//       remark: '',
+//     });
+//   });
+//
+//   results.inconsistent.forEach((item, index) => {
+//     const buttons = [];
+//     buttons.push({
+//       label: t('FUNCTION_VERIFICATION'),
+//       type: 'default',
+//       onClick: () => verifyFunctionCalling(item.model),
+//     });
+//     if (isGpt(item.model) || isClaude(item.model)) {
+//       buttons.push({
+//         label: t('TEMPERATURE_VERIFICATION'),
+//         type: 'primary',
+//         onClick: () => verifyTemperature(item.model),
+//       });
+//       if (isGpt(item.model)) {
+//         const officialVerificationDone =
+//             results.awaitOfficialVerification &&
+//             results.awaitOfficialVerification.some((r) => r.model === item.model);
+//         const buttonType = officialVerificationDone ? 'success' : 'warning';
+//         buttons.push({
+//           label: t('OFFICIAL_VERIFICATION'),
+//           type: buttonType,
+//           onClick: () => verifyOfficial(item.model),
+//         });
+//       }
+//     }
+//
+//     // 根据返回的模型名称，判断是模型映射还是未匹配
+//     let status = '';
+//     let remark = '';
+//     let fullRemark = '';
+//
+//     if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
+//       status = t('MODEL_STATE_INCONSISTENT');
+//       remark = '模型映射';
+//       fullRemark = `模型映射到：${item.returnedModel}`;
+//     } else {
+//       status = '🤔未匹配';
+//       remark = '未匹配';
+//       fullRemark = `返回模型：${item.returnedModel}`;
+//     }
+//
+//     data.push({
+//       key: `inconsistent-${index}`,
+//       status: status,
+//       model: item.model,
+//       responseTime: item.responseTime.toFixed(2),
+//       buttons: buttons,
+//       remark: remark,
+//       fullRemark: fullRemark,
+//     });
+//   });
+//
+//   results.invalid.forEach((item, index) => {
+//     let displayedRemark = '';
+//     let fullRemark = item.response_text || item.error || '';
+//     displayedRemark = errorHandler(fullRemark);
+//     data.push({
+//       key: `invalid-${index}`,
+//       status: t('MODEL_STATE_UNAVAILABLE'),
+//       model: item.model,
+//       responseTime: '-',
+//       buttons: [],
+//       remark: displayedRemark,
+//       fullRemark: fullRemark,
+//     });
+//   });
+//
+//   return data;
+// });
+function computeTableData() {
   const data = [];
 
+  // 处理 valid 模型
   results.valid.forEach((item, index) => {
     const buttons = [];
     buttons.push({
@@ -1385,16 +1525,32 @@ const tableData = computed(() => {
         });
       }
     }
+
+    // 针对 o1- 模型的特殊处理
+    let remark = '';
+    let fullRemark = '';
+    if (item.model.startsWith('o1-')) {
+      if (item.has_o1_reason) {
+        remark = '✨API 可靠';
+        fullRemark = '返回响应中包含非空 reasoning_tokens，API 可靠';
+      } else {
+        remark = '⚠️API 非官';
+        fullRemark = '返回响应中不包含 reasoning_tokens 或为空，API 非官';
+      }
+    }
+
     data.push({
       key: `valid-${index}`,
       status: t('MODEL_STATE_AVAILABLE'),
       model: item.model,
       responseTime: item.responseTime.toFixed(2),
       buttons: buttons,
-      remark: '',
+      remark: remark,
+      fullRemark: fullRemark,
     });
   });
 
+  // 处理 inconsistent 模型
   results.inconsistent.forEach((item, index) => {
     const buttons = [];
     buttons.push({
@@ -1427,13 +1583,24 @@ const tableData = computed(() => {
     let fullRemark = '';
 
     if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
-      status = t('MODEL_STATE_INCONSISTENT');
+      status = `${t('MODEL_STATE_INCONSISTENT')} 🧐`;
       remark = '模型映射';
       fullRemark = `模型映射到：${item.returnedModel}`;
     } else {
-      status = '🤔未匹配';
+      status = '🤔 未匹配';
       remark = '未匹配';
       fullRemark = `返回模型：${item.returnedModel}`;
+    }
+
+    // 针对 o1- 模型的特殊处理
+    if (item.model.startsWith('o1-')) {
+      if (item.has_o1_reason) {
+        remark += ' / ✨API 可靠';
+        fullRemark += '；返回响应中包含非空 reasoning_tokens，API 可靠';
+      } else {
+        remark += ' / ⚠️API 非官';
+        fullRemark += '；返回响应中不包含 reasoning_tokens 或为空，API 非官';
+      }
     }
 
     data.push({
@@ -1447,10 +1614,12 @@ const tableData = computed(() => {
     });
   });
 
+  // 处理 invalid 模型
   results.invalid.forEach((item, index) => {
     let displayedRemark = '';
     let fullRemark = item.response_text || item.error || '';
     displayedRemark = errorHandler(fullRemark);
+
     data.push({
       key: `invalid-${index}`,
       status: t('MODEL_STATE_UNAVAILABLE'),
@@ -1463,8 +1632,7 @@ const tableData = computed(() => {
   });
 
   return data;
-});
-
+}
 
 // 复制文本函数
 function copyText(text) {
@@ -1685,13 +1853,13 @@ function openSettingsModal() {
     fetchCloudData();
   }
 
-  showSettingsModal1.value = true;
+  showAppSettingsModal.value = true;
 }
 
 
 // 关闭设置面板
 function closeSettingsModal() {
-  showSettingsModal1.value = false;
+  showAppSettingsModal.value = false;
 }
 
 // 保存到本地缓存

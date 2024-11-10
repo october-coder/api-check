@@ -40,7 +40,7 @@ export async function fetchQuotaInfo(apiUrl, apiKey) {
     };
 }
 
-export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, concurrency) {
+export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, concurrency, progressCallback) {
     const valid = [];
     const invalid = [];
     const inconsistent = [];
@@ -48,7 +48,13 @@ export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, 
 
     async function testModel(model) {
         const apiUrlValue = apiUrl.replace(/\/+$/, '');
-        const timeout = timeoutSeconds * 1000; // 转换为毫秒
+        let timeout = timeoutSeconds * 1000; // 转换为毫秒
+
+        // 对于 'o1-' 开头的模型，增加超时时间
+        if (model.startsWith('o1-')) {
+            timeout *= 6;
+        }
+
         const controller = new AbortController();
         const id = setTimeout(() => controller.abort(), timeout);
         const startTime = Date.now();
@@ -59,7 +65,7 @@ export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, 
                 model: model,
                 messages: [{ role: "user", content: "写一个10个字的冷笑话" }]
             };
-            if (/^(gpt-|chatgpt-|o1-)/.test(model)) {
+            if (/^(gpt-|chatgpt-)/.test(model)) {
                 requestBody.seed = 331;
             }
             const response = await fetch(`${apiUrlValue}/v1/chat/completions`, {
@@ -75,23 +81,30 @@ export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, 
             const endTime = Date.now();
             const responseTime = (endTime - startTime) / 1000; // 转换为秒
 
+            let has_o1_reason = false;
             if (response.ok) {
                 const data = await response.json();
-                const returnedModel = data.model || "no returned model"; // 确保 returnedModel 有效
+                const returnedModel = data.model || "no returned model";
+
+                // 检查 'o1-' 模型的特殊字段
+                if (returnedModel.startsWith('o1-') && data?.usage?.completion_tokens_details?.reasoning_tokens > 0) {
+                    has_o1_reason = true;
+                }
+
                 if (returnedModel === model) {
-                    valid.push({ model, responseTime });
-                    if (/^(gpt-|chatgpt-|o1-)/.test(model)) {
-                        if (data.system_fingerprint) {
-                            awaitOfficialVerification.push({
-                                model,
-                                system_fingerprint: data.system_fingerprint
-                            });
-                        }
-                    }
-                    console.log(`测试模型：${model} 一致，用时：${responseTime.toFixed(2)} 秒`);
+                    const resultData = { model, responseTime, has_o1_reason };
+                    valid.push(resultData);
+                    progressCallback({
+                        type: 'valid',
+                        data: resultData
+                    });
                 } else {
-                    inconsistent.push({ model, returnedModel, responseTime });
-                    console.log(`测试模型：${model} 不一致，期望：${model}，实际：${returnedModel}，用时：${responseTime.toFixed(2)} 秒`);
+                    const resultData = { model, returnedModel, responseTime, has_o1_reason };
+                    inconsistent.push(resultData);
+                    progressCallback({
+                        type: 'inconsistent',
+                        data: resultData
+                    });
                 }
             } else {
                 try {
@@ -104,16 +117,28 @@ export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, 
                         response_text = '无法解析响应内容';
                     }
                 }
-                invalid.push({ model, response_text });
-                console.log(`测试模型：${model} 不可用，响应：${response.status} ${response.statusText} ${response_text}`);
+                const resultData = { model, response_text };
+                invalid.push(resultData);
+                progressCallback({
+                    type: 'invalid',
+                    data: resultData
+                });
             }
         } catch (error) {
             if (error.name === 'AbortError') {
-                invalid.push({ model, error: '超时' });
-                console.log(`测试模型：${model} 不可用（超时）`);
+                const resultData = { model, error: '超时' };
+                invalid.push(resultData);
+                progressCallback({
+                    type: 'invalid',
+                    data: resultData
+                });
             } else {
-                invalid.push({ model, error: error.message });
-                console.log(`测试模型：${model} 不可用，错误：${error.message}`);
+                const resultData = { model, error: error.message };
+                invalid.push(resultData);
+                progressCallback({
+                    type: 'invalid',
+                    data: resultData
+                });
             }
         } finally {
             clearTimeout(id);
@@ -136,3 +161,5 @@ export async function testModelList(apiUrl, apiKey, modelNames, timeoutSeconds, 
 
     return { valid, invalid, inconsistent, awaitOfficialVerification };
 }
+
+
