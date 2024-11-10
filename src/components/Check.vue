@@ -194,11 +194,16 @@
 
             <div class="left-icons">
               <a-tooltip :title="t('CHAT')" placement="bottom">
-                <span class="iconfont icon-button" @click="goChat">&#xe635;</span>
+                <a @click="goChat" class="icon-button">
+                  <MessageOutlined />
+                </a>
               </a-tooltip>
               <a-tooltip :title="t('SHARE')" placement="bottom">
-                <span class="iconfont icon-button" @click="goShare">&#xe68b;</span>
+                <a @click="goShare" class="icon-button">
+                  <ShareAltOutlined />
+                </a>
               </a-tooltip>
+
               <a-dropdown trigger="click">
                 <template #overlay>
                   <a-menu>
@@ -210,8 +215,10 @@
                     </a-menu-item>
                   </a-menu>
                 </template>
-                <a-tooltip :title="t('COPY')" placement="top" >
-                  <span class="iconfont icon-button">&#xe661;</span>
+                <a-tooltip :title="t('COPY')" placement="top">
+                  <a class="icon-button">
+                    <CopyOutlined style="cursor: pointer;"/>
+                  </a>
                 </a-tooltip>
               </a-dropdown>
             </div>
@@ -352,6 +359,7 @@
         :title="t('FUNCTION_VERIFICATION_MODAL_TITLE')"
         @ok="handleFunctionCallingOk"
         @cancel="() => { functionCallingModalVisible.value = false; }"
+        :destroyOnClose="true"
     >
       <a-form :model="{ a: functionCallingA, b: functionCallingB }" layout="vertical">
         <a-form-item :label="t('VALUE_A')">
@@ -370,6 +378,7 @@
         @cancel="closeSettingsModal"
         class="settings-modal"
         :centered="true"
+        :destroyOnClose="true"
     >
       <a-tabs>
         <a-tab-pane key="1" :tab="t('LOCAL_CACHE')" style="overflow-x: hidden;" tabPosition="left">
@@ -508,7 +517,7 @@
           <div style="padding: 12px;">
             <a-row :gutter="[12, 12]" align="middle">
               <a-col :xs="4" :sm="4" :md="6" :lg="6" :xl="6" style="text-align: center;">
-                <img src="@/assets/logo.png" alt="Logo" style="width: 60px;">
+                <img src="../assets/logo.png" alt="Logo" style="width: 60px;">
               </a-col>
               <a-col :xs="12" :sm="12" :md="12" :lg="12" :xl="12">
                 <div style="text-align: left;">
@@ -522,10 +531,10 @@
               <a-col :xs="8" :sm="8" :md="6" :lg="6" :xl="6">
                 <div style="text-align: right;">
                   <a-space direction="vertical" size="small" style="width: 100%;">
-                    <a-button type="default" size="default" block @click="openChangelog">
+                    <a-button type="default" size="middle" block @click="openChangelog">
                       {{ t('UPDATE_LOG') }}
                     </a-button>
-                    <a-button type="primary" size="default" block @click="openWebsite">
+                    <a-button type="primary" size="middle" block @click="openWebsite">
                       {{ t('OFFICIAL_WEBSITE') }}
                     </a-button>
                   </a-space>
@@ -683,14 +692,22 @@
   </ConfigProvider>
 </template>
 <script setup>
-import {CopyOutlined, SettingOutlined, GithubOutlined, LockOutlined, UserOutlined} from '@ant-design/icons-vue';
+import {
+  CopyOutlined,
+  SettingOutlined,
+  GithubOutlined,
+  LockOutlined,
+  UserOutlined,
+  ShareAltOutlined,
+  MessageOutlined
+} from '@ant-design/icons-vue';
 import {computed, h, onMounted, reactive, ref, nextTick, onBeforeUnmount} from 'vue';
 import {message, Modal, ConfigProvider, theme} from 'ant-design-vue';
 import {useWindowSize} from '@vueuse/core';
 import {useI18n} from 'vue-i18n';
 
 
-import {TitleComponent, LegendComponent, TooltipComponent, RadarComponent} from 'echarts/components';
+import {TitleComponent, LegendComponent, TooltipComponent} from 'echarts/components';
 import * as echarts from 'echarts/core';
 import {RadarChart} from 'echarts/charts';
 import {CanvasRenderer} from 'echarts/renderers';
@@ -799,7 +816,6 @@ const paginatedData = computed(() => {
 });
 // 设置面板相关状态
 const showAppSettingsModal = ref(false);
-const showLoginModal = ref(false);
 
 // 主题切换方法
 const handleToggleTheme = () => {
@@ -1102,7 +1118,6 @@ const checkQuota = async () => {
     checkQuota_spinning.value = false;
   }
 };
-let modelNames=[]
 const tableData = ref([]);
 const totalModels = ref(0);
 const completedModels = ref(0);
@@ -1169,7 +1184,7 @@ async function testModels() {
 }
 
 function updateTableData(progress) {
-  const { type, data } = progress;
+  const {type, data} = progress;
 
   // 根据类型，将结果添加到对应的数组
   if (type === 'valid') {
@@ -1407,114 +1422,6 @@ const columns = [
   },
 ];
 
-// 定义 tableData
-// const tableData = computed(() => {
-//   const data = [];
-//
-//   results.valid.forEach((item, index) => {
-//     const buttons = [];
-//     buttons.push({
-//       label: t('FUNCTION_VERIFICATION'),
-//       type: 'default',
-//       onClick: () => verifyFunctionCalling(item.model),
-//     });
-//     if (isGpt(item.model) || isClaude(item.model)) {
-//       buttons.push({
-//         label: t('TEMPERATURE_VERIFICATION'),
-//         type: 'primary',
-//         onClick: () => verifyTemperature(item.model),
-//       });
-//       if (isGpt(item.model)) {
-//         const officialVerificationDone =
-//             results.awaitOfficialVerification &&
-//             results.awaitOfficialVerification.some((r) => r.model === item.model);
-//         const buttonType = officialVerificationDone ? 'success' : 'warning';
-//         buttons.push({
-//           label: t('OFFICIAL_VERIFICATION'),
-//           type: buttonType,
-//           onClick: () => verifyOfficial(item.model),
-//         });
-//       }
-//     }
-//     data.push({
-//       key: `valid-${index}`,
-//       status: t('MODEL_STATE_AVAILABLE'),
-//       model: item.model,
-//       responseTime: item.responseTime.toFixed(2),
-//       buttons: buttons,
-//       remark: '',
-//     });
-//   });
-//
-//   results.inconsistent.forEach((item, index) => {
-//     const buttons = [];
-//     buttons.push({
-//       label: t('FUNCTION_VERIFICATION'),
-//       type: 'default',
-//       onClick: () => verifyFunctionCalling(item.model),
-//     });
-//     if (isGpt(item.model) || isClaude(item.model)) {
-//       buttons.push({
-//         label: t('TEMPERATURE_VERIFICATION'),
-//         type: 'primary',
-//         onClick: () => verifyTemperature(item.model),
-//       });
-//       if (isGpt(item.model)) {
-//         const officialVerificationDone =
-//             results.awaitOfficialVerification &&
-//             results.awaitOfficialVerification.some((r) => r.model === item.model);
-//         const buttonType = officialVerificationDone ? 'success' : 'warning';
-//         buttons.push({
-//           label: t('OFFICIAL_VERIFICATION'),
-//           type: buttonType,
-//           onClick: () => verifyOfficial(item.model),
-//         });
-//       }
-//     }
-//
-//     // 根据返回的模型名称，判断是模型映射还是未匹配
-//     let status = '';
-//     let remark = '';
-//     let fullRemark = '';
-//
-//     if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
-//       status = t('MODEL_STATE_INCONSISTENT');
-//       remark = '模型映射';
-//       fullRemark = `模型映射到：${item.returnedModel}`;
-//     } else {
-//       status = '🤔未匹配';
-//       remark = '未匹配';
-//       fullRemark = `返回模型：${item.returnedModel}`;
-//     }
-//
-//     data.push({
-//       key: `inconsistent-${index}`,
-//       status: status,
-//       model: item.model,
-//       responseTime: item.responseTime.toFixed(2),
-//       buttons: buttons,
-//       remark: remark,
-//       fullRemark: fullRemark,
-//     });
-//   });
-//
-//   results.invalid.forEach((item, index) => {
-//     let displayedRemark = '';
-//     let fullRemark = item.response_text || item.error || '';
-//     displayedRemark = errorHandler(fullRemark);
-//     data.push({
-//       key: `invalid-${index}`,
-//       status: t('MODEL_STATE_UNAVAILABLE'),
-//       model: item.model,
-//       responseTime: '-',
-//       buttons: [],
-//       remark: displayedRemark,
-//       fullRemark: fullRemark,
-//     });
-//   });
-//
-//   return data;
-// });
 function computeTableData() {
   const data = [];
 
@@ -1553,7 +1460,7 @@ function computeTableData() {
         remark = '✨API 可靠';
         fullRemark = '返回响应中包含非空 reasoning_tokens，API 可靠';
       } else {
-        remark = '⚠️API 非官';
+        remark = '⚠️API 可能存在问题';
         fullRemark = '返回响应中不包含 reasoning_tokens 或为空，API 非官';
       }
     }
@@ -1597,9 +1504,9 @@ function computeTableData() {
     }
 
     // 根据返回的模型名称，判断是模型映射还是未匹配
-    let status = '';
-    let remark = '';
-    let fullRemark = '';
+    let status;
+    let remark;
+    let fullRemark;
 
     if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
       status = `${t('MODEL_STATE_INCONSISTENT')} 🧐`;
@@ -1635,7 +1542,7 @@ function computeTableData() {
 
   // 处理 invalid 模型
   results.invalid.forEach((item, index) => {
-    let displayedRemark = '';
+    let displayedRemark;
     let fullRemark = item.response_text || item.error || '';
     displayedRemark = errorHandler(fullRemark);
 
@@ -1665,6 +1572,7 @@ function copyText(text) {
         message.error('复制失败，请手动复制');
       });
 }
+
 // 修改 verifyTemperature 函数
 async function verifyTemperature(model) {
   verificationLoading.value = true;
@@ -1799,6 +1707,12 @@ function handleFunctionCallingOk() {
   }
   functionCallingModalVisible.value = false;
   performFunctionCallingVerification(selectedModelForFunctionCalling.value, a, b);
+  setTimeout(() => {
+    const triggerButton = document.querySelector('[data-model="' + selectedModelForFunctionCalling.value + '"]');
+    if (triggerButton) {
+      triggerButton.focus();
+    }
+  }, 0);
 }
 
 async function performFunctionCallingVerification(model, a, b) {
@@ -1877,9 +1791,16 @@ function openSettingsModal() {
 function openGitHub() {
   window.open(appInfo.githubUrl);
 }
+
 // 关闭设置面板
 function closeSettingsModal() {
   showAppSettingsModal.value = false;
+  setTimeout(() => {
+    const settingsButton = document.querySelector('[aria-label="' + t('SETTINGS') + '"]');
+    if (settingsButton) {
+      settingsButton.focus();
+    }
+  }, 0);
 }
 
 // 保存到本地缓存
@@ -1902,10 +1823,10 @@ function saveToLocal() {
   const id = Math.floor(Math.random() * 100);
   // 创建新的缓存项
   const newCacheItem = {
-    id: Date.now()+id ,
+    id: Date.now() + id,
     url: apiUrl.value,
     apiKey: apiKey.value,
-    name: `配置 ${existingList.length + 1}$`,
+    name: `配置 ${existingList.length + 1}`,
   };
 
   // 添加新的缓存项到列表
@@ -1978,7 +1899,7 @@ function importLocalCache() {
             //随机两位数字
             const id = Math.floor(Math.random() * 100);
             const newItem = {
-              id: Date.now()+id,
+              id: Date.now() + id,
               url: item.url,
               apiKey: item.sk,
               name: `导入的配置 ${localCacheList.value.length + 1}`,
@@ -2189,7 +2110,7 @@ function importCloudCache() {
             const id = Math.floor(Math.random() * 100);
 
             const newItem = {
-              id: Date.now()+id,
+              id: Date.now() + id,
               url: item.url,
               apiKey: item.sk,
               name: `导入的配置 ${cloudDataList.value.length + 1}`,
@@ -2337,35 +2258,33 @@ function copyModels(type) {
 </script>
 
 <style scoped>
-@font-face {
-  font-family: 'iconfont';
-  src: url('../assets/iconfont.woff2?t=1731088979023') format('woff2'),
-  url('../assets/iconfont.woff?t=1731088979023') format('woff'),
-  url('../assets/iconfont.ttf?t=1731088979023') format('truetype');
-}
-
-.iconfont {
-  font-family: "iconfont", serif !important;
-  font-size: 20px;
-  font-style: normal;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  cursor: pointer;
-}
-
 .left-icons {
   display: flex;
   align-items: center;
-  gap: 5px;
-  margin-bottom: 30px;
+  gap: 10px;
   /* 靠左对齐 */
   justify-content: flex-start;
 }
+
+/* 统一图标按钮的样式 */
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--font-color);
+  transition: color 0.3s;
+}
+
+.icon-button:hover {
+  color: #0366d6;
+}
+
 html, body {
   height: 100%;
   margin: 0;
   padding: 0;
 }
+
 /* 通用样式 */
 body {
   font-family: Arial, sans-serif;
@@ -2409,22 +2328,6 @@ body {
   max-height: 95vh;
 }
 
-.copyright {
-  flex-shrink: 0; /* 防止被压缩或挤出可视区域 */
-  text-align: center;
-  padding: 10px 0;
-  color: var(--font-color);
-  font-size: 14px;
-}
-
-
-body.dark-mode {
-  --border-color: #444444;
-}
-
-body.light-mode {
-  --border-color: #cccccc;
-}
 
 .close-button {
   position: absolute;
@@ -3245,6 +3148,7 @@ body.light-mode {
   text-align: center;
   margin-top: 20px;
 }
+
 .copy-close-container {
   display: flex;
   justify-content: space-between;

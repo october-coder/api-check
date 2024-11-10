@@ -10,9 +10,9 @@
   "TIMEOUT_PLACEHOLDER": "e.g., 10",
   "SET_CONCURRENCY": "Concurrency",
   "CONCURRENCY_PLACEHOLDER": "e.g., 5",
-  "TEST_MODELS": "Test Models",
-  "CHECK_QUOTA": "Check Quota",
-  "CLEAR_FORM": "Clear Form",
+  "TEST_MODELS": "TestModel",
+  "CHECK_QUOTA": "CheckQuota",
+  "CLEAR_FORM": "ClearForm",
   "GIVE_STAR": "Give me a Star",
   "CONTRIBUTORS": "Contributors",
   "SELECT_MODEL_TITLE": "Select Model",
@@ -37,7 +37,7 @@
   "MODEL_STATUS_LABEL": "Model Status:",
   "MODEL_NAME_LABEL": "Model Name:",
   "RESPONSE_TIME_LABEL": "Response Time (s):",
-  "VERIFICATION_BUTTONS_LABEL": "Verification Buttons:",
+  "VERIFICATION_BUTTONS_LABEL": "Verification:",
   "REMARK_LABEL": "Remark:",
   "FUNCTION_VERIFICATION": "Function",
   "TEMPERATURE_VERIFICATION": "Temperature ",
@@ -141,5 +141,6 @@
   "IDENTICAL_MODELS": "identical models",
   "COPY_FAILED": "Copy failed, please copy manually",
   "RECORD_ALREADY_EXISTS": "Record already exists",
-  "SPONSORS": "Sponsors"
+  "SPONSORS": "Sponsors",
+  "PRESET_SETTINGS": "Preset Settings"
 }

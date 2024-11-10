@@ -49,7 +49,7 @@
   "CLOUD_CACHE": "云端缓存",
   "LOGIN": "登录",
   "LOGOUT": "注销",
-  "USER_LOGGED_IN": "已登录，欢迎 {{ username }}",
+  "USER_LOGGED_IN": "已登录，欢迎 {{username}}",
   "PLEASE_LOGIN_TO_VIEW_CLOUD_CACHE": "请先登录以查看云端缓存。",
   "ABOUT": "关于",
   "ABOUT_CONTENT": "这是关于信息的内容，您可以在这里添加相关的说明或帮助信息。",
@@ -64,7 +64,7 @@
   "SAVE": "保存",
   "DELETE": "删除",
   "SETTINGS": "设置",
-  "TEST_RESULT_SUMMARY": "测试结果总结",
+  "TEST_RESULT_SUMMARY": "测试概览",
   "SHARE_RESULTS": "分享结果",
   "COPY_IMAGE": "复制图片",
   "CLOSE": "关闭",
@@ -142,5 +142,6 @@
   "IDENTICAL_MODELS": "一致模型",
   "COPY_FAILED": "复制失败，请手动复制",
   "RECORD_ALREADY_EXISTS": "记录已存在",
-  "SPONSORS": "鸣谢"
+  "SPONSORS": "鸣谢",
+  "PRESET_SETTINGS": "预设配置"
 }
