@@ -71,7 +71,7 @@
   "COPY_MODELS": "复制模型",
   "GO_CHAT": "进入聊天",
   "MODEL_STATE_AVAILABLE": "一致可用",
-  "MODEL_STATE_INCONSISTENT":"模型映射",
+  "MODEL_STATE_INCONSISTENT": "模型映射",
   "MODEL_STATE_UNAVAILABLE": "调用失败",
   "AVERAGE_LATENCY": "平均延时",
   "CHAT_MODEL_COUNT": "聊天模型数",
@@ -149,5 +149,8 @@
   "MODEL_MAPPING": "模型映射",
   "MAPPED_TO_MODEL": "模型映射到",
   "RETURNED_MODEL": "返回模型",
-  "NO_MATCH": "未匹配"
+  "NO_MATCH": "未匹配",
+  "MODEL": "模型",
+  "STANDARD_RESPONSE": "标准响应",
+  "MODEL_RESPONSE": "模型响应"
 }

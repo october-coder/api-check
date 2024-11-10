@@ -361,25 +361,24 @@
         v-model:open="functionCallingModalVisible"
         :title="t('FUNCTION_VERIFICATION_MODAL_TITLE')"
         @ok="handleFunctionCallingOk"
-        @cancel="() => { functionCallingModalVisible.value = false; }"
+        @cancel="handleFunctionCallingCancel"
         :destroyOnClose="true"
     >
       <a-form :model="{ a: functionCallingA, b: functionCallingB }" layout="horizontal">
         <a-row :gutter="16">
           <a-col :span="12">
-            <a-form-item :label="t('VALUE_A')" label-col="{ span: 6 }" wrapper-col="{ span: 18 }">
+            <a-form-item :label="t('VALUE_A')" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
               <a-input-number v-model:value="functionCallingA" style="width: 100%;"/>
             </a-form-item>
           </a-col>
           <a-col :span="12">
-            <a-form-item :label="t('VALUE_B')" label-col="{ span: 6 }" wrapper-col="{ span: 18 }">
+            <a-form-item :label="t('VALUE_B')" :label-col="{ span: 6 }" :wrapper-col="{ span: 18 }">
               <a-input-number v-model:value="functionCallingB" style="width: 100%;"/>
             </a-form-item>
           </a-col>
         </a-row>
       </a-form>
     </a-modal>
-
 
     <a-modal
         v-model:open="showAppSettingsModal"
@@ -563,7 +562,7 @@
               <a-row :gutter="16">
                 <!-- 左侧：作者信息 -->
                 <a-col :xs="12" :sm="12">
-                  <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('AUTHORS') }}</h3>
+                  <h3 style="font-size: 16px; margin-bottom: 8px;">{{ t('AUTHORS') }}</h3>
                   <p style="margin: 4px 0; font-size: 14px;">
                     <a :href="appInfo.author.url" target="_blank" style="color: #1890ff;">
                       {{ appInfo.author.name }}
@@ -577,7 +576,7 @@
                 </a-col>
                 <!-- 右侧：赞助商信息 -->
                 <a-col :xs="12" :sm="12">
-                  <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('SPONSORS') }}</h3>
+                  <h3 style="font-size: 16px; margin-bottom: 8px;">{{ t('SPONSORS') }}</h3>
                   <ul style="list-style-type: none; padding: 0;">
                     <li v-for="(sponsor, index) in appInfo.sponsors" :key="index" style="margin-bottom: 4px;">
                       <a :href="sponsor.url" target="_blank" style="color: #1890ff;">
@@ -590,7 +589,7 @@
               </a-row>
               <a-divider style="margin: 16px 0;"></a-divider>
               <div v-if="appInfo.contributors && appInfo.contributors.length">
-                <h3 style="font-size: 18px; margin: 16px 0 8px 0;">{{ t('CONTRIBUTORS') }}</h3>
+                <h3 style="font-size: 14px; margin: 16px 0 8px 0;">{{ t('CONTRIBUTORS') }}</h3>
                 <div style="display: flex; flex-wrap: wrap;">
                   <div
                       v-for="(contributor, index) in appInfo.contributors"
@@ -731,7 +730,8 @@ import ModelVerifier from '../utils/verify.js';
 import {toggleTheme} from '../utils/theme.js';
 import {createSVGDataURL} from '../utils/svg.js';
 import {appInfo} from '../utils/info.js';
-import {cantFunctionModelList, cantTemperatureModelList, cantOfficialModelList} from '../utils/models.js'
+import {cantFunctionModelList, cantTemperatureModelList, cantOfficialModelList} from "../utils/models.js";
+
 // 注册必须的组件
 echarts.use([
   TitleComponent,
@@ -857,7 +857,6 @@ const setLanguage = (language) => {
 const FUNCTION_VERIFICATION = computed(() => t('FUNCTION_VERIFICATION'));
 const TEMPERATURE_VERIFICATION = computed(() => t('TEMPERATURE_VERIFICATION'));
 const OFFICIAL_VERIFICATION = computed(() => t('OFFICIAL_VERIFICATION'));
-const OFFICIAL_VERIFICATION_PENDING = computed(() => t('OFFICIAL_VERIFICATION_PENDING'));
 
 const buttonColors = {
   functionVerification: '#1890ff', // 蓝色
@@ -865,6 +864,10 @@ const buttonColors = {
   officialVerification: '#52c41a', // 绿色
   officialVerificationPending: '#95de64',
 };
+
+function handleFunctionCallingCancel() {
+  functionCallingModalVisible.value = false;
+}
 
 // 页面加载时初始化主题和语言
 onMounted(() => {
@@ -1222,7 +1225,35 @@ function computeTableData() {
 
   // 处理 valid 模型
   results.valid.forEach((item, index) => {
-    const buttons = pushButtons();
+    const buttons = [];
+    if (!cantFunctionModelList.includes(item.model)) {
+      buttons.push({
+        label: FUNCTION_VERIFICATION.value,
+        type: 'default',
+        key: 'functionVerification',
+        onClick: () => verifyFunctionCalling(item.model),
+      });
+    }
+    if (!cantTemperatureModelList.includes(item.model)) {
+      if (isGpt(item.model) || isClaude(item.model)) {
+        buttons.push({
+          label: TEMPERATURE_VERIFICATION.value,
+          type: 'default',
+          key: 'temperatureVerification',
+          onClick: () => verifyTemperature(item.model),
+        });
+      }
+    }
+    if (!cantOfficialModelList.includes(item.model)) {
+      if (isGpt(item.model)) {
+        buttons.push({
+          label: OFFICIAL_VERIFICATION.value,
+          type: 'default',
+          key: 'officialVerification',
+          onClick: () => verifyOfficial(item.model),
+        });
+      }
+    }
     // 针对 o1- 模型的特殊处理
     let remark = '';
     let fullRemark = '';
@@ -1249,7 +1280,36 @@ function computeTableData() {
 
   // 处理 inconsistent 模型
   results.inconsistent.forEach((item, index) => {
-    const buttons = pushButtons();
+    const buttons = [];
+    if (!cantFunctionModelList.includes(item.model)) {
+      buttons.push({
+        label: FUNCTION_VERIFICATION.value,
+        type: 'default',
+        key: 'functionVerification',
+        onClick: () => verifyFunctionCalling(item.model),
+      });
+    }
+    if (!cantTemperatureModelList.includes(item.model)) {
+      if (isGpt(item.model) || isClaude(item.model)) {
+        buttons.push({
+          label: TEMPERATURE_VERIFICATION.value,
+          type: 'default',
+          key: 'temperatureVerification',
+          onClick: () => verifyTemperature(item.model),
+        });
+      }
+    }
+    if (!cantOfficialModelList.includes(item.model)) {
+      if (isGpt(item.model)) {
+        buttons.push({
+          label: OFFICIAL_VERIFICATION.value,
+          type: 'default',
+          key: 'officialVerification',
+          onClick: () => verifyOfficial(item.model),
+        });
+      }
+    }
+
     // 根据返回的模型名称，判断是模型映射还是未匹配
     let status;
     let remark;
@@ -1304,39 +1364,6 @@ function computeTableData() {
     });
   });
   return data;
-}
-
-function pushButtons(item) {
-  const buttons = [];
-  if (!cantFunctionModelList.includes(item.model)) {
-    buttons.push({
-      label: FUNCTION_VERIFICATION.value,
-      type: 'default',
-      key: 'functionVerification',
-      onClick: () => verifyFunctionCalling(item.model),
-    });
-  }
-  if (!cantTemperatureModelList.includes(item.model)) {
-    if (isGpt(item.model) || isClaude(item.model)) {
-      buttons.push({
-        label: TEMPERATURE_VERIFICATION.value,
-        type: 'default',
-        key: 'temperatureVerification',
-        onClick: () => verifyTemperature(item.model),
-      });
-    }
-  }
-  if (!cantOfficialModelList.includes(item.model)) {
-    if (isGpt(item.model) && !isClaude(item.model)) {
-      buttons.push({
-        label: OFFICIAL_VERIFICATION.value,
-        type: 'default',
-        key: 'officialVerification',
-        onClick: () => verifyOfficial(item.model),
-      });
-    }
-  }
-  return buttons;
 }
 
 function showSummary(results) {
@@ -1523,7 +1550,7 @@ function showOfficialVerificationResult(result) {
   // 准备数据
   const dataSource = result.texts.map((text, index) => ({
     key: index,
-    testNumber: `测试 ${index + 1}`,
+    testNumber: `测试${index + 1}`,
     text,
     fingerprint: result.fingerprints[index],
   }));
@@ -1534,7 +1561,7 @@ function showOfficialVerificationResult(result) {
       title: '测试',
       dataIndex: 'testNumber',
       key: 'testNumber',
-      width: '20%', // 增大“测试”列的宽度
+      width: '25%',
     },
     {
       title: '文本',
@@ -1546,7 +1573,7 @@ function showOfficialVerificationResult(result) {
       title: '系统指纹',
       dataIndex: 'fingerprint',
       key: 'fingerprint',
-      width: '30%', // 缩小“系统指纹”列的宽度
+      width: '25%',
     },
   ];
 
@@ -1557,8 +1584,8 @@ function showOfficialVerificationResult(result) {
 
   Modal.info({
     title: t('OFFICIAL_VERIFICATION_RESULT'),
-    content: h('div', {}, [
-      h('p', {style: 'font-weight: bold;'}, `模型：${result.model}`),
+    content: () => h('div', {}, [
+      h('p', {style: 'font-weight: bold;'}, `${t('MODEL')}: ${result.model}`),
       h('p', {}, result.conclusion),
       h(
           aTable,
@@ -1566,14 +1593,14 @@ function showOfficialVerificationResult(result) {
             dataSource,
             columns,
             pagination: false,
-            style: 'margin-top: 16px;',
+            style: 'margin-top: 12px;',
           },
           {}
       ),
-      h('p', {style: 'margin-top: 16px;'}, '相似度结果：'),
+      h('p', {style: 'margin-top: 16px;'}, t('SIMILARITY_RESULTS') + '：'),
       h(
           'pre',
-          {style: 'white-space: pre-wrap; font-size: 14px;'},
+          {style: 'white-space: pre-wrap; font-size: 12px;'},
           similarityText
       ),
     ]),
@@ -1581,7 +1608,6 @@ function showOfficialVerificationResult(result) {
     okText: t('OK'),
   });
 }
-
 
 // 修改 verifyFunctionCalling 函数
 async function verifyFunctionCalling(model) {
@@ -1626,8 +1652,7 @@ async function performFunctionCallingVerification(model, a, b) {
 function showFunctionCallingResult(result) {
   Modal.info({
     title: t('FUNCTION_VERIFICATION_RESULT'),
-    content: h('div', {}, [
-      h('h3', {}, t('FUNCTION_VERIFICATION_RESULT')),
+    content: () => h('div', {}, [
       h('p', {style: 'font-weight: bold;'}, `${t('MODEL')}: ${result.model}`),
       h('div', {style: 'display: flex; justify-content: space-between;'}, [
         h('div', {style: 'width: 48%;'}, [

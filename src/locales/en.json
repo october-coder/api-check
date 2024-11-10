@@ -148,5 +148,8 @@
   "MODEL_MAPPING": "Model Mapping",
   "MAPPED_TO_MODEL": "Mapped to",
   "RETURNED_MODEL": "Returned Model",
-  "NO_MATCH": "No match"
+  "NO_MATCH": "No match",
+  "MODEL": "Model",
+  "STANDARD_RESPONSE": "Standard Response",
+  "MODEL_RESPONSE": "Model Response"
 }
