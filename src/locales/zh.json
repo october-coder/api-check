@@ -125,7 +125,7 @@
   "PLEASE_LOGIN_TO_CLOUD": "请先登录云端",
   "UPDATE_LOG": "更新日志",
   "VERIFY": "验证",
-  "CHAT": "去聊天",
+  "CHAT": "去对话",
   "SHARE": "去分享",
   "COPY": "复制模型",
   "UPDATE_CHECK_FAILED": "无法获取最新的发布版本信息",
@@ -141,5 +141,6 @@
   "COPIED_MODELS_TO_CLIPBOARD": "已复制 {count} 个 {type} 到剪贴板",
   "IDENTICAL_MODELS": "一致模型",
   "COPY_FAILED": "复制失败，请手动复制",
-  "RECORD_ALREADY_EXISTS": "记录已存在"
+  "RECORD_ALREADY_EXISTS": "记录已存在",
+  "SPONSORS": "鸣谢"
 }

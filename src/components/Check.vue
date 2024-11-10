@@ -71,9 +71,9 @@
                 </a>
               </a-tooltip>
               <a-tooltip :title="t('GITHUB')" placement="bottom">
-                <a href="https://github.com/your-repo" target="_blank" class="icon-button">
+                <div @click="openGitHub()" class="icon-button">
                   <GithubOutlined style="cursor: pointer;"/>
-                </a>
+                </div>
               </a-tooltip>
             </div>
           </div>
@@ -540,16 +540,34 @@
             </div>
             <a-divider style="margin: 16px 0;"></a-divider>
             <div style="text-align: left;">
-              <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('AUTHORS') }}</h3>
-              <p style="margin: 4px 0; font-size: 14px;">
-                <a :href="appInfo.author.url" target="_blank" style="color: #1890ff;">
-                  {{ appInfo.author.name }}
-                </a>
-                &
-                <a :href="appInfo.coauthor.url" target="_blank" style="color: #1890ff;">
-                  {{ appInfo.coauthor.name }}
-                </a>
-              </p>
+              <a-row :gutter="16">
+                <!-- 左侧：作者信息 -->
+                <a-col :xs="12" :sm="12">
+                  <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('AUTHORS') }}</h3>
+                  <p style="margin: 4px 0; font-size: 14px;">
+                    <a :href="appInfo.author.url" target="_blank" style="color: #1890ff;">
+                      {{ appInfo.author.name }}
+                    </a>
+                  </p>
+                  <p>
+                    <a :href="appInfo.coauthor.url" target="_blank" style="color: #1890ff;">
+                      {{ appInfo.coauthor.name }}
+                    </a>
+                  </p>
+                </a-col>
+                <!-- 右侧：赞助商信息 -->
+                <a-col :xs="12" :sm="12">
+                  <h3 style="font-size: 18px; margin-bottom: 8px;">{{ t('SPONSORS') }}</h3>
+                  <ul style="list-style-type: none; padding: 0;">
+                    <li v-for="(sponsor, index) in appInfo.sponsors" :key="index" style="margin-bottom: 4px;">
+                      <a :href="sponsor.url" target="_blank" style="color: #1890ff;">
+                        {{ sponsor.name }}
+                      </a>
+                      :{{ sponsor.desc }}
+                    </li>
+                  </ul>
+                </a-col>
+              </a-row>
               <a-divider style="margin: 16px 0;"></a-divider>
               <div v-if="appInfo.contributors && appInfo.contributors.length">
                 <h3 style="font-size: 18px; margin: 16px 0 8px 0;">{{ t('CONTRIBUTORS') }}</h3>
@@ -560,11 +578,12 @@
                       style="margin: 8px; text-align: center;"
                   >
                     <a :href="contributor.url" target="_blank">
-                      <img
+                      <a-avatar
                           :src="contributor.avatar"
                           :alt="contributor.name"
-                          style="width: 45px; height: 45px; border-radius: 50%;"
-                      />
+                          shape="circle"
+                          :size="45"
+                      ></a-avatar>
                     </a>
                     <p style="margin-top: 4px; font-size: 14px;">
                       <a :href="contributor.url" target="_blank" style="color: #1890ff;">
@@ -1852,11 +1871,12 @@ function openSettingsModal() {
     cloudAuthHeader = `Bearer ${cloudPassword.value}`;
     fetchCloudData();
   }
-
   showAppSettingsModal.value = true;
 }
 
-
+function openGitHub() {
+  window.open(appInfo.githubUrl);
+}
 // 关闭设置面板
 function closeSettingsModal() {
   showAppSettingsModal.value = false;
@@ -3243,6 +3263,7 @@ body.light-mode {
 .copy-close-container .ant-btn:last-child {
   margin-left: auto; /* 将最后一个按钮（关闭按钮）推到最右侧 */
 }
+
 
 </style>
 

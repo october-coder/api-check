@@ -140,5 +140,6 @@
   "COPIED_MODELS_TO_CLIPBOARD": "Copied {count} {type} to clipboard",
   "IDENTICAL_MODELS": "identical models",
   "COPY_FAILED": "Copy failed, please copy manually",
-  "RECORD_ALREADY_EXISTS": "Record already exists"
+  "RECORD_ALREADY_EXISTS": "Record already exists",
+  "SPONSORS": "Sponsors"
 }
