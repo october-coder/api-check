@@ -870,19 +870,6 @@ function handleFunctionCallingCancel() {
 
 // 页面加载时初始化主题和语言
 onMounted(() => {
-  const setVh = () => {
-    const vh = window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-  };
-
-  // 初始化设置
-  setVh();
-  // 监听窗口尺寸变化，重新计算视口高度
-  window.addEventListener('resize', setVh);
-  // 在组件卸载前移除事件监听
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', setVh);
-  });
   initializeTheme(isDarkMode);
   initializeLanguage(locale, currentLanguage);
   // 初始化本地缓存列表
@@ -2348,8 +2335,7 @@ body {
 .wrapper {
   display: flex;
   flex-direction: column;
-  min-height: calc(var(--vh, 1vh) * 100);
-  justify-content: center; /* 垂直居中 */
+  justify-content: flex-start;
   align-items: center; /* 水平居中 */
   overflow-y: auto;
 }
@@ -2376,7 +2362,6 @@ body {
   align-items: center;
   transition: transform 0.3s ease-in-out;
   margin: auto;
-  max-height: 95vh;
 }
 
 
@@ -3264,13 +3249,15 @@ body.light-mode {
   margin: 4px 0;
 }
 
+.ant-modal .ant-modal-body {
+  max-height: 70vh;
+  overflow-y: auto;
+}
 .ant-list-item {
   min-height: 80px; /* 根据需要调整 */
 }
 
-/* 可选：自定义滚动条样式 */
 .ant-list {
-  /* 滚动条样式（可根据需要调整或移除） */
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
 }
