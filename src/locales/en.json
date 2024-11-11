@@ -160,5 +160,8 @@
   "SEE_MORE_INTRODUCTION": "See More Introduction",
   "INTRODUCTION": "Introduction",
   "DETAIL_INTRODUCTION": "Detailed Introduction",
-  "PLEASE_WAIT_FOR_TESTING": "Please wait for testing to complete before sharing."
+  "PLEASE_WAIT_FOR_TESTING": "Please wait for testing to complete before sharing.",
+  "PLEASE_ENTER_CLOUD_URL_AND_PASSWORD": "Please enter the cloud URL and password",
+  "CLOUD_LOGIN_FAILED": "Cloud login failed"
+
 }

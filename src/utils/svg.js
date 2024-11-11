@@ -533,7 +533,7 @@ export function createSVGDataURL(results, title) {
     // 绘制其他模型
     if (processedData.otherModels.length > 0) {
         y += lineHeight; // 空行
-        svgContent += drawText(col1X, y, "🚀 其他模型：", "16", "#FFA500", "bold");
+        svgContent += drawText(col1X, y, "🚀 普通模型：", "16", "#FFA500", "bold");
         y += lineHeight;
 
         processedData.otherModels.forEach((r) => {

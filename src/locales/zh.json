@@ -161,5 +161,7 @@
   "INTRODUCTION": "介绍",
   "DETAIL_INTRODUCTION": "详细介绍",
   "SEE_MORE_INTRODUCTION": "查看更多介绍",
-  "PLEASE_WAIT_FOR_TESTING": "请等待测试完成后再分享。"
+  "PLEASE_WAIT_FOR_TESTING": "请等待测试完成后再分享。",
+  "PLEASE_ENTER_CLOUD_URL_AND_PASSWORD": "请输入云端URL和密码",
+  "CLOUD_LOGIN_FAILED": "云端登录失败"
 }

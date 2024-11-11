@@ -432,6 +432,7 @@
               bordered
               style="width: 100%;"
               item-layout="horizontal"
+              :style="localListStyle"
           >
             <template #renderItem="{ item }">
               <a-list-item>
@@ -500,6 +501,7 @@
                 bordered
                 style="width: 100%;"
                 item-layout="horizontal"
+                :style="cloudListStyle"
             >
               <template #renderItem="{ item }">
                 <a-list-item>
@@ -1135,7 +1137,8 @@ async function getModelList() {
   spinning.value = true; // 开始加载动画
   try {
     const data = await fetchModelList(apiUrl.value, apiKey.value);
-    models.value = data.data.map((model) => model.id).sort();
+    // 需要去重  data.data
+    models.value = [...new Set(data.data.map((model) => model.id))].sort();
     showModelModal.value = true;
   } catch (error) {
     console.error('Error in getModelList:', error);
@@ -1784,6 +1787,22 @@ const cloudPassword = ref('');
 let cloudAuthHeader = ''; // 存储 Authorization 头的值
 const cloudDataList = ref([]);
 
+const localListStyle = computed(() => {
+  if (localCacheList.value.length > 4) {
+    return { maxHeight: '320px', overflowY: 'auto' };
+  } else {
+    return {};
+  }
+});
+
+const cloudListStyle = computed(() => {
+  if (cloudDataList.value.length > 5) {
+    return { maxHeight: '420px', overflowY: 'auto' };
+  } else {
+    return {};
+  }
+});
+
 // 本地缓存相关状态
 const settingsApiUrl = ref('');
 const settingsApiKey = ref('');
@@ -1907,39 +1926,42 @@ function importLocalCache() {
     reader.onload = (event) => {
       try {
         const importedData = JSON.parse(event.target.result);
-        if (Array.isArray(importedData)) {
-          importedData.forEach((item) => {
-            // 规范化 URL
-            const importedUrl = normalizeUrl(item.url);
-            const importedSk = item.sk.trim();
+        // 将 importedData 规范为数组形式，方便统一处理
+        const dataArray = Array.isArray(importedData) ? importedData : [importedData];
 
-            // 查找是否有相同的 url 和 sk
-            const existingIndex = localCacheList.value.findIndex((existingItem) =>
-                normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedSk
-            );
-            //随机两位数字
-            const id = Math.floor(Math.random() * 100);
-            const newItem = {
-              id: Date.now() + id,
-              url: item.url,
-              apiKey: item.sk,
-              name: `导入的配置 ${localCacheList.value.length + 1}`,
-            };
+        dataArray.forEach((item) => {
+          // 兼容不同的字段名
+          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
+          const importedApiKey = (item.sk || item.apiKey || '').trim();
+          if (!importedUrl || !importedApiKey) {
+            // 如果缺少必要的字段，跳过该项
+            return;
+          }
+          // 查找是否有相同的 url 和 apiKey
+          const existingIndex = localCacheList.value.findIndex((existingItem) =>
+              normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedApiKey
+          );
 
-            if (existingIndex !== -1) {
-              // 存在相同的配置，进行覆盖
-              localCacheList.value[existingIndex] = newItem;
-            } else {
-              // 不存在，添加新的配置
-              localCacheList.value.push(newItem);
-            }
-          });
+          // 随机两位数字
+          const id = Date.now() + Math.floor(Math.random() * 100);
+          const newItem = {
+            id: id,
+            url: importedUrl,
+            apiKey: importedApiKey,
+            name: `导入的配置 ${localCacheList.value.length + 1}`,
+          };
 
-          localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
-          message.success(t('DATA_IMPORTED'));
-        } else {
-          message.error(t('INVALID_IMPORT_FORMAT'));
-        }
+          if (existingIndex !== -1) {
+            // 存在相同的配置，进行覆盖
+            localCacheList.value[existingIndex] = newItem;
+          } else {
+            // 不存在，添加新的配置
+            localCacheList.value.push(newItem);
+          }
+        });
+
+        localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
+        message.success(t('DATA_IMPORTED'));
       } catch (error) {
         message.error(t('IMPORT_PARSE_ERROR'));
         console.error(error);
@@ -1949,6 +1971,7 @@ function importLocalCache() {
   };
   input.click();
 }
+
 
 function normalizeUrl(url) {
   return url.replace(/\/+$/, '').toLowerCase();
@@ -2118,38 +2141,42 @@ function importCloudCache() {
     reader.onload = (event) => {
       try {
         const importedData = JSON.parse(event.target.result);
-        if (Array.isArray(importedData)) {
-          importedData.forEach((item) => {
-            // 规范化 URL
-            const importedUrl = normalizeUrl(item.url);
-            const importedSk = item.sk.trim();
+        // 将 importedData 规范为数组形式，方便统一处理
+        const dataArray = Array.isArray(importedData) ? importedData : [importedData];
 
-            // 查找是否有相同的 url 和 sk
-            const existingIndex = cloudDataList.value.findIndex((existingItem) =>
-                normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedSk
-            );
-            const id = Math.floor(Math.random() * 100);
+        dataArray.forEach((item) => {
+          // 兼容不同的字段名
+          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
+          const importedApiKey = (item.sk || item.apiKey || '').trim();
 
-            const newItem = {
-              id: Date.now() + id,
-              url: item.url,
-              apiKey: item.sk,
-              name: `导入的配置 ${cloudDataList.value.length + 1}`,
-            };
+          if (!importedUrl || !importedApiKey) {
+            // 如果缺少必要的字段，跳过该项
+            return;
+          }
+          // 查找是否有相同的 url 和 apiKey
+          const existingIndex = cloudDataList.value.findIndex((existingItem) =>
+              normalizeUrl(existingItem.url) === importedUrl && existingItem.apiKey.trim() === importedApiKey
+          );
+          // 随机两位数字
+          const id = Date.now() + Math.floor(Math.random() * 100);
 
-            if (existingIndex !== -1) {
-              // 存在相同的配置，进行覆盖
-              cloudDataList.value[existingIndex] = newItem;
-            } else {
-              // 不存在，添加新的配置
-              cloudDataList.value.push(newItem);
-            }
-          });
+          const newItem = {
+            id: id,
+            url: importedUrl,
+            apiKey: importedApiKey,
+            name: `导入的配置 ${cloudDataList.value.length + 1}`,
+          };
 
-          message.success(t('DATA_IMPORTED_PLEASE_SAVE'));
-        } else {
-          message.error(t('INVALID_IMPORT_FORMAT'));
-        }
+          if (existingIndex !== -1) {
+            // 存在相同的配置，进行覆盖
+            cloudDataList.value[existingIndex] = newItem;
+          } else {
+            // 不存在，添加新的配置
+            cloudDataList.value.push(newItem);
+          }
+        });
+
+        message.success(t('DATA_IMPORTED_PLEASE_SAVE'));
       } catch (error) {
         message.error(t('IMPORT_PARSE_ERROR'));
         console.error(error);
@@ -3234,5 +3261,26 @@ body.light-mode {
 .announcement-collapse li {
   margin: 4px 0;
 }
+
+.ant-list-item {
+  min-height: 80px; /* 根据需要调整 */
+}
+
+/* 可选：自定义滚动条样式 */
+.ant-list {
+  /* 滚动条样式（可根据需要调整或移除） */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.5) transparent;
+}
+
+.ant-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ant-list::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 3px;
+}
+
 </style>
 
