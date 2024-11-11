@@ -18,6 +18,7 @@ export const priorityModelList = [
     "llama-3.1-405b"
 ];
 export const cantFunctionModelList = [
+    "chatgpt-4o-latest",
     // 无法使用函数验证列表
     "o1-mini",
     "o1-mini-2024-09-12",

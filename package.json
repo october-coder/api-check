@@ -6,15 +6,20 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
-    "@radix-ui/themes": "^3.1.4",
+    "@vercel/kv": "^3.0.0",
+    "@vercel/node": "^3.2.24",
     "@vueuse/core": "^11.2.0",
     "ant-design-vue": "^4.0.0-rc.6",
     "axios": "^1.7.7",
+    "dotenv": "^16.4.5",
     "echarts": "^5.5.1",
+    "express": "^4.21.1",
+    "path": "^0.12.7",
     "vue": "^3.5.12",
     "vue-i18n": "^9.14.1",
     "vue-router": "^4.4.5"

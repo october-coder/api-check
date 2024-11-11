@@ -44,10 +44,10 @@
   "OFFICIAL_VERIFICATION": "Official ",
   "OTHER_VERIFICATION": "Other Verification",
   "SETTINGS_PANEL": "Settings Panel",
-  "LOCAL_CACHE": "Local Cache",
+  "LOCAL_CACHE": "Local Storage",
   "EXPORT": "Export",
   "IMPORT": "Import",
-  "CLOUD_CACHE": "Cloud Cache",
+  "CLOUD_CACHE": "Cloud Storage",
   "LOGIN": "Login",
   "LOGOUT": "Logout",
   "USER_LOGGED_IN": "Logged in as {{ username }}",
@@ -180,5 +180,6 @@
   "LANGUAGE_MENU": "Language Menu",
   "ERROR_MESSAGE": "Error Message",
   "RESOLUTION": "Resolution",
-  "INVALID_IMPORT_FORMAT": "Invalid import format"
+  "INVALID_IMPORT_FORMAT": "Invalid import format",
+  "VIEW_DETAILS": "查看详细信息"
 }

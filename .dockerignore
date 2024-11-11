@@ -1,3 +1,13 @@
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+.next
+.git
+.github
+*.md
+.env.example
+
 # Logs
 logs
 *.log
@@ -7,7 +17,6 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
 dist
 dist-ssr
 *.local
@@ -26,10 +35,17 @@ dist-ssr
 .vscode
 .history
 .temp
+.env.local
 venv
 temp
 tmp
 tput
+
+
+
+
+
+
 
 
 

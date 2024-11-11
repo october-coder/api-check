@@ -133,6 +133,17 @@ export const announcement = {
     },
     updateLog: {
         zh: [{
+            version: 'v2.0',
+            date: '2024-11-11',
+            content: [
+                '全新样式：vue3重构项目',
+                '新增：图片分享与API评估',
+                '新增：docker 镜像 和 vercel部署',
+                '新增：本地存储和云端存储',
+                '优化：优化前端交互体验',
+            ],
+            url: 'https://check.crond.dev'
+        }, {
             version: 'v1.5',
             date: '2024-11-10',
             content: [
@@ -140,9 +151,9 @@ export const announcement = {
                 '新增：黑暗模式',
                 '优化：优化前端交互体验',
             ],
-            url: ''
+            url: 'https://check.crond.dev'
         }, {
-            version: '1.4.0',
+            version: 'v1.4.0',
             date: '2024-09-08',
             content: [
                 '优化:模型名称一致性时无返回模型参数的提示信息',
@@ -151,7 +162,7 @@ export const announcement = {
             ],
             url: 'https://linux.do/t/topic/199694'
         }, {
-            version: '1.3.0',
+            version: 'v1.3.0',
             date: '2024-08-31',
             content: [
                 '新增：增加函数验证方式',
@@ -161,6 +172,18 @@ export const announcement = {
         }
         ], en: [
             {
+                version: 'v2.0',
+                date: '2024-11-11',
+                content: [
+                    'New style: vue3 refactoring project',
+                    'New: Image sharing, API evaluation',
+                    'New: Docker image and Vercel deployment',
+                    'New: Local storage and cloud storage',
+                    'Optimization: Optimize front-end interactive experience',
+                ],
+                url: 'https://check.crond.dev'
+            },
+            {
                 version: 'v1.5',
                 date: '2024-11-10',
                 content: [
@@ -168,9 +191,9 @@ export const announcement = {
                     'New: Dark mode',
                     'Optimization: Optimize front-end interactive experience',
                 ],
-                url: ''
+                url: 'https://check.crond.dev'
             }, {
-                version: '1.4.0',
+                version: 'v1.4.0',
                 date: '2024-09-08',
                 content: [
                     'Optimization: Prompt information when the model name consistency does not return model parameters',
@@ -179,7 +202,7 @@ export const announcement = {
                 ],
                 url: 'https://linux.do/t/topic/199694'
             }, {
-                version: '1.3.0',
+                version: 'v1.3.0',
                 date: '2024-08-31',
                 content: [
                     'New: Added function verification method',

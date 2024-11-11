@@ -43,10 +43,10 @@
   "OFFICIAL_VERIFICATION": "官转验证",
   "OTHER_VERIFICATION": "其他验证",
   "SETTINGS_PANEL": "设置面板",
-  "LOCAL_CACHE": "本地缓存",
+  "LOCAL_CACHE": "本地存储",
   "EXPORT": "导出",
   "IMPORT": "导入",
-  "CLOUD_CACHE": "云端缓存",
+  "CLOUD_CACHE": "云端存储",
   "LOGIN": "登录",
   "LOGOUT": "注销",
   "USER_LOGGED_IN": "已登录，欢迎 {{username}}",
@@ -181,5 +181,6 @@
   "LANGUAGE_MENU": "语言菜单",
   "ERROR_MESSAGE": "错误信息",
   "RESOLUTION": "解决方案",
-  "INVALID_IMPORT_FORMAT": "导入格式无效"
+  "INVALID_IMPORT_FORMAT": "导入格式无效",
+  "VIEW_DETAILS": "查看详情"
 }

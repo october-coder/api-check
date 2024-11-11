@@ -1,3 +1,4 @@
+import {appInfo, banner} from './info.js';
 export function initializeTheme(isDarkMode) {
     // 初始化主题
     const savedTheme = localStorage.getItem('theme');
@@ -18,4 +19,13 @@ export function initializeLanguage(locale, currentLanguage) {
     } else {
         locale.value = 'zh'; // 默认语言为中文
     }
+}
+//打印控制台
+export  function initConsole(){
+    const message = `hello ? ️`;
+    console.log(`%c  API CHECK v${appInfo.version} %c  ${appInfo.officialUrl} `, "color: #fadfa3; background: #030307; padding:5px 0;", "background: #fadfa3; padding:5px 0;");
+    console.log(banner);
+    console.log(message +location.href);
+    console.log(appInfo.author.name + ':' + appInfo.author.url);
+    console.log(appInfo.coauthor.name + ':' + appInfo.coauthor.url);
 }
