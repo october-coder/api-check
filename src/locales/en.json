@@ -162,6 +162,23 @@
   "DETAIL_INTRODUCTION": "Detailed Introduction",
   "PLEASE_WAIT_FOR_TESTING": "Please wait for testing to complete before sharing.",
   "PLEASE_ENTER_CLOUD_URL_AND_PASSWORD": "Please enter the cloud URL and password",
-  "CLOUD_LOGIN_FAILED": "Cloud login failed"
-
+  "CLOUD_LOGIN_FAILED": "Cloud login failed",
+  "IMPORT_PARSE_ERROR": "Failed to parse the imported file, please check the format",
+  "CLOUD_LOGIN_ERROR": "An error occurred while logging in to the cloud",
+  "CONCLUSION": "Conclusion",
+  "SIMILARITY_RESULTS": "Similarity Results",
+  "UNKNOWN_ERROR": "Unknown error, please check the console logs",
+  "O1_API_RELIABLE": "✨API is reliable",
+  "O1_API_POSSIBLE_ISSUE": "⚠️API may have issues",
+  "O1_API_RELIABLE_DETAIL": "Response contains non-empty reasoning_tokens, API is reliable",
+  "O1_API_POSSIBLE_ISSUE_DETAIL": "Response does not contain reasoning_tokens or it's empty, API may have issues",
+  "REFERENCE_VALUES": "Reference values: c3.5 = 51 (gcp test), gpt-4o = 59, gpt-4o-mini = 32 (azure test)",
+  "TEST": "Test",
+  "RESPONSE": "Response",
+  "TEXT": "Text",
+  "SYSTEM_FINGERPRINT": "System Fingerprint",
+  "LANGUAGE_MENU": "Language Menu",
+  "ERROR_MESSAGE": "Error Message",
+  "RESOLUTION": "Resolution",
+  "INVALID_IMPORT_FORMAT": "Invalid import format"
 }

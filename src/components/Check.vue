@@ -1368,11 +1368,11 @@ function computeTableData() {
     let fullRemark = '';
     if (item.model.startsWith('o1-')) {
       if (item.has_o1_reason) {
-        remark = '✨API 可靠';
-        fullRemark = '返回响应中包含非空 reasoning_tokens，API 可靠';
+        remark = t('O1_API_RELIABLE'); // '✨API 可靠'
+        fullRemark = t('O1_API_RELIABLE_DETAIL'); // '返回响应中包含非空 reasoning_tokens，API 可靠'
       } else {
-        remark = '⚠️API 可能存在问题';
-        fullRemark = '返回响应中不包含 reasoning_tokens 或为空，API 非官';
+        remark = t('O1_API_POSSIBLE_ISSUE'); // '⚠️API 可能存在问题'
+        fullRemark = t('O1_API_POSSIBLE_ISSUE_DETAIL'); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
       }
     }
 
@@ -1437,13 +1437,14 @@ function computeTableData() {
     // 针对 o1- 模型的特殊处理
     if (item.model.startsWith('o1-')) {
       if (item.has_o1_reason) {
-        remark += ' / ✨API 可靠';
-        fullRemark += '；返回响应中包含非空 reasoning_tokens，API 可靠';
+        remark = t('O1_API_RELIABLE'); // '✨API 可靠'
+        fullRemark = t('O1_API_RELIABLE_DETAIL'); // '返回响应中包含非空 reasoning_tokens，API 可靠'
       } else {
-        remark += ' / ⚠️API 可能存在问题';
-        fullRemark += '；返回响应中不包含 reasoning_tokens 或为空，API 可能存在问题';
+        remark = t('O1_API_POSSIBLE_ISSUE'); // '⚠️API 可能存在问题'
+        fullRemark = t('O1_API_POSSIBLE_ISSUE_DETAIL'); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
       }
     }
+
 
     data.push({
       key: `inconsistent-${index}`,
@@ -1593,18 +1594,19 @@ function showTemperatureVerificationResult(result) {
   // 定义列
   const columns = [
     {
-      title: '测试',
+      title: t('TEST'),
       dataIndex: 'testNumber',
       key: 'testNumber',
       width: '20%',
     },
     {
-      title: '响应',
+      title: t('RESPONSE'),
       dataIndex: 'response',
       key: 'response',
       width: '80%',
     },
   ];
+
 
   Modal.info({
     title: t('TEMPERATURE_VERIFICATION_RESULT'),
@@ -1613,7 +1615,7 @@ function showTemperatureVerificationResult(result) {
       h(
           'p',
           {},
-          '参考值：c3.5 = 51(gcp测试)，gpt-4o = 59，gpt-4o-mini = 32(azure测试)'
+          t('REFERENCE_VALUES')
       ),
       h(
           aTable,
@@ -1789,7 +1791,7 @@ const cloudDataList = ref([]);
 
 const localListStyle = computed(() => {
   if (localCacheList.value.length > 4) {
-    return { maxHeight: '320px', overflowY: 'auto' };
+    return {maxHeight: '320px', overflowY: 'auto'};
   } else {
     return {};
   }
@@ -1797,7 +1799,7 @@ const localListStyle = computed(() => {
 
 const cloudListStyle = computed(() => {
   if (cloudDataList.value.length > 5) {
-    return { maxHeight: '420px', overflowY: 'auto' };
+    return {maxHeight: '420px', overflowY: 'auto'};
   } else {
     return {};
   }
