@@ -17,7 +17,7 @@
   "CONTRIBUTORS": "Contributors",
   "SELECT_MODEL_TITLE": "Select Model",
   "SELECTED_MODELS": "Selected {count} models",
-  "FILTER_PLACEHOLDER": "Enter model prefix for filter",
+  "FILTER_PLACEHOLDER": "Enter model keywords to filter",
   "FILTER": "Filter",
   "CLEAR": "Clear",
   "SELECT_ALL": "Select All",
@@ -190,5 +190,17 @@
   "RAW_RESPONSE": "Raw Response",
   "PASTE": "Paste",
   "PASTE_SUCCESS": "Paste successful",
-  "PASTE_FAILED": "Paste failed, please paste manually"
+  "PASTE_FAILED": "Paste failed, please paste manually",
+  "FUNCTION_INTRODUCTION": "Function Introduction",
+  "FUNCTION_INTRODUCTION_TEXT": "Here is a brief introduction of the function.",
+  "SELECT_MODEL": "Select Model",
+  "SELECT_MODEL_PLACEHOLDER": "Please select a model",
+  "SELECT_PROMPT": "Select Prompt",
+  "SELECT_PROMPT_PLACEHOLDER": "Please select a prompt",
+  "PROMPT_CONTENT": "Prompt Content",
+  "SEND": "Send",
+  "CONTINUE_TESTING": "Continue Testing",
+  "PROMPT_DESCRIPTION": "Prompt Description",
+  "NO_DESCRIPTION_AVAILABLE": "No description available",
+  "ERROR_OCCURRED": "An error occurred"
 }

@@ -862,6 +862,8 @@
         </div>
       </div>
     </a-modal>
+
+    <!--  测试总结   -->
     <a-modal
       v-model:open="isSummaryModalVisible"
       :title="t('TEST_RESULT_SUMMARY')"
@@ -892,45 +894,132 @@
         <a-button @click="handleCloseSVGModal">{{ t('CLOSE') }}</a-button>
       </div>
     </a-modal>
+
     <a-modal
       v-model:open="customDialogModalVisible"
       :title="t('CUSTOM_DIALOG_VERIFICATION')"
-      @ok="handleCustomDialogSubmit"
       @cancel="handleCustomDialogCancel"
-      :width="800"
+      :width="600"
+      centered
       :confirmLoading="customDialogLoading"
+      :footer="null"
     >
-      <template v-if="!customDialogResult">
-        <a-textarea
-          v-model:value="customDialogPrompt"
-          :placeholder="t('ENTER_PROMPT')"
-          :rows="4"
-        />
-      </template>
-      <template v-else>
+      <div v-if="!customDialogResult">
+        <div style="margin-bottom: 16px">
+          <p>{{ t('FUNCTION_INTRODUCTION') }}</p>
+        </div>
+        <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <!-- 模型下拉框 -->
+          <a-form-item :label="t('SELECT_MODEL')">
+            <a-select
+              v-model:value="currentVerifyingModel"
+              :options="modelOptions"
+              :placeholder="t('SELECT_MODEL_PLACEHOLDER')"
+              allowClear
+            >
+              <template #suffixIcon>
+                <SmileOutlined />
+              </template>
+            </a-select>
+          </a-form-item>
+
+          <!-- 提示词下拉框 -->
+          <a-form-item :label="t('SELECT_PROMPT')">
+            <a-select
+              v-model="selectedPresetPrompt"
+              :options="promptOptions"
+              :placeholder="t('SELECT_PROMPT_PLACEHOLDER')"
+              @change="changePrompt"
+            >
+              <template #suffixIcon>
+                <SmileOutlined />
+              </template>
+            </a-select>
+          </a-form-item>
+
+          <!-- 提示词输入框 -->
+          <a-form-item :label="t('PROMPT_CONTENT')">
+            <a-textarea
+              v-model:value="customDialogPrompt"
+              :placeholder="t('ENTER_PROMPT')"
+              :rows="4"
+            />
+          </a-form-item>
+
+          <a-form-item :wrapper-col="{ span: 24 }">
+            <div style="text-align: right">
+              <a-button
+                type="primary"
+                @click="handleCustomDialogSubmit"
+                :loading="customDialogLoading"
+                style="width: 100px"
+              >
+                {{ t('SEND') }}
+              </a-button>
+            </div>
+          </a-form-item>
+        </a-form>
+      </div>
+
+      <!-- 返回结果展示 -->
+      <div v-else style="margin-top: 24px">
         <div class="dialog-result">
-          <h3>{{ t('CUSTOM_DIALOG_VERIFICATION_RESULT') }}</h3>
           <div class="result-item">
             <div class="label">{{ t('MODEL') }}:</div>
-            <div class="content">{{ customDialogResult.model }}</div>
+            <div class="content no-box">{{ customDialogResult.model }}</div>
           </div>
+
           <div class="result-item">
             <div class="label">{{ t('PROMPT') }}:</div>
-            <div class="content">{{ customDialogResult.prompt }}</div>
+            <div
+              class="content no-box"
+              style="display: flex; align-items: center"
+            >
+              <span style="flex: 1; margin-right: 8px">
+                {{ customDialogResult.prompt }}
+              </span>
+              <a-popover :title="t('PROMPT_DESCRIPTION')" trigger="click">
+                <template #content>
+                  <pre class="popover-description-pre">{{
+                    getPromptDescriptionByContent(customDialogResult.prompt)
+                  }}</pre>
+                </template>
+                <a-button type="text" shape="circle">
+                  <InfoCircleTwoTone />
+                </a-button>
+              </a-popover>
+            </div>
           </div>
+
+          <!-- 响应内容展示 -->
           <div class="result-item">
             <div class="label">{{ t('RESPONSE_CONTENT') }}:</div>
-            <div class="content">{{ customDialogResult.response }}</div>
+            <div
+              class="content response-content"
+              style="max-height: 300px; overflow-y: auto"
+            >
+              {{ customDialogResult.response }}
+            </div>
           </div>
-          <a-collapse>
+
+          <!-- 原始响应折叠面板 -->
+          <a-collapse :bordered="false">
             <a-collapse-panel :header="t('RAW_RESPONSE')">
-              <pre>{{
+              <pre class="raw-response-pre">{{
                 JSON.stringify(customDialogResult.raw_response, null, 2)
               }}</pre>
             </a-collapse-panel>
           </a-collapse>
+
+          <!-- 继续测试按钮，靠右边，增加图标 -->
+          <div style="text-align: right; margin-top: 16px">
+            <a-button @click="handleContinueTesting">
+              <DoubleRightOutlined />
+              {{ t('CONTINUE_TESTING') }}
+            </a-button>
+          </div>
         </div>
-      </template>
+      </div>
     </a-modal>
   </ConfigProvider>
 </template>
@@ -943,8 +1032,11 @@ import {
   SettingOutlined,
   ShareAltOutlined,
   UserOutlined,
+  InfoCircleTwoTone,
+  SmileOutlined,
+  DoubleRightOutlined,
 } from '@ant-design/icons-vue';
-import { computed, h, nextTick, onMounted, reactive, ref } from 'vue';
+import { computed, h, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import {
   ConfigProvider,
   message,
@@ -988,6 +1080,7 @@ import {
   cantFunctionModelList,
   cantOfficialModelList,
   cantTemperatureModelList,
+  presetPromptsList,
 } from '../utils/models.js';
 
 // 注册必须的组件
@@ -1161,6 +1254,7 @@ onMounted(() => {
   setVh();
   window.addEventListener('resize', setVh);
 });
+
 // 显示更新提示的函数
 function showUpdatePrompt(updateInfo) {
   Modal.confirm({
@@ -1600,14 +1694,18 @@ function computeTableData() {
   // 处理 valid 模型
   results.valid.forEach((item, index) => {
     const buttons = [];
+    const notChatPattern =
+      /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
 
-    // 添加对话验证按钮 (放在最前面)
-    buttons.push({
-      label: t('CUSTOM_DIALOG_VERIFICATION'),
-      type: 'default',
-      key: 'customDialogVerification',
-      onClick: () => verifyCustomDialog(item.model),
-    });
+    // 添加对话验证按钮 (放在最前面) 如果是对话模型
+    if (!notChatPattern.test(item.model)) {
+      buttons.push({
+        label: t('CUSTOM_DIALOG_VERIFICATION'),
+        type: 'default',
+        key: 'customDialogVerification',
+        onClick: () => verifyCustomDialog(item.model),
+      });
+    }
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
@@ -1665,13 +1763,18 @@ function computeTableData() {
   results.inconsistent.forEach((item, index) => {
     const buttons = [];
 
-    // 添加对话验证按钮 (放在最前面)
-    buttons.push({
-      label: t('CUSTOM_DIALOG_VERIFICATION'),
-      type: 'default',
-      key: 'customDialogVerification',
-      onClick: () => verifyCustomDialog(item.model),
-    });
+    const notChatPattern =
+      /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
+
+    // 添加对话验证按钮 (放在最前面) 如果是对话模型
+    if (!notChatPattern.test(item.model)) {
+      buttons.push({
+        label: t('CUSTOM_DIALOG_VERIFICATION'),
+        type: 'default',
+        key: 'customDialogVerification',
+        onClick: () => verifyCustomDialog(item.model),
+      });
+    }
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
@@ -2633,26 +2736,79 @@ function copyModels(type) {
     });
 }
 
-// 添加新的响应式变量
+// 模态框显示控制
 const customDialogModalVisible = ref(false);
+const currentVerifyingModel = ref('');
+// 计算模型列表
+const modelNames = computed(() => {
+  let inputModels = modelName.value
+    .split(',')
+    .map(name => name.trim())
+    .filter(name => name !== '');
+  let selectedModelNames = selectedModels.value || [];
+  let currentModel = currentVerifyingModel.value
+    ? [currentVerifyingModel.value]
+    : [];
+  return Array.from(
+    new Set([...inputModels, ...selectedModelNames, ...currentModel])
+  );
+});
+
+// 模型选项列表，用于下拉框
+const modelOptions = computed(() =>
+  modelNames.value.map(name => ({
+    label: name,
+    value: name,
+  }))
+);
+
+// 提示词相关
 const customDialogPrompt = ref('');
 const customDialogResult = ref(null);
-const currentVerifyingModel = ref('');
-const customDialogLoading = ref(false); // 新增对话验证的 loading 状态
+const customDialogLoading = ref(false);
 
-// 添加新的验证函数
-async function verifyCustomDialog(model) {
-  currentVerifyingModel.value = model;
-  customDialogModalVisible.value = true;
+// 预设的提示词列表，包含标题、内容和描述
+const presetPrompts = ref(presetPromptsList);
+
+// 提示词选项列表，用于下拉框
+const promptOptions = computed(() =>
+  presetPrompts.value.map(prompt => ({
+    label: prompt.title,
+    value: prompt.title,
+  }))
+);
+
+const selectedPresetPrompt = ref(null);
+
+// 修改 changePrompt 函数
+function changePrompt(value) {
+  const prompt = presetPrompts.value.find(item => item.title === value);
+  if (prompt) {
+    customDialogPrompt.value = prompt.content;
+  } else {
+    customDialogPrompt.value = '';
+  }
 }
 
+// 添加根据提示词内容获取描述的方法
+function getPromptDescriptionByContent(content) {
+  const prompt = presetPrompts.value.find(item => item.content === content);
+  return prompt ? prompt.description : t('NO_DESCRIPTION_AVAILABLE');
+}
+
+// 处理发送请求
 async function handleCustomDialogSubmit() {
   if (!customDialogPrompt.value) {
     message.error(t('ENTER_PROMPT'));
     return;
   }
 
-  customDialogLoading.value = true; // 开始加载
+  if (!currentVerifyingModel.value) {
+    message.error(t('SELECT_MODEL'));
+    return;
+  }
+
+  customDialogLoading.value = true;
   try {
     const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
     customDialogResult.value = await verifier.verifyCustomDialog(
@@ -2662,14 +2818,28 @@ async function handleCustomDialogSubmit() {
   } catch (error) {
     message.error(error.message);
   } finally {
-    customDialogLoading.value = false; // 结束加载
+    customDialogLoading.value = false;
   }
 }
 
+// 处理继续测试
+function handleContinueTesting() {
+  customDialogResult.value = null;
+  // 模型和提示词保持默认值，无需重新设置
+}
+
+// 处理关闭模态框
 function handleCustomDialogCancel() {
   customDialogModalVisible.value = false;
   customDialogPrompt.value = '';
   customDialogResult.value = null;
+  selectedPresetPrompt.value = null;
+}
+
+// 打开验证对话框的函数
+function verifyCustomDialog(model) {
+  currentVerifyingModel.value = model || modelNames.value[0] || '';
+  customDialogModalVisible.value = true;
 }
 
 // 添加粘贴处理函数
@@ -3707,11 +3877,52 @@ body.light-mode {
     }
 
     .content {
-      background: var(--background-color);
-      padding: 8px;
-      border-radius: 4px;
-      white-space: pre-wrap;
+      /* 移除背景和边框，使布局更加紧凑 */
+      background: none;
+      padding: 0;
+      border: none;
+
+      /* 设置水平布局时的样式 */
+      display: flex;
+      align-items: center;
+
+      &.no-box {
+        /* 特殊样式，用于移除框框 */
+        background: none;
+        padding: 0;
+        border: none;
+        display: inline;
+      }
+
+      &.response-content {
+        background: var(--background-color);
+        padding: 8px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        border: 1px solid #d9d9d9;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 12px;
+      }
     }
   }
+}
+
+/* 调整原始响应字体大小 */
+.raw-response-pre {
+  font-size: 12px;
+}
+
+.popover-description-pre {
+  margin: 0; /* 去除默认的 margin */
+  white-space: pre-wrap; /* 保留换行符，自动换行 */
+  word-break: break-word; /* 单词过长时换行 */
+  font-size: 14px; /* 根据需要调整字体大小 */
 }
 </style>
