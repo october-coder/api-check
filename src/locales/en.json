@@ -181,5 +181,14 @@
   "ERROR_MESSAGE": "Error Message",
   "RESOLUTION": "Resolution",
   "INVALID_IMPORT_FORMAT": "Invalid import format",
-  "VIEW_DETAILS": "查看详细信息"
+  "VIEW_DETAILS": "View Details",
+  "CUSTOM_DIALOG_VERIFICATION": "Dialog Test",
+  "CUSTOM_DIALOG_VERIFICATION_RESULT": "Dialog Test Result",
+  "ENTER_PROMPT": "Please enter prompt",
+  "PROMPT": "Prompt",
+  "RESPONSE_CONTENT": "Response Content",
+  "RAW_RESPONSE": "Raw Response",
+  "PASTE": "Paste",
+  "PASTE_SUCCESS": "Paste successful",
+  "PASTE_FAILED": "Paste failed, please paste manually"
 }
