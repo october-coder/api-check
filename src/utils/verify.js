@@ -360,5 +360,70 @@ class ModelVerifier {
             return { error: error.message };
         }
     }
+
+    /**
+     * 自定义对话验证
+     * @param {string} model - 模型名称
+     * @param {string} prompt - 用户输入的提示词
+     * @returns {Object} - 包含响应结果的对象
+     */
+    async verifyCustomDialog(model, prompt) {
+        try {
+            const result = await this.sendCustomDialogRequest(model, prompt);
+
+            if (result.error) {
+                console.error(`Error in request:`, result.error);
+                throw new Error(`请求失败: ${result.error}`);
+            }
+
+            return {
+                model: model,
+                prompt: prompt,
+                response: result.choices?.[0]?.message?.content || '',
+                raw_response: result
+            };
+
+        } catch (error) {
+            console.error('Error in verifyCustomDialog:', error);
+            throw error;
+        }
+    }
+
+    /**
+     * 发送自定义对话请求
+     * @param {string} model - 模型名称
+     * @param {string} prompt - 用户输入的提示词
+     * @returns {Object} - 请求的响应结果
+     */
+    async sendCustomDialogRequest(model, prompt) {
+        try {
+            const response = await fetch(`${this.apiUrl}/v1/chat/completions`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${this.apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    messages: [
+                        {
+                            role: "user",
+                            content: prompt
+                        }
+                    ],
+                    temperature: 0.7,
+                    model: model
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            return await response.json();
+        } catch (error) {
+            console.error('Error in sendCustomDialogRequest:', error);
+            return { error: error.message };
+        }
+    }
 }
 export default ModelVerifier;

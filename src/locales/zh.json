@@ -182,5 +182,11 @@
   "ERROR_MESSAGE": "错误信息",
   "RESOLUTION": "解决方案",
   "INVALID_IMPORT_FORMAT": "导入格式无效",
-  "VIEW_DETAILS": "查看详情"
+  "VIEW_DETAILS": "查看详情",
+  "CUSTOM_DIALOG_VERIFICATION": "对话验证",
+  "CUSTOM_DIALOG_VERIFICATION_RESULT": "对话验证结果",
+  "ENTER_PROMPT": "请输入提示词",
+  "PROMPT": "提示词",
+  "RESPONSE_CONTENT": "响应内容",
+  "RAW_RESPONSE": "原始响应"
 }
