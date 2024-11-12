@@ -102,12 +102,25 @@
           <h3>{{ t("API_CHECKER_SUBTITLE") }}</h3>
 
           <form @submit.prevent="handleSubmit" id="apiForm">
-            <textarea
-              v-model="apiInfo"
-              id="api_info"
-              name="api_info"
-              :placeholder="t('API_INFO_PLACEHOLDER')"
-            ></textarea>
+            <div style="position: relative; margin-bottom: 10px;">
+              <textarea
+                v-model="apiInfo"
+                id="api_info"
+                name="api_info"
+                :placeholder="t('API_INFO_PLACEHOLDER')"
+              ></textarea>
+              <a-button
+                type="primary"
+                size="small"
+                @click="handlePaste"
+                style="position: absolute; right: 4px; top: 14px; padding: 0 8px; height: 24px;"
+              >
+                <template #icon>
+                  <CopyOutlined style="font-size: 14px;" />
+                </template>
+                {{ t('PASTE') }}
+              </a-button>
+            </div>
 
             <input
               type="text"
@@ -2174,7 +2187,7 @@ function saveToLocal() {
   // 添加新的缓存项到列表
   existingList.push(newCacheItem);
 
-  // 更新本地缓存列表
+  // 新本地缓存表
   localCacheList.value = existingList;
   localStorage.setItem("localCacheList", JSON.stringify(existingList));
 
@@ -2651,6 +2664,43 @@ function handleCustomDialogCancel() {
   customDialogModalVisible.value = false;
   customDialogPrompt.value = "";
   customDialogResult.value = null;
+}
+
+// 添加粘贴处理函数
+async function handlePaste() {
+  try {
+    const text = await navigator.clipboard.readText();
+    // 先设置文本值
+    apiInfo.value = text;
+    
+    // 手动解析 URL 和 API Key
+    let urlPattern = /(https?:\/\/[^\s，。、！,；;\n]+)/;
+    let keyPattern = /(sk-[a-zA-Z0-9]+)/;
+
+    let urlMatch = text.match(urlPattern);
+    let keyMatch = text.match(keyPattern);
+
+    if (urlMatch) {
+      let cleanUrl = urlMatch[0];
+      // 去除末尾的斜杠和其他字符
+      cleanUrl = cleanUrl.replace(/\/+$/, '');
+      // 如果包含点号，则使用点号之前的部分
+      if (cleanUrl.includes('.')) {
+        apiUrl.value = cleanUrl;
+      } else {
+        apiUrl.value = urlMatch[0];
+      }
+    }
+    
+    if (keyMatch) {
+      apiKey.value = keyMatch[0];
+    }
+    
+    message.success(t('PASTE_SUCCESS'));
+  } catch (err) {
+    console.error('粘贴失败:', err);
+    message.error(t('PASTE_FAILED'));
+  }
 }
 </script>
 
@@ -3498,7 +3548,7 @@ body.dark-mode .field-value {
   z-index: 10;
 }
 
-/* 根据主题切换背景色 */
+/* 根据主题换背景色 */
 body.dark-mode {
   --overlay-background-color: rgba(0, 0, 0, 0.3);
 }
