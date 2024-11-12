@@ -1,411 +1,429 @@
 <template>
   <ConfigProvider :theme="configProviderTheme">
     <div class="wrapper">
-      <div class="page-content">
-        <div class="container" :class="{ 'shift-left': shouldShift }">
-          <div class="header">
-            <button
-              id="themeToggle"
-              :aria-label="t('SWITCH_THEME')"
-              @click="handleToggleTheme"
-            >
-              <svg
-                id="themeIcon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="transparent"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-sun"
+      <a-flex :direction="'vertical'" :justify="'center'" :align="'center'">
+        <div class="page-content">
+          <div class="container" :class="{ 'shift-left': shouldShift }">
+            <div class="header">
+              <button
+                id="themeToggle"
+                :aria-label="t('SWITCH_THEME')"
+                @click="handleToggleTheme"
               >
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2"></path>
-                <path d="M12 20v2"></path>
-                <path d="m4.93 4.93 1.41 1.41"></path>
-                <path d="m17.66 17.66 1.41 1.41"></path>
-                <path d="M2 12h2"></path>
-                <path d="M20 12h2"></path>
-                <path d="m6.34 17.66-1.41 1.41"></path>
-                <path d="m19.07 4.93-1.41 1.41"></path>
-              </svg>
-            </button>
-
-            <div class="right-icons" @click="showLanguageMenu = false">
-              <div class="language-container" @click.stop="toggleLanguageMenu">
-                <button :aria-label="t('SWITCH_LANGUAGE')" class="language-btn">
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 15 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.49996 1.80002C4.35194 1.80002 1.79996 4.352 1.79996 7.50002C1.79996 10.648 4.35194 13.2 7.49996 13.2C10.648 13.2 13.2 10.648 13.2 7.50002C13.2 4.352 10.648 1.80002 7.49996 1.80002ZM0.899963 7.50002C0.899963 3.85494 3.85488 0.900024 7.49996 0.900024C11.145 0.900024 14.1 3.85494 14.1 7.50002C14.1 11.1451 11.145 14.1 7.49996 14.1C3.85488 14.1 0.899963 11.1451 0.899963 7.50002Z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M13.4999 7.89998H1.49994V7.09998H13.4999V7.89998Z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M7.09991 13.5V1.5H7.89991V13.5H7.09991zM10.375 7.49998C10.375 5.32724 9.59364 3.17778 8.06183 1.75656L8.53793 1.24341C10.2396 2.82218 11.075 5.17273 11.075 7.49998 11.075 9.82724 10.2396 12.1778 8.53793 13.7566L8.06183 13.2434C9.59364 11.8222 10.375 9.67273 10.375 7.49998zM3.99969 7.5C3.99969 5.17611 4.80786 2.82678 6.45768 1.24719L6.94177 1.75281C5.4582 3.17323 4.69969 5.32389 4.69969 7.5 4.6997 9.67611 5.45822 11.8268 6.94179 13.2472L6.45769 13.7528C4.80788 12.1732 3.9997 9.8239 3.99969 7.5z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M7.49996 3.95801C9.66928 3.95801 11.8753 4.35915 13.3706 5.19448 13.5394 5.28875 13.5998 5.50197 13.5055 5.67073 13.4113 5.83948 13.198 5.89987 13.0293 5.8056 11.6794 5.05155 9.60799 4.65801 7.49996 4.65801 5.39192 4.65801 3.32052 5.05155 1.97064 5.8056 1.80188 5.89987 1.58866 5.83948 1.49439 5.67073 1.40013 5.50197 1.46051 5.28875 1.62927 5.19448 3.12466 4.35915 5.33063 3.95801 7.49996 3.95801zM7.49996 10.85C9.66928 10.85 11.8753 10.4488 13.3706 9.6135 13.5394 9.51924 13.5998 9.30601 13.5055 9.13726 13.4113 8.9685 13.198 8.90812 13.0293 9.00238 11.6794 9.75643 9.60799 10.15 7.49996 10.15 5.39192 10.15 3.32052 9.75643 1.97064 9.00239 1.80188 8.90812 1.58866 8.9685 1.49439 9.13726 1.40013 9.30601 1.46051 9.51924 1.62927 9.6135 3.12466 10.4488 5.33063 10.85 7.49996 10.85z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-                <div v-if="showLanguageMenu" class="language-menu">
-                  <button
-                    class="language-menu-button"
-                    @click="setLanguage('zh')"
-                  >
-                    {{ t('LANGUAGE_CHINESE') }}
-                  </button>
-                  <button
-                    class="language-menu-button"
-                    @click="setLanguage('en')"
-                  >
-                    {{ t('LANGUAGE_ENGLISH') }}
-                  </button>
-                </div>
-              </div>
-              <a-tooltip :title="t('SETTINGS')" placement="bottom">
-                <a @click="openSettingsModal" class="icon-button">
-                  <SettingOutlined style="cursor: pointer" />
-                </a>
-              </a-tooltip>
-              <a-tooltip :title="t('GITHUB')" placement="bottom">
-                <div @click="openGitHub()" class="icon-button">
-                  <GithubOutlined style="cursor: pointer" />
-                </div>
-              </a-tooltip>
-            </div>
-          </div>
-
-          <h1>{{ t('API_CHECKER_TITLE') }}</h1>
-          <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
-
-          <form @submit.prevent="handleSubmit" id="apiForm">
-            <div style="position: relative">
-              <textarea
-                v-model="apiInfo"
-                id="api_info"
-                name="api_info"
-                :placeholder="t('API_INFO_PLACEHOLDER')"
-              ></textarea>
-              <a-button
-                type="primary"
-                size="small"
-                @click="handlePaste"
-                style="position: absolute; right: 4px; top: 14px; height: 24px"
-              >
-                <template #icon>
-                  <CopyOutlined style="font-size: 14px" />
-                </template>
-              </a-button>
-            </div>
-
-            <input
-              type="text"
-              v-model="apiUrl"
-              id="api_url"
-              name="api_url"
-              :placeholder="t('API_URL_PLACEHOLDER')"
-            />
-
-            <input
-              type="text"
-              v-model="apiKey"
-              id="api_key"
-              name="api_key"
-              :placeholder="t('API_KEY_PLACEHOLDER')"
-            />
-
-            <div class="model-input-container" id="model-input-container">
-              <textarea
-                v-model="modelName"
-                id="model_name"
-                name="model_name"
-                :placeholder="t('MODEL_NAME_PLACEHOLDER')"
-              ></textarea>
-              <a-button
-                type="primary"
-                :loading="spinning"
-                @click="getModelList"
-                class="get-models large-button"
-                style="height: 80px; width: 180px"
-              >
-                {{ t('GET_MODEL_LIST') }}
-              </a-button>
-            </div>
-
-            <div id="modelCheckboxes"></div>
-            <div class="model-timeout-concurrency">
-              <div class="model-timeout">
-                <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
-                <input
-                  type="number"
-                  v-model="modelTimeout"
-                  id="model_timeout"
-                  name="model_timeout"
-                  min="1"
-                  :placeholder="t('TIMEOUT_PLACEHOLDER')"
-                />
-              </div>
-              <div class="model-concurrency">
-                <label for="model_concurrency"
-                  >{{ t('SET_CONCURRENCY') }}:</label
+                <svg
+                  id="themeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="transparent"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-sun"
                 >
-                <input
-                  type="number"
-                  v-model="modelConcurrency"
-                  id="model_concurrency"
-                  name="model_concurrency"
-                  min="1"
-                  :placeholder="t('CONCURRENCY_PLACEHOLDER')"
-                />
-              </div>
-            </div>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </button>
 
-            <div class="submit-container">
-              <a-button
-                type="primary"
-                :loading="testModels_spinning"
-                @click="testModels"
-                class="submit-query"
-                size="large"
-              >
-                {{ t('TEST_MODELS') }}
-              </a-button>
-
-              <a-button
-                type="default"
-                :loading="checkQuota_spinning"
-                @click="checkQuota"
-                class="check-quota"
-                size="large"
-              >
-                {{ t('CHECK_QUOTA') }}
-              </a-button>
-
-              <a-button
-                type="ghost"
-                @click="clearForm"
-                class="clear-form"
-                size="large"
-              >
-                {{ t('CLEAR_FORM') }}
-              </a-button>
-            </div>
-          </form>
-        </div>
-        <div
-          class="container result-container"
-          v-if="showResultContainer"
-          :class="{ show: showResultContainer }"
-        >
-          <button class="close-button" @click="closeResults">×</button>
-          <div class="result-content" style="position: relative">
-            <div v-if="verificationLoading" class="loading-overlay">
-              <a-spin size="large" />
-            </div>
-
-            <div class="left-icons">
-              <a-tooltip :title="t('CHAT')" placement="bottom">
-                <a @click="goChat" class="icon-button">
-                  <MessageOutlined />
-                </a>
-              </a-tooltip>
-              <a-tooltip
-                :title="
-                  !testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')
-                "
-                placement="bottom"
-              >
-                <a
-                  @click="goShare"
-                  class="icon-button"
-                  :class="{ 'disabled-icon': !testingComplete }"
+              <div class="right-icons" @click="showLanguageMenu = false">
+                <div
+                  class="language-container"
+                  @click.stop="toggleLanguageMenu"
                 >
-                  <ShareAltOutlined />
-                </a>
-              </a-tooltip>
-
-              <a-dropdown trigger="click">
-                <template #overlay>
-                  <a-menu>
-                    <a-menu-item key="1">
-                      <a @click="copyModels('valid')">{{
-                        t('COPY_IDENTICAL_MODELS')
-                      }}</a>
-                    </a-menu-item>
-                    <a-menu-item key="2">
-                      <a @click="copyModels('available')">{{
-                        t('COPY_AVAILABLE_MODELS')
-                      }}</a>
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-tooltip :title="t('COPY')" placement="top">
-                  <a class="icon-button">
-                    <CopyOutlined style="cursor: pointer" />
+                  <button
+                    :aria-label="t('SWITCH_LANGUAGE')"
+                    class="language-btn"
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.49996 1.80002C4.35194 1.80002 1.79996 4.352 1.79996 7.50002C1.79996 10.648 4.35194 13.2 7.49996 13.2C10.648 13.2 13.2 10.648 13.2 7.50002C13.2 4.352 10.648 1.80002 7.49996 1.80002ZM0.899963 7.50002C0.899963 3.85494 3.85488 0.900024 7.49996 0.900024C11.145 0.900024 14.1 3.85494 14.1 7.50002C14.1 11.1451 11.145 14.1 7.49996 14.1C3.85488 14.1 0.899963 11.1451 0.899963 7.50002Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M13.4999 7.89998H1.49994V7.09998H13.4999V7.89998Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M7.09991 13.5V1.5H7.89991V13.5H7.09991zM10.375 7.49998C10.375 5.32724 9.59364 3.17778 8.06183 1.75656L8.53793 1.24341C10.2396 2.82218 11.075 5.17273 11.075 7.49998 11.075 9.82724 10.2396 12.1778 8.53793 13.7566L8.06183 13.2434C9.59364 11.8222 10.375 9.67273 10.375 7.49998zM3.99969 7.5C3.99969 5.17611 4.80786 2.82678 6.45768 1.24719L6.94177 1.75281C5.4582 3.17323 4.69969 5.32389 4.69969 7.5 4.6997 9.67611 5.45822 11.8268 6.94179 13.2472L6.45769 13.7528C4.80788 12.1732 3.9997 9.8239 3.99969 7.5z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M7.49996 3.95801C9.66928 3.95801 11.8753 4.35915 13.3706 5.19448 13.5394 5.28875 13.5998 5.50197 13.5055 5.67073 13.4113 5.83948 13.198 5.89987 13.0293 5.8056 11.6794 5.05155 9.60799 4.65801 7.49996 4.65801 5.39192 4.65801 3.32052 5.05155 1.97064 5.8056 1.80188 5.89987 1.58866 5.83948 1.49439 5.67073 1.40013 5.50197 1.46051 5.28875 1.62927 5.19448 3.12466 4.35915 5.33063 3.95801 7.49996 3.95801zM7.49996 10.85C9.66928 10.85 11.8753 10.4488 13.3706 9.6135 13.5394 9.51924 13.5998 9.30601 13.5055 9.13726 13.4113 8.9685 13.198 8.90812 13.0293 9.00238 11.6794 9.75643 9.60799 10.15 7.49996 10.15 5.39192 10.15 3.32052 9.75643 1.97064 9.00239 1.80188 8.90812 1.58866 8.9685 1.49439 9.13726 1.40013 9.30601 1.46051 9.51924 1.62927 9.6135 3.12466 10.4488 5.33063 10.85 7.49996 10.85z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div v-if="showLanguageMenu" class="language-menu">
+                    <button
+                      class="language-menu-button"
+                      @click="setLanguage('zh')"
+                    >
+                      {{ t('LANGUAGE_CHINESE') }}
+                    </button>
+                    <button
+                      class="language-menu-button"
+                      @click="setLanguage('en')"
+                    >
+                      {{ t('LANGUAGE_ENGLISH') }}
+                    </button>
+                  </div>
+                </div>
+                <a-tooltip :title="t('SETTINGS')" placement="bottom">
+                  <a @click="openSettingsModal" class="icon-button">
+                    <SettingOutlined style="cursor: pointer" />
                   </a>
                 </a-tooltip>
-              </a-dropdown>
+                <a-tooltip :title="t('GITHUB')" placement="bottom">
+                  <div @click="openGitHub()" class="icon-button">
+                    <GithubOutlined style="cursor: pointer" />
+                  </div>
+                </a-tooltip>
+              </div>
             </div>
-            <a-progress
-              :percent="progressPercent"
-              show-info
-              size="small"
-              style="margin-top: 10px"
-            />
 
-            <div v-if="!isMobile" class="table-container">
-              <a-table
-                :columns="columns"
-                :data-source="tableData"
-                :pagination="{ pageSize: 8 }"
-                :row-key="record => record.key"
+            <h1>{{ t('API_CHECKER_TITLE') }}</h1>
+            <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
+
+            <form @submit.prevent="handleSubmit" id="apiForm">
+              <div style="position: relative">
+                <textarea
+                  v-model="apiInfo"
+                  id="api_info"
+                  name="api_info"
+                  :placeholder="t('API_INFO_PLACEHOLDER')"
+                ></textarea>
+                <a-button
+                  type="primary"
+                  size="small"
+                  @click="handlePaste"
+                  style="
+                    position: absolute;
+                    right: 4px;
+                    top: 14px;
+                    height: 24px;
+                  "
+                >
+                  <template #icon>
+                    <CopyOutlined style="font-size: 14px" />
+                  </template>
+                </a-button>
+              </div>
+
+              <input
+                type="text"
+                v-model="apiUrl"
+                id="api_url"
+                name="api_url"
+                :placeholder="t('API_URL_PLACEHOLDER')"
+              />
+
+              <input
+                type="text"
+                v-model="apiKey"
+                id="api_key"
+                name="api_key"
+                :placeholder="t('API_KEY_PLACEHOLDER')"
+              />
+
+              <div class="model-input-container" id="model-input-container">
+                <textarea
+                  v-model="modelName"
+                  id="model_name"
+                  name="model_name"
+                  :placeholder="t('MODEL_NAME_PLACEHOLDER')"
+                ></textarea>
+                <a-button
+                  type="primary"
+                  :loading="spinning"
+                  @click="getModelList"
+                  class="get-models large-button"
+                  style="height: 80px; width: 180px"
+                >
+                  {{ t('GET_MODEL_LIST') }}
+                </a-button>
+              </div>
+
+              <div id="modelCheckboxes"></div>
+              <div class="model-timeout-concurrency">
+                <div class="model-timeout">
+                  <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
+                  <input
+                    type="number"
+                    v-model="modelTimeout"
+                    id="model_timeout"
+                    name="model_timeout"
+                    min="1"
+                    :placeholder="t('TIMEOUT_PLACEHOLDER')"
+                  />
+                </div>
+                <div class="model-concurrency">
+                  <label for="model_concurrency"
+                    >{{ t('SET_CONCURRENCY') }}:</label
+                  >
+                  <input
+                    type="number"
+                    v-model="modelConcurrency"
+                    id="model_concurrency"
+                    name="model_concurrency"
+                    min="1"
+                    :placeholder="t('CONCURRENCY_PLACEHOLDER')"
+                  />
+                </div>
+              </div>
+
+              <div class="submit-container">
+                <a-button
+                  type="primary"
+                  :loading="testModels_spinning"
+                  @click="testModels"
+                  class="submit-query"
+                  size="large"
+                >
+                  {{ t('TEST_MODELS') }}
+                </a-button>
+
+                <a-button
+                  type="default"
+                  :loading="checkQuota_spinning"
+                  @click="checkQuota"
+                  class="check-quota"
+                  size="large"
+                >
+                  {{ t('CHECK_QUOTA') }}
+                </a-button>
+
+                <a-button
+                  type="ghost"
+                  @click="clearForm"
+                  class="clear-form"
+                  size="large"
+                >
+                  {{ t('CLEAR_FORM') }}
+                </a-button>
+              </div>
+            </form>
+          </div>
+          <div
+            class="container result-container"
+            v-if="showResultContainer"
+            :class="{ show: showResultContainer }"
+          >
+            <button class="close-button" @click="closeResults">×</button>
+            <div class="result-content" style="position: relative">
+              <div v-if="verificationLoading" class="loading-overlay">
+                <a-spin size="large" />
+              </div>
+
+              <div class="left-icons">
+                <a-tooltip :title="t('CHAT')" placement="bottom">
+                  <a @click="goChat" class="icon-button">
+                    <MessageOutlined />
+                  </a>
+                </a-tooltip>
+                <a-tooltip
+                  :title="
+                    !testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')
+                  "
+                  placement="bottom"
+                >
+                  <a
+                    @click="goShare"
+                    class="icon-button"
+                    :class="{ 'disabled-icon': !testingComplete }"
+                  >
+                    <ShareAltOutlined />
+                  </a>
+                </a-tooltip>
+
+                <a-dropdown trigger="click">
+                  <template #overlay>
+                    <a-menu>
+                      <a-menu-item key="1">
+                        <a @click="copyModels('valid')">{{
+                          t('COPY_IDENTICAL_MODELS')
+                        }}</a>
+                      </a-menu-item>
+                      <a-menu-item key="2">
+                        <a @click="copyModels('available')">{{
+                          t('COPY_AVAILABLE_MODELS')
+                        }}</a>
+                      </a-menu-item>
+                    </a-menu>
+                  </template>
+                  <a-tooltip :title="t('COPY')" placement="top">
+                    <a class="icon-button">
+                      <CopyOutlined style="cursor: pointer" />
+                    </a>
+                  </a-tooltip>
+                </a-dropdown>
+              </div>
+              <a-progress
+                :percent="progressPercent"
+                show-info
                 size="small"
-                class="result-table"
-              >
-                <template #bodyCell="{ text, record, column, index }">
-                  <template v-if="column.dataIndex === 'status'">
-                    {{ record.status }}
-                  </template>
-                  <template v-else-if="column.dataIndex === 'model'">
-                    <span @click="copyText(item.model)">
-                      {{ record.model }}
-                    </span>
-                  </template>
-                  <template v-else-if="column.dataIndex === 'responseTime'">
-                    {{ record.responseTime }}
-                  </template>
-                  <template v-else-if="column.dataIndex === 'buttons'">
-                    <template
-                      v-if="record.buttons && record.buttons.length > 0"
-                    >
-                      <a-popover trigger="hover" placement="top">
-                        <template #content>
-                          <div class="verify-btn-group">
-                            <a-button
-                              v-for="(button, idx) in record.buttons"
-                              :key="idx"
-                              type="default"
-                              size="small"
-                              @click="button.onClick"
-                              style="margin: 0 5px 5px 0"
-                              :style="{
-                                backgroundColor: buttonColors[button.key] || '',
-                                borderColor: buttonColors[button.key] || '',
-                              }"
-                            >
-                              {{ button.label }}
-                            </a-button>
-                          </div>
-                        </template>
-                        <a-button type="primary" size="small">
-                          {{ t('VERIFY') }}
-                        </a-button>
-                      </a-popover>
+                style="margin-top: 10px"
+              />
+
+              <div v-if="!isMobile" class="table-container">
+                <a-table
+                  :columns="columns"
+                  :data-source="tableData"
+                  :pagination="{ pageSize: 8 }"
+                  :row-key="record => record.key"
+                  size="small"
+                  class="result-table"
+                >
+                  <template #bodyCell="{ text, record, column, index }">
+                    <template v-if="column.dataIndex === 'status'">
+                      {{ record.status }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'model'">
+                      <span @click="copyText(item.model)">
+                        {{ record.model }}
+                      </span>
+                    </template>
+                    <template v-else-if="column.dataIndex === 'responseTime'">
+                      {{ record.responseTime }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'buttons'">
+                      <template
+                        v-if="record.buttons && record.buttons.length > 0"
+                      >
+                        <a-popover trigger="hover" placement="top">
+                          <template #content>
+                            <div class="verify-btn-group">
+                              <a-button
+                                v-for="(button, idx) in record.buttons"
+                                :key="idx"
+                                type="default"
+                                size="small"
+                                @click="button.onClick"
+                                style="margin: 0 5px 5px 0"
+                                :style="{
+                                  backgroundColor:
+                                    buttonColors[button.key] || '',
+                                  borderColor: buttonColors[button.key] || '',
+                                }"
+                              >
+                                {{ button.label }}
+                              </a-button>
+                            </div>
+                          </template>
+                          <a-button type="primary" size="small">
+                            {{ t('VERIFY') }}
+                          </a-button>
+                        </a-popover>
+                      </template>
+                    </template>
+
+                    <template v-else-if="column.dataIndex === 'remark'">
+                      <a-tooltip
+                        :title="record.fullRemark || record.remark"
+                        placement="topLeft"
+                      >
+                        <span v-html="record.remark"></span>
+                      </a-tooltip>
+                    </template>
+                    <template v-else>
+                      {{ text }}
                     </template>
                   </template>
-
-                  <template v-else-if="column.dataIndex === 'remark'">
-                    <a-tooltip
-                      :title="record.fullRemark || record.remark"
-                      placement="topLeft"
-                    >
-                      <span v-html="record.remark"></span>
-                    </a-tooltip>
-                  </template>
-                  <template v-else>
-                    {{ text }}
-                  </template>
-                </template>
-              </a-table>
-            </div>
-            <div v-if="isMobile" class="list-container" style="margin: 0 16px">
-              <div class="result-list">
-                <div
-                  class="list-item"
-                  v-for="item in paginatedData"
-                  :key="item.key"
-                >
-                  <div class="list-item-content">
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('MODEL_STATUS_LABEL')
-                      }}</span>
-                      <span class="field-value">{{ item.status }}</span>
-                    </div>
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('MODEL_NAME_LABEL')
-                      }}</span>
-                      <span class="field-value" @click="copyText(item.model)">
-                        {{ item.model }}
-                      </span>
-                    </div>
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('RESPONSE_TIME_LABEL')
-                      }}</span>
-                      <span class="field-value">{{ item.responseTime }}</span>
-                    </div>
-                    <div class="list-item-field">
-                      <div class="verify-btn-group">
-                        <a-button
-                          v-for="(button, index) in item.buttons"
-                          :key="index"
-                          type="default"
-                          size="small"
-                          @click="button.onClick"
-                          style="margin-bottom: 5px"
-                          :style="{
-                            backgroundColor: buttonColors[button.key] || '',
-                            borderColor: buttonColors[button.key] || '',
-                          }"
-                        >
-                          {{ button.label }}
-                        </a-button>
+                </a-table>
+              </div>
+              <div
+                v-if="isMobile"
+                class="list-container"
+                style="margin: 0 16px"
+              >
+                <div class="result-list">
+                  <div
+                    class="list-item"
+                    v-for="item in paginatedData"
+                    :key="item.key"
+                  >
+                    <div class="list-item-content">
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('MODEL_STATUS_LABEL')
+                        }}</span>
+                        <span class="field-value">{{ item.status }}</span>
                       </div>
-                    </div>
-                    <div class="list-item-field" v-if="item.remark">
-                      <span class="field-label">{{ t('REMARK_LABEL') }}</span>
-                      <span class="field-value" v-html="item.remark"></span>
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('MODEL_NAME_LABEL')
+                        }}</span>
+                        <span class="field-value" @click="copyText(item.model)">
+                          {{ item.model }}
+                        </span>
+                      </div>
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('RESPONSE_TIME_LABEL')
+                        }}</span>
+                        <span class="field-value">{{ item.responseTime }}</span>
+                      </div>
+                      <div class="list-item-field">
+                        <div class="verify-btn-group">
+                          <a-button
+                            v-for="(button, index) in item.buttons"
+                            :key="index"
+                            type="default"
+                            size="small"
+                            @click="button.onClick"
+                            style="margin-bottom: 5px"
+                            :style="{
+                              backgroundColor: buttonColors[button.key] || '',
+                              borderColor: buttonColors[button.key] || '',
+                            }"
+                          >
+                            {{ button.label }}
+                          </a-button>
+                        </div>
+                      </div>
+                      <div class="list-item-field" v-if="item.remark">
+                        <span class="field-label">{{ t('REMARK_LABEL') }}</span>
+                        <span class="field-value" v-html="item.remark"></span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <a-pagination
+                :current="currentPage"
+                :total="tableData.length"
+                :pageSize="pageSize"
+                @change="handlePageChange"
+                style="margin-top: 16px; text-align: right"
+                v-if="isMobile"
+              />
             </div>
-            <a-pagination
-              :current="currentPage"
-              :total="tableData.length"
-              :pageSize="pageSize"
-              @change="handlePageChange"
-              style="margin-top: 16px; text-align: right"
-              v-if="isMobile"
-            />
           </div>
         </div>
-      </div>
+      </a-flex>
     </div>
     <a-modal
       v-model:open="functionCallingModalVisible"
@@ -1134,6 +1152,15 @@ onMounted(() => {
   });
 });
 
+// 设置高度单位 vh
+onMounted(() => {
+  const setVh = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+  setVh();
+  window.addEventListener('resize', setVh);
+});
 // 显示更新提示的函数
 function showUpdatePrompt(updateInfo) {
   Modal.confirm({
@@ -1778,6 +1805,7 @@ const columns = [
     dataIndex: 'model',
     key: 'model',
     width: 180,
+    ellipsis: true,
     sorter: (a, b) => a.model.localeCompare(b.model),
     customCell: () => ({ attrs: { 'data-label': t('MODEL_NAME_LABEL') } }),
   },
@@ -2719,9 +2747,9 @@ body {
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center; /* 水平居中 */
-  overflow-y: auto;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100);
 }
 
 .page-content {
@@ -3235,24 +3263,24 @@ input[type='number']:not(:placeholder-shown) {
 
 /* 移动端样式 */
 @media (max-width: 767px) {
-  .page-content {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    flex-grow: 0;
-    overflow-y: auto;
-  }
-
   .container {
     max-width: 95%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
   }
 
   .container.shift-left,
   .container.result-container {
     transform: none;
     opacity: 1;
+  }
+
+  .result-container {
+    width: 100%;
+    overflow: hidden; /* 防止内容溢出 */
+    max-width: 95%;
+    margin-bottom: 20px;
   }
 
   /* 添加以下内容，确保 .page-content 仍然占据可用空间，并且内容可滚动 */
@@ -3269,6 +3297,7 @@ input[type='number']:not(:placeholder-shown) {
 
 .result-table .ant-table-cell {
   padding: 8px;
+  table-layout: fixed;
   white-space: normal; /* 允许内容换行 */
   word-break: break-all; /* 长单词会换行 */
 }
@@ -3439,18 +3468,22 @@ body.light-mode {
   border-bottom: 1px solid var(--border-color, #e0e0e0);
   padding: 8px 0;
   display: flex;
-  align-items: center;
+  flex-direction: row; /* 确保子元素水平排列 */
+  align-items: flex-start; /* 垂直方向顶部对齐 */
+  text-align: left; /* 确保文本左对齐 */
 }
 
 .field-label {
   font-weight: bold;
   margin-right: 8px;
   min-width: 100px;
+  text-align: left;
 }
 
 .field-value {
   flex: 1;
   word-break: break-all;
+  text-align: left;
 }
 
 /* 调整按钮在移动端的显示 */
