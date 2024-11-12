@@ -40,7 +40,7 @@ venv
 temp
 tmp
 tput
-
+api/local/data.json
 
 
 docs

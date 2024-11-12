@@ -11,16 +11,16 @@ import { useI18n } from 'vue-i18n';
 export default {
   name: 'App',
   setup() {
-    const {t} = useI18n();
+    const { t } = useI18n();
     const theme = ref({
-      primaryColor: '#1890ff'
+      primaryColor: '#1890ff',
     });
 
     return {
       theme,
-      t
+      t,
     };
-  }
+  },
 };
 </script>
 

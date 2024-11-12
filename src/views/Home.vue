@@ -10,7 +10,7 @@ import ApiForm from '../components/Check.vue';
 export default {
   name: 'Home',
   components: {
-    ApiForm
-  }
+    ApiForm,
+  },
 };
 </script>

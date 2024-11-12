@@ -1,8 +1,6 @@
 <div align="center">
 <img src="./docs/images/logo.png" alt="logo.png" style="zoom:30%;" />
 
-
-
 # API CHECKE
 
 </div>
@@ -10,34 +8,39 @@
 > [!TIP]
 > 点击体验 : https://check.crond.dev
 
-
-
-##  纯前端 API 检测工具
+## 纯前端 API 检测工具
 
 - ✅ **支持各种 OpenAI API 中转服务的测活**
+
   - 兼容 oneapi、newapi 等中转 OpenAI 格式的 API，全面检测可用性。
 
 - 🔒 **纯前端版本，数据更安全**
+
   - 所有操作均在前端完成，无需担心网络超时，确保数据安全。
 
 - 📊 **详细的测活数据**
+
   - 显示响应时间、模型一致性等信息，测试结果一目了然。
 
 - 💾 **云端存储与本地存**储
+
   - **云端存储**：配置可保存至云端，实现多设备共享。
   - **本地存储**：常用配置本地保存，快速加载，方便快捷。
 
 - 🌙 **主题和语言切换**
+
   - **深色/浅色模式**：根据喜好选择适合的主题，保护视力。
   - **多语言支持**：支持中文和英文，满足不同语言需求。
 
 - 🖥️ **多种部署方式**
   - **Vercel 部署**：支持一键部署到 Vercel，方便快捷。
-  - **Docker 部署**  
+  - **Docker 部署**
   - **Cloudflare 部署**
 
 ## 📦开始使用
+
 ### vercel 部署
+
 1. 点击右侧按钮开始部署：
    [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)，直接使用 Github 账号登录即可，记得在环境变量页填入 后端密码
 2. 部署完毕后，即可开始使用；
@@ -52,21 +55,19 @@
    docker run -d -p 13000:13000 \
      -e PASSWORD=you_password \
      -v you_path:/app/data \
-     --name api-check ghcr.io/rickcert/api-check:latest 
+     --name api-check ghcr.io/rickcert/api-check:latest
    ```
 
-   
-
 ### cloudflare 部署后端
+
 1. 参考 [详细教程](./docs/cloudflare.md)。
 2. 最好绑定自定义域名
-   
 
-##  📜最近更新
+## 📜最近更新
 
 <img src="./docs/images/testing.png" alt="测试" style="zoom:50%;" />
 
-###  v2.0.0
+### v2.0.0
 
 🔔 **全新特性与优化**
 
@@ -75,9 +76,9 @@
   - **本地存储**：提供本地缓存功能，快捷保存到本地，避免重复输入，提高使用效率。
   - **数据管理**：新增设置面板，方便管理本地和云端的配置数据。
 - ✨**支持预设参数**
-  -  **一键配置方便**
-  -  **快速绑定到new-api**
-- 💻 **支持 Vercel  Docker一键部署**
+  - **一键配置方便**
+  - **快速绑定到new-api**
+- 💻 **支持 Vercel Docker一键部署**
 - 🌙 **新增暗黑模式**
   - **主题切换**：支持深色模式和浅色模式的切换，适应不同环境和用户偏好。
   - **自动适配**：可以根据系统设置自动切换主题，保护您的视力。
@@ -86,13 +87,13 @@
 - 📱 **移动端适配优化**。
 - 🛠 **其他优化和修复**
 
-###  🧪  版本历史
+### 🧪 版本历史
 
 <details>
 
-###  v1.5.0
+### v1.5.0
 
-- 📱  适配手机模式
+- 📱 适配手机模式
 - 🌙 新增暗黑主题
 - 🧠 优化o1模型测试
 
@@ -120,7 +121,6 @@
 - 📋 实现模型列表获取
 </details>
 
-
 ## 📋 功能介绍
 
 - 🧪 测试多个模型的可用性和一致性
@@ -131,17 +131,16 @@
 - 💾 云端存储和本地缓存
 - 🌙 主题和语言切换
 - 🛠 高级验证功能
+
   - **官转 验证**：验证 API 的真实性，查看系统指纹。
-  
   - **温度验证**：验证模型的随机性和稳定性。
-  
   - **函数调用验证**：测试模型的函数调用能力。
-  
+
 ### 🛠 云端存储
 
 - **docker 部署** 后端url 请使用 https://your_website/api
 - **vercel 部署** 后端url 请使用 https://your_website/api
-- **Cloudflare部署**  后端url 请使用 https://your_website
+- **Cloudflare部署** 后端url 请使用 https://your_website
 
 ### 🛠 预设参数设置
 
@@ -149,59 +148,63 @@
 
 🔗 url
 
-  - **描述**: API 接口地址。
-  - **示例**: `"url": "https://api.example.com"`
+- **描述**: API 接口地址。
+- **示例**: `"url": "https://api.example.com"`
 
 📦 models
 
-  - **描述**: 模型名称数组，表示可以使用的模型。
-  - **示例**: `"models": ["model1", "model2"]`
+- **描述**: 模型名称数组，表示可以使用的模型。
+- **示例**: `"models": ["model1", "model2"]`
 
 ⏱ timeout
 
-  - **描述**: 请求超时时间（以秒为单位）。
-  - **示例**: `"timeout": 30`
+- **描述**: 请求超时时间（以秒为单位）。
+- **示例**: `"timeout": 30`
 
 🔁 concurrency
 
-  - **描述**: 并发请求的数量。
-  - **示例**: `"concurrency": 5`
+- **描述**: 并发请求的数量。
+- **示例**: `"concurrency": 5`
 
-🚫 closeAnnouncement  **方便中转站使用**
+🚫 closeAnnouncement **方便中转站使用**
 
-  - **描述**: 是否关闭公告显示。设置为 `true` 时关闭公告显示，设置为 `false` 或未定义时显示公告。 **方便中转站使用**
-  - **示例**: `"closeAnnouncement": true`
+- **描述**: 是否关闭公告显示。设置为 `true` 时关闭公告显示，设置为 `false` 或未定义时显示公告。 **方便中转站使用**
+- **示例**: `"closeAnnouncement": true`
 
-  ```
-  https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true}
-  ```
-  解码后的 JSON 字符串如下：
-  ```json
-  {
-      "key": "your_api_key",
-      "url": "https://api.example.com",
-      "models": ["gpt-4o-mini", "gpt-4o"],
-      "timeout": 10,
-      "concurrency": 2,
-      "closeAnnouncement": true
-  }
-  ```
-  - **voapi** 示例
+```
+https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true}
+```
 
-  ```
-  {
-          "name": "check",
-          "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true}",
-          "icon": "https://check.crond.dev/logo.png"
-  }
-  ```
-  - **newapi** 示例
+解码后的 JSON 字符串如下：
 
-  ```
-  {
-      "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true}"
-  }
-  ```
+```json
+{
+  "key": "your_api_key",
+  "url": "https://api.example.com",
+  "models": ["gpt-4o-mini", "gpt-4o"],
+  "timeout": 10,
+  "concurrency": 2,
+  "closeAnnouncement": true
+}
+```
+
+- **voapi** 示例
+
+```
+{
+        "name": "check",
+        "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true}",
+        "icon": "https://check.crond.dev/logo.png"
+}
+```
+
+- **newapi** 示例
+
+```
+{
+    "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true}"
+}
+```
 
 ### 🛠 **高级验证功能**
 
@@ -219,6 +222,7 @@
 3. 🎯 根据官方api参考值，检测命中率
 
 ### 🛠生成报告
+
 <img src="./docs/images/report.png" alt="上测试报告" style="zoom:50%;" />
 
 ## 🤝 贡献
@@ -233,7 +237,7 @@
 
 特别感谢以下贡献者，他们的努力使这个项目变得更好：
 
-- [Rick](https://linux.do/u/rick) 
-- [Megasoft](https://linux.do/u/zhong_little) 
+- [Rick](https://linux.do/u/rick)
+- [Megasoft](https://linux.do/u/zhong_little)
 - [fangyuan99](https://linux.do/u/fangyuan99)
-- [juzeon](https://github.com/juzeon) 
+- [juzeon](https://github.com/juzeon)

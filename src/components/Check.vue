@@ -75,13 +75,13 @@
                     class="language-menu-button"
                     @click="setLanguage('zh')"
                   >
-                    {{ t("LANGUAGE_CHINESE") }}
+                    {{ t('LANGUAGE_CHINESE') }}
                   </button>
                   <button
                     class="language-menu-button"
                     @click="setLanguage('en')"
                   >
-                    {{ t("LANGUAGE_ENGLISH") }}
+                    {{ t('LANGUAGE_ENGLISH') }}
                   </button>
                 </div>
               </div>
@@ -98,11 +98,11 @@
             </div>
           </div>
 
-          <h1>{{ t("API_CHECKER_TITLE") }}</h1>
-          <h3>{{ t("API_CHECKER_SUBTITLE") }}</h3>
+          <h1>{{ t('API_CHECKER_TITLE') }}</h1>
+          <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
 
           <form @submit.prevent="handleSubmit" id="apiForm">
-            <div style="position: relative; margin-bottom: 10px;">
+            <div style="position: relative">
               <textarea
                 v-model="apiInfo"
                 id="api_info"
@@ -113,12 +113,11 @@
                 type="primary"
                 size="small"
                 @click="handlePaste"
-                style="position: absolute; right: 4px; top: 14px; padding: 0 8px; height: 24px;"
+                style="position: absolute; right: 4px; top: 14px; height: 24px"
               >
                 <template #icon>
-                  <CopyOutlined style="font-size: 14px;" />
+                  <CopyOutlined style="font-size: 14px" />
                 </template>
-                {{ t('PASTE') }}
               </a-button>
             </div>
 
@@ -152,14 +151,14 @@
                 class="get-models large-button"
                 style="height: 80px; width: 180px"
               >
-                {{ t("GET_MODEL_LIST") }}
+                {{ t('GET_MODEL_LIST') }}
               </a-button>
             </div>
 
             <div id="modelCheckboxes"></div>
             <div class="model-timeout-concurrency">
               <div class="model-timeout">
-                <label for="model_timeout">{{ t("SET_TIMEOUT") }}:</label>
+                <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
                 <input
                   type="number"
                   v-model="modelTimeout"
@@ -171,7 +170,7 @@
               </div>
               <div class="model-concurrency">
                 <label for="model_concurrency"
-                  >{{ t("SET_CONCURRENCY") }}:</label
+                  >{{ t('SET_CONCURRENCY') }}:</label
                 >
                 <input
                   type="number"
@@ -192,7 +191,7 @@
                 class="submit-query"
                 size="large"
               >
-                {{ t("TEST_MODELS") }}
+                {{ t('TEST_MODELS') }}
               </a-button>
 
               <a-button
@@ -202,7 +201,7 @@
                 class="check-quota"
                 size="large"
               >
-                {{ t("CHECK_QUOTA") }}
+                {{ t('CHECK_QUOTA') }}
               </a-button>
 
               <a-button
@@ -211,7 +210,7 @@
                 class="clear-form"
                 size="large"
               >
-                {{ t("CLEAR_FORM") }}
+                {{ t('CLEAR_FORM') }}
               </a-button>
             </div>
           </form>
@@ -253,12 +252,12 @@
                   <a-menu>
                     <a-menu-item key="1">
                       <a @click="copyModels('valid')">{{
-                        t("COPY_IDENTICAL_MODELS")
+                        t('COPY_IDENTICAL_MODELS')
                       }}</a>
                     </a-menu-item>
                     <a-menu-item key="2">
                       <a @click="copyModels('available')">{{
-                        t("COPY_AVAILABLE_MODELS")
+                        t('COPY_AVAILABLE_MODELS')
                       }}</a>
                     </a-menu-item>
                   </a-menu>
@@ -282,7 +281,7 @@
                 :columns="columns"
                 :data-source="tableData"
                 :pagination="{ pageSize: 8 }"
-                :row-key="(record) => record.key"
+                :row-key="record => record.key"
                 size="small"
                 class="result-table"
               >
@@ -322,7 +321,7 @@
                           </div>
                         </template>
                         <a-button type="primary" size="small">
-                          {{ t("VERIFY") }}
+                          {{ t('VERIFY') }}
                         </a-button>
                       </a-popover>
                     </template>
@@ -352,13 +351,13 @@
                   <div class="list-item-content">
                     <div class="list-item-field">
                       <span class="field-label">{{
-                        t("MODEL_STATUS_LABEL")
+                        t('MODEL_STATUS_LABEL')
                       }}</span>
                       <span class="field-value">{{ item.status }}</span>
                     </div>
                     <div class="list-item-field">
                       <span class="field-label">{{
-                        t("MODEL_NAME_LABEL")
+                        t('MODEL_NAME_LABEL')
                       }}</span>
                       <span class="field-value" @click="copyText(item.model)">
                         {{ item.model }}
@@ -366,7 +365,7 @@
                     </div>
                     <div class="list-item-field">
                       <span class="field-label">{{
-                        t("RESPONSE_TIME_LABEL")
+                        t('RESPONSE_TIME_LABEL')
                       }}</span>
                       <span class="field-value">{{ item.responseTime }}</span>
                     </div>
@@ -389,7 +388,7 @@
                       </div>
                     </div>
                     <div class="list-item-field" v-if="item.remark">
-                      <span class="field-label">{{ t("REMARK_LABEL") }}</span>
+                      <span class="field-label">{{ t('REMARK_LABEL') }}</span>
                       <span class="field-value" v-html="item.remark"></span>
                     </div>
                   </div>
@@ -500,13 +499,13 @@
                       height: 90%;
                     "
                   >
-                    {{ t("SAVE_TO_LOCAL_CACHE") }}
+                    {{ t('SAVE_TO_LOCAL_CACHE') }}
                   </a-button>
                 </div>
               </a-col>
             </a-row>
           </a-form>
-          <h3>{{ t("HISTORY_RECORDS") }}</h3>
+          <h3>{{ t('HISTORY_RECORDS') }}</h3>
           <a-list
             :data-source="localCacheList"
             bordered
@@ -526,17 +525,17 @@
                   </div>
                 </div>
                 <template #actions>
-                  <a @click="loadLocalRecord(item.id)">{{ t("IMPORT") }}</a>
-                  <a @click="deleteLocalRecord(item.id)">{{ t("DELETE") }}</a>
+                  <a @click="loadLocalRecord(item.id)">{{ t('IMPORT') }}</a>
+                  <a @click="deleteLocalRecord(item.id)">{{ t('DELETE') }}</a>
                 </template>
               </a-list-item>
             </template>
           </a-list>
           <div style="margin-top: 16px">
-            <a-button @click="exportLocalCache" style="margin-right: 8px">{{
-              t("EXPORT")
-            }}</a-button>
-            <a-button @click="importLocalCache">{{ t("IMPORT") }}</a-button>
+            <a-button @click="exportLocalCache" style="margin-right: 8px"
+              >{{ t('EXPORT') }}
+            </a-button>
+            <a-button @click="importLocalCache">{{ t('IMPORT') }}</a-button>
           </div>
         </a-tab-pane>
         <a-tab-pane key="2" :tab="t('CLOUD_CACHE')" style="overflow-x: hidden">
@@ -577,7 +576,7 @@
                       word-break: break-word;
                     "
                   >
-                    {{ t("LOGIN") }}
+                    {{ t('LOGIN') }}
                   </a-button>
                 </a-col>
               </a-row>
@@ -592,9 +591,9 @@
                 margin-bottom: 16px;
               "
             >
-              <span>{{ t("LOGGED_IN_TO_CLOUD", { url: cloudUrl }) }}</span>
+              <span>{{ t('LOGGED_IN_TO_CLOUD', { url: cloudUrl }) }}</span>
               <a-button type="primary" @click="handleCloudLogout">
-                {{ t("LOGOUT") }}
+                {{ t('LOGOUT') }}
               </a-button>
             </div>
             <a-list
@@ -616,22 +615,22 @@
                     </div>
                   </div>
                   <template #actions>
-                    <a @click="loadCloudRecord(item.id)">{{ t("IMPORT") }}</a>
-                    <a @click="deleteCloudRecord(item.id)">{{ t("DELETE") }}</a>
+                    <a @click="loadCloudRecord(item.id)">{{ t('IMPORT') }}</a>
+                    <a @click="deleteCloudRecord(item.id)">{{ t('DELETE') }}</a>
                   </template>
                 </a-list-item>
               </template>
             </a-list>
             <div style="margin-top: 16px">
-              <a-button @click="exportCloudCache" style="margin-right: 8px">{{
-                t("EXPORT")
-              }}</a-button>
-              <a-button @click="importCloudCache" style="margin-right: 8px">{{
-                t("IMPORT")
-              }}</a-button>
-              <a-button type="primary" @click="confirmSaveCloudData">{{
-                t("CONFIRM_SAVE")
-              }}</a-button>
+              <a-button @click="exportCloudCache" style="margin-right: 8px"
+                >{{ t('EXPORT') }}
+              </a-button>
+              <a-button @click="importCloudCache" style="margin-right: 8px"
+                >{{ t('IMPORT') }}
+              </a-button>
+              <a-button type="primary" @click="confirmSaveCloudData"
+                >{{ t('CONFIRM_SAVE') }}
+              </a-button>
             </div>
           </div>
         </a-tab-pane>
@@ -655,7 +654,7 @@
                     {{ appInfo.subtitle }}
                   </p>
                   <p style="margin: 4px 0; font-size: 12px; color: #666">
-                    {{ t("VERSION") }}: {{ appInfo.version }}
+                    {{ t('VERSION') }}: {{ appInfo.version }}
                   </p>
                 </div>
               </a-col>
@@ -672,7 +671,7 @@
                       block
                       @click="openChangelog"
                     >
-                      {{ t("UPDATE_LOG") }}
+                      {{ t('UPDATE_LOG') }}
                     </a-button>
                     <a-button
                       type="primary"
@@ -680,7 +679,7 @@
                       block
                       @click="openWebsite"
                     >
-                      {{ t("OFFICIAL_WEBSITE") }}
+                      {{ t('OFFICIAL_WEBSITE') }}
                     </a-button>
                   </a-space>
                 </div>
@@ -702,7 +701,7 @@
                 <!-- 左侧：作者信息 -->
                 <a-col :xs="12" :sm="12">
                   <h3 style="font-size: 16px; margin-bottom: 8px">
-                    {{ t("AUTHORS") }}
+                    {{ t('AUTHORS') }}
                   </h3>
                   <p style="margin: 4px 0; font-size: 14px">
                     <a
@@ -726,7 +725,7 @@
                 <!-- 右侧：赞助商信息 -->
                 <a-col :xs="12" :sm="12">
                   <h3 style="font-size: 16px; margin-bottom: 8px">
-                    {{ t("SPONSORS") }}
+                    {{ t('SPONSORS') }}
                   </h3>
                   <ul style="list-style-type: none; padding: 0">
                     <li
@@ -749,7 +748,7 @@
               <a-divider style="margin: 16px 0"></a-divider>
               <div v-if="appInfo.contributors && appInfo.contributors.length">
                 <h3 style="font-size: 14px; margin: 16px 0 8px 0">
-                  {{ t("CONTRIBUTORS") }}
+                  {{ t('CONTRIBUTORS') }}
                 </h3>
                 <div style="display: flex; flex-wrap: wrap">
                   <div
@@ -782,7 +781,7 @@
             <div style="margin-top: 12px; text-align: left">
               <p style="margin: 4px 0; font-size: 12px">
                 &copy; {{ appInfo.year }} {{ appInfo.company }}.
-                {{ t("ALL_RIGHTS_RESERVED") }} {{ t("LICENSE") }}:
+                {{ t('ALL_RIGHTS_RESERVED') }} {{ t('LICENSE') }}:
                 {{ appInfo.license }}
               </p>
             </div>
@@ -804,7 +803,7 @@
     >
       <div>
         <div style="margin-bottom: 16px">
-          {{ t("SELECTED_MODELS", { count: selectedModels.length }) }}
+          {{ t('SELECTED_MODELS', { count: selectedModels.length }) }}
         </div>
         <div
           class="model-filter-container"
@@ -820,25 +819,25 @@
             @click="filterModels"
             style="margin-right: 8px"
           >
-            {{ t("FILTER") }}
+            {{ t('FILTER') }}
           </a-button>
-          <a-button @click="clearFilter">{{ t("CLEAR") }}</a-button>
+          <a-button @click="clearFilter">{{ t('CLEAR') }}</a-button>
         </div>
         <div class="checkbox-container" style="margin-bottom: 16px">
           <a-checkbox @change="onSelectAll" style="margin-right: 16px">
-            {{ t("SELECT_ALL") }}
+            {{ t('SELECT_ALL') }}
           </a-checkbox>
           <a-checkbox @change="onSelectAllChatOnly">
-            {{ t("SELECT_ALL_CHAT_ONLY") }}
+            {{ t('SELECT_ALL_CHAT_ONLY') }}
           </a-checkbox>
         </div>
-        <div style="max-height: 300px; overflow-y: auto">
+        <div style="max-height: 300px; overflow-y: auto; overflow-x: hidden">
           <a-checkbox-group v-model:value="selectedModels">
             <a-row :gutter="[16, 16]">
               <a-col v-for="model in sortedModels" :key="model" :span="12">
-                <a-checkbox :value="model" style="width: 100%">{{
-                  model
-                }}</a-checkbox>
+                <a-checkbox :value="model" style="width: 100%"
+                  >{{ model }}
+                </a-checkbox>
               </a-col>
             </a-row>
           </a-checkbox-group>
@@ -869,14 +868,14 @@
         <a-image :width="200" :src="svgDataUrl" alt="SVG Image" />
       </div>
       <div class="copy-close-container">
-        <a-button type="primary" @click="copyToClipboardHandler">{{
-          t("COPY_IMAGE")
-        }}</a-button>
-        <a-button @click="handleCloseSVGModal">{{ t("CLOSE") }}</a-button>
+        <a-button type="primary" @click="copyToClipboardHandler"
+          >{{ t('COPY_IMAGE') }}
+        </a-button>
+        <a-button @click="handleCloseSVGModal">{{ t('CLOSE') }}</a-button>
       </div>
     </a-modal>
     <a-modal
-      v-model:visible="customDialogModalVisible"
+      v-model:open="customDialogModalVisible"
       :title="t('CUSTOM_DIALOG_VERIFICATION')"
       @ok="handleCustomDialogSubmit"
       @cancel="handleCustomDialogCancel"
@@ -892,17 +891,17 @@
       </template>
       <template v-else>
         <div class="dialog-result">
-          <h3>{{ t("CUSTOM_DIALOG_VERIFICATION_RESULT") }}</h3>
+          <h3>{{ t('CUSTOM_DIALOG_VERIFICATION_RESULT') }}</h3>
           <div class="result-item">
-            <div class="label">{{ t("MODEL") }}:</div>
+            <div class="label">{{ t('MODEL') }}:</div>
             <div class="content">{{ customDialogResult.model }}</div>
           </div>
           <div class="result-item">
-            <div class="label">{{ t("PROMPT") }}:</div>
+            <div class="label">{{ t('PROMPT') }}:</div>
             <div class="content">{{ customDialogResult.prompt }}</div>
           </div>
           <div class="result-item">
-            <div class="label">{{ t("RESPONSE_CONTENT") }}:</div>
+            <div class="label">{{ t('RESPONSE_CONTENT') }}:</div>
             <div class="content">{{ customDialogResult.response }}</div>
           </div>
           <a-collapse>
@@ -920,66 +919,58 @@
 <script setup>
 import {
   CopyOutlined,
-  SettingOutlined,
   GithubOutlined,
   LockOutlined,
-  UserOutlined,
-  ShareAltOutlined,
   MessageOutlined,
-} from "@ant-design/icons-vue";
+  SettingOutlined,
+  ShareAltOutlined,
+  UserOutlined,
+} from '@ant-design/icons-vue';
+import { computed, h, nextTick, onMounted, reactive, ref } from 'vue';
 import {
-  computed,
-  h,
-  onMounted,
-  reactive,
-  ref,
-  nextTick,
-  onBeforeUnmount,
-} from "vue";
-import {
+  ConfigProvider,
   message,
   Modal,
-  ConfigProvider,
-  theme,
-  Table as aTable,
   notification,
-  Collapse,
-} from "ant-design-vue";
-import { useWindowSize } from "@vueuse/core";
-import { useI18n } from "vue-i18n";
+  Table as aTable,
+  theme,
+} from 'ant-design-vue';
+import { useWindowSize } from '@vueuse/core';
+import { useI18n } from 'vue-i18n';
 
 import {
-  TitleComponent,
   LegendComponent,
+  TitleComponent,
   TooltipComponent,
-} from "echarts/components";
-import * as echarts from "echarts/core";
-import { RadarChart } from "echarts/charts";
-import { CanvasRenderer } from "echarts/renderers";
+} from 'echarts/components';
+import * as echarts from 'echarts/core';
+import { RadarChart } from 'echarts/charts';
+import { CanvasRenderer } from 'echarts/renderers';
 
 import {
-  initializeTheme,
-  initializeLanguage,
   initConsole,
-} from "../utils/initialization.js";
-import { fetchModelList, fetchQuotaInfo, testModelList } from "../utils/api.js";
+  initializeLanguage,
+  initializeTheme,
+} from '../utils/initialization.js';
+import { fetchModelList, fetchQuotaInfo, testModelList } from '../utils/api.js';
 import {
+  calculateSummaryData,
   errorHandler,
-  maskApiKey,
+  extractApiInfo,
   isClaude,
   isGpt,
-  calculateSummaryData,
-} from "../utils/normal.js";
-import { checkForUpdates } from "../utils/update.js";
-import ModelVerifier from "../utils/verify.js";
-import { toggleTheme } from "../utils/theme.js";
-import { createSVGDataURL } from "../utils/svg.js";
-import { appInfo, announcement } from "../utils/info.js";
+  maskApiKey,
+} from '../utils/normal.js';
+import { checkForUpdates } from '../utils/update.js';
+import ModelVerifier from '../utils/verify.js';
+import { toggleTheme } from '../utils/theme.js';
+import { createSVGDataURL } from '../utils/svg.js';
+import { announcement, appInfo } from '../utils/info.js';
 import {
   cantFunctionModelList,
-  cantTemperatureModelList,
   cantOfficialModelList,
-} from "../utils/models.js";
+  cantTemperatureModelList,
+} from '../utils/models.js';
 
 // 注册必须的组件
 echarts.use([
@@ -1013,7 +1004,7 @@ const results = reactive({
 // 添加布尔变量，用于控制平移动画和结果容器的显示
 const shouldShift = ref(false);
 const showResultContainer = ref(false);
-const handlePageChange = (page) => {
+const handlePageChange = page => {
   currentPage.value = page;
 };
 
@@ -1028,20 +1019,20 @@ function closeResults() {
 }
 
 // 定义响应式状态
-const apiInfo = ref("");
-const apiUrl = ref("");
-const apiKey = ref("");
-const modelName = ref("");
+const apiInfo = ref('');
+const apiUrl = ref('');
+const apiKey = ref('');
+const modelName = ref('');
 const modelTimeout = ref(10);
 const modelConcurrency = ref(5);
 const currentLanguage = computed(() =>
-  locale.value.startsWith("zh") ? "zh" : "en"
+  locale.value.startsWith('zh') ? 'zh' : 'en'
 );
 const showLanguageMenu = ref(false);
 const models = ref([]);
 const selectedModels = ref([]);
 const showModelModal = ref(false);
-const prefixFilter = ref("");
+const prefixFilter = ref('');
 const verificationLoading = ref(false);
 const functionCallingModalVisible = ref(false);
 const functionCallingA = ref(3);
@@ -1053,22 +1044,22 @@ const isSummaryModalVisible = ref(false);
 const chartContainer = ref(null);
 let chartInstance = null;
 const showSVGModal = ref(false);
-const svgDataUrl = ref("");
+const svgDataUrl = ref('');
 const testingComplete = ref(false);
 
 const appDescription = computed(() => {
-  const currentLocale = locale.value || "zh";
-  return appInfo.description[currentLocale] || appInfo.description["zh"];
+  const currentLocale = locale.value || 'zh';
+  return appInfo.description[currentLocale] || appInfo.description['zh'];
 });
 
 // 打开官方网站的方法
 function openWebsite() {
-  window.open(appInfo.officialUrl, "_blank");
+  window.open(appInfo.officialUrl, '_blank');
 }
 
 // 打开更新日志的方法
 function openChangelog() {
-  window.open(appInfo.changelogUrl, "_blank");
+  window.open(appInfo.changelogUrl, '_blank');
 }
 
 // 修改 paginatedData 的定义，使用 tableData.value
@@ -1083,8 +1074,8 @@ const showAppSettingsModal = ref(false);
 // 主题切换方法
 const handleToggleTheme = () => {
   toggleTheme(isDarkMode);
-  document.body.classList.toggle("dark-mode", isDarkMode.value);
-  document.body.classList.toggle("light-mode", !isDarkMode.value);
+  document.body.classList.toggle('dark-mode', isDarkMode.value);
+  document.body.classList.toggle('light-mode', !isDarkMode.value);
 };
 
 // 语言切换菜单显示隐藏方法
@@ -1093,21 +1084,21 @@ const toggleLanguageMenu = () => {
 };
 
 // 语言切换方法
-const setLanguage = (language) => {
+const setLanguage = language => {
   locale.value = language;
-  localStorage.setItem("locale", language);
+  localStorage.setItem('locale', language);
   showLanguageMenu.value = false; // 切换语言后隐藏菜单
 };
 
-const FUNCTION_VERIFICATION = computed(() => t("FUNCTION_VERIFICATION"));
-const TEMPERATURE_VERIFICATION = computed(() => t("TEMPERATURE_VERIFICATION"));
-const OFFICIAL_VERIFICATION = computed(() => t("OFFICIAL_VERIFICATION"));
+const FUNCTION_VERIFICATION = computed(() => t('FUNCTION_VERIFICATION'));
+const TEMPERATURE_VERIFICATION = computed(() => t('TEMPERATURE_VERIFICATION'));
+const OFFICIAL_VERIFICATION = computed(() => t('OFFICIAL_VERIFICATION'));
 
 const buttonColors = {
-  functionVerification: "#1890ff", // 蓝色
-  temperatureVerification: "#fa8c16", // 橙色
-  officialVerification: "#52c41a", // 绿色
-  officialVerificationPending: "#95de64",
+  functionVerification: '#1890ff', // 蓝色
+  temperatureVerification: '#fa8c16', // 橙色
+  officialVerification: '#52c41a', // 绿色
+  officialVerificationPending: '#95de64',
 };
 
 function handleFunctionCallingCancel() {
@@ -1120,7 +1111,7 @@ onMounted(() => {
   initializeLanguage(locale, currentLanguage);
   initConsole();
   // 初始化本地缓存列表
-  const savedLocalDataList = localStorage.getItem("localCacheList");
+  const savedLocalDataList = localStorage.getItem('localCacheList');
   if (savedLocalDataList) {
     localCacheList.value = JSON.parse(savedLocalDataList);
   } else {
@@ -1131,26 +1122,14 @@ onMounted(() => {
 
 onMounted(() => {
   // 智能提取 api info
-  document.getElementById("api_info").addEventListener("input", function () {
+  document.getElementById('api_info').addEventListener('input', function () {
     let text = this.value;
-    let urlPattern = /(https?:\/\/[^\s，。、！,；;\n]+)/;
-    let keyPattern = /(sk-[a-zA-Z0-9]+)/;
-
-    let urlMatch = text.match(urlPattern);
-    let keyMatch = text.match(keyPattern);
-
-    if (urlMatch) {
-      // 去除末尾/后的空格 其他字符 保留到最后一个/前面
-      let cleanUrl = urlMatch[0].match(/(.*)\/.*/)[1];
-      // 如果. 存在则使用
-      if (cleanUrl.includes(".")) {
-        apiUrl.value = cleanUrl;
-      } else {
-        apiUrl.value = urlMatch[0];
-      }
+    let { apiUrl: extractedUrl, apiKey: extractedKey } = extractApiInfo(text);
+    if (extractedUrl) {
+      apiUrl.value = extractedUrl;
     }
-    if (keyMatch) {
-      apiKey.value = keyMatch[0];
+    if (extractedKey) {
+      apiKey.value = extractedKey;
     }
   });
 });
@@ -1158,19 +1137,19 @@ onMounted(() => {
 // 显示更新提示的函数
 function showUpdatePrompt(updateInfo) {
   Modal.confirm({
-    title: t("UPDATE_AVAILABLE_TITLE", { version: updateInfo.latestVersion }),
+    title: t('UPDATE_AVAILABLE_TITLE', { version: updateInfo.latestVersion }),
     content: () =>
-      h("div", [
-        h("p", `${t("CURRENT_VERSION")}: ${appInfo.version}`),
-        h("p", `${t("LATEST_VERSION")}: ${updateInfo.latestVersion}`),
-        h("p", `${t("RELEASE_NOTES")}:`),
-        h("div", { style: "white-space: pre-wrap;" }, updateInfo.releaseNotes),
+      h('div', [
+        h('p', `${t('CURRENT_VERSION')}: ${appInfo.version}`),
+        h('p', `${t('LATEST_VERSION')}: ${updateInfo.latestVersion}`),
+        h('p', `${t('RELEASE_NOTES')}:`),
+        h('div', { style: 'white-space: pre-wrap;' }, updateInfo.releaseNotes),
       ]),
-    okText: t("GO_TO_UPDATE"),
-    cancelText: t("CANCEL"),
+    okText: t('GO_TO_UPDATE'),
+    cancelText: t('CANCEL'),
     onOk() {
       // 打开 GitHub 发布页面
-      window.open(updateInfo.htmlUrl, "_blank");
+      window.open(updateInfo.htmlUrl, '_blank');
     },
   });
 }
@@ -1178,7 +1157,7 @@ function showUpdatePrompt(updateInfo) {
 // 函数：获取 URL 参数
 const getQueryParams = async () => {
   const params = new URLSearchParams(window.location.search);
-  const settings = params.get("settings");
+  const settings = params.get('settings');
   const owner = appInfo.owner;
   const repo = appInfo.repo;
   if (settings) {
@@ -1191,7 +1170,7 @@ const getQueryParams = async () => {
         apiUrl.value = settingsObj.url;
       }
       if (settingsObj.models) {
-        modelName.value = settingsObj.models.join(",");
+        modelName.value = settingsObj.models.join(',');
       }
       if (settingsObj.timeout) {
         modelTimeout.value = settingsObj.timeout;
@@ -1213,7 +1192,7 @@ const getQueryParams = async () => {
       }
       showSettingsModal();
     } catch (e) {
-      console.error("解析URL参数失败:", e);
+      console.error('解析URL参数失败:', e);
     }
   } else {
     showAnnouncement();
@@ -1226,7 +1205,7 @@ const getQueryParams = async () => {
 
 // 使用 ant-design-vue 的 Modal 显示设置弹窗
 const showSettingsModal = () => {
-  const skMasked = apiKey.value.slice(0, 5) + "*****";
+  const skMasked = apiKey.value.slice(0, 5) + '*****';
 
   const messageContent = `
         <div>
@@ -1240,11 +1219,11 @@ const showSettingsModal = () => {
       `;
 
   Modal.info({
-    title: "预设配置",
-    content: h("div", { innerHTML: messageContent }),
+    title: '预设配置',
+    content: h('div', { innerHTML: messageContent }),
     width: 400,
     centered: true,
-    okText: "确定",
+    okText: '确定',
   });
 };
 
@@ -1255,44 +1234,44 @@ function showAnnouncement() {
 
   descriptionNodes.push(
     h(
-      "div",
+      'div',
       {
-        style: "font-weight: bold; font-size: 16px; margin-bottom: 8px;",
+        style: 'font-weight: bold; font-size: 16px; margin-bottom: 8px;',
       },
       `${appInfo.name} v${appInfo.version}`
     )
   );
 
-  descriptionNodes.push(h("br"));
+  descriptionNodes.push(h('br'));
   descriptionNodes.push(
-    h("div", [
-      t("REPO_ADDRESS"),
-      ": ",
+    h('div', [
+      t('REPO_ADDRESS'),
+      ': ',
       h(
-        "a",
+        'a',
         {
           href: appInfo.githubUrl,
-          target: "_blank",
-          style: "color: #1890ff;",
+          target: '_blank',
+          style: 'color: #1890ff;',
         },
         `${appInfo.repo}`
       ),
     ])
   );
 
-  descriptionNodes.push(h("div", t("STAR_PROJECT")));
-  descriptionNodes.push(h("br"));
+  descriptionNodes.push(h('div', t('STAR_PROJECT')));
+  descriptionNodes.push(h('br'));
 
   descriptionNodes.push(
-    h("div", [
-      t("NEW_DOMAIN"),
-      ": ",
+    h('div', [
+      t('NEW_DOMAIN'),
+      ': ',
       h(
-        "a",
+        'a',
         {
           href: appInfo.officialUrl,
-          target: "_blank",
-          style: "color: #1890ff;",
+          target: '_blank',
+          style: 'color: #1890ff;',
         },
         appInfo.officialUrl
       ),
@@ -1300,46 +1279,46 @@ function showAnnouncement() {
   );
 
   if (isOfficialSite) {
-    descriptionNodes.push(h("br"));
-    announcement.officialContent[lang].forEach((line) => {
-      descriptionNodes.push(h("div", line));
+    descriptionNodes.push(h('br'));
+    announcement.officialContent[lang].forEach(line => {
+      descriptionNodes.push(h('div', line));
     });
   }
 
-  descriptionNodes.push(h("br"));
+  descriptionNodes.push(h('br'));
 
   descriptionNodes.push(
-    h("div", { style: "font-weight: bold;" }, t("HOW_TO_USE"))
+    h('div', { style: 'font-weight: bold;' }, t('HOW_TO_USE'))
   );
-  announcement.howToUse[lang].forEach((line) => {
-    descriptionNodes.push(h("div", line));
+  announcement.howToUse[lang].forEach(line => {
+    descriptionNodes.push(h('div', line));
   });
 
-  descriptionNodes.push(h("br"));
+  descriptionNodes.push(h('br'));
 
-  const versionHistoryNodes = announcement.updateLog[lang].map((log) =>
-    h("div", { style: "margin-bottom: 8px;" }, [
-      h("strong", `${log.version} - ${log.date}`),
+  const versionHistoryNodes = announcement.updateLog[lang].map(log =>
+    h('div', { style: 'margin-bottom: 8px;' }, [
+      h('strong', `${log.version} - ${log.date}`),
       log.url
         ? h(
-            "a",
+            'a',
             {
               href: log.url,
-              target: "_blank",
-              style: "margin-left: 10px; color: #1890ff;",
+              target: '_blank',
+              style: 'margin-left: 10px; color: #1890ff;',
             },
-            t("VIEW_DETAILS") // "View Details" text
+            t('VIEW_DETAILS') // "View Details" text
           )
         : null,
     ])
   );
 
   descriptionNodes.push(
-    h("div", [
+    h('div', [
       h(
-        "div",
-        { style: "font-weight: bold; margin-bottom: 8px;" },
-        t("VERSION_HISTORY")
+        'div',
+        { style: 'font-weight: bold; margin-bottom: 8px;' },
+        t('VERSION_HISTORY')
       ),
       ...versionHistoryNodes,
     ])
@@ -1347,24 +1326,24 @@ function showAnnouncement() {
 
   notification.open({
     message: null,
-    description: h("div", descriptionNodes),
-    placement: "topRight",
+    description: h('div', descriptionNodes),
+    placement: 'topRight',
     duration: 0,
     onClose: () => {
-      localStorage.setItem("announcementShown", "true");
+      localStorage.setItem('announcementShown', 'true');
     },
     style: {
-      width: "350px",
+      width: '350px',
     },
   });
 }
 
 // 清除表单
 const clearForm = () => {
-  apiInfo.value = "";
-  apiUrl.value = "";
-  apiKey.value = "";
-  modelName.value = "";
+  apiInfo.value = '';
+  apiUrl.value = '';
+  apiKey.value = '';
+  modelName.value = '';
   modelTimeout.value = 10;
   modelConcurrency.value = 5;
 };
@@ -1377,18 +1356,18 @@ async function getModelList() {
   try {
     const data = await fetchModelList(apiUrl.value, apiKey.value);
     // 需要去重  data.data
-    models.value = [...new Set(data.data.map((model) => model.id))].sort();
+    models.value = [...new Set(data.data.map(model => model.id))].sort();
     showModelModal.value = true;
   } catch (error) {
-    console.error("Error in getModelList:", error);
-    message.error("获取模型失败，请检查API地址或密钥是否正确");
+    console.error('Error in getModelList:', error);
+    message.error('获取模型失败，请检查API地址或密钥是否正确');
   } finally {
     spinning.value = false; // 停止加载动画
   }
 }
 
 function handleModelModalOk() {
-  modelName.value = selectedModels.value.join(",");
+  modelName.value = selectedModels.value.join(',');
   showModelModal.value = false;
 }
 
@@ -1409,7 +1388,7 @@ function onSelectAllChatOnly(e) {
     const notChatPattern =
       /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
     selectedModels.value = models.value.filter(
-      (model) =>
+      model =>
         !notChatPattern.test(model) &&
         !/(image|audio|video|music|pdf|flux|suno|embed)/.test(model)
     );
@@ -1421,7 +1400,7 @@ function onSelectAllChatOnly(e) {
 function filterModels() {
   let prefix = prefixFilter.value.trim().toLowerCase();
   // 获取当前筛选结果
-  const filteredModels = models.value.filter((model) =>
+  const filteredModels = models.value.filter(model =>
     model.toLowerCase().includes(prefix)
   );
   // 将新筛选的模型与已选择的模型合并，使用 Set 去重
@@ -1442,7 +1421,7 @@ const sortedModels = computed(() => {
 });
 
 function clearFilter() {
-  prefixFilter.value = "";
+  prefixFilter.value = '';
   selectedModels.value = [];
 }
 
@@ -1462,33 +1441,33 @@ const checkQuota = async () => {
     if (!isNaN(quotaNumber) && !isNaN(usedNumber)) {
       remainInfo = `${(quotaNumber - usedNumber).toFixed(2)} $`;
     } else {
-      remainInfo = "无法计算剩余额度";
+      remainInfo = '无法计算剩余额度';
     }
 
     const showInfo = `可用额度为: ${remainInfo}\n\n已用额度为: ${usedInfo} $\n\n总额度为: ${quotaInfo} $`;
 
     Modal.info({
-      title: "检查额度",
-      content: h("div", { innerHTML: showInfo.replace(/\n/g, "<br/>") }),
+      title: '检查额度',
+      content: h('div', { innerHTML: showInfo.replace(/\n/g, '<br/>') }),
       centered: true,
       width: 400,
-      okText: "确定",
+      okText: '确定',
     });
   } catch (error) {
-    console.error("Error in checkQuota:", error);
-    if (error.message.includes("Unexpected token")) {
+    console.error('Error in checkQuota:', error);
+    if (error.message.includes('Unexpected token')) {
       Modal.error({
-        title: "检查额度失败",
-        content: "请检查API地址或密钥是否正确",
+        title: '检查额度失败',
+        content: '请检查API地址或密钥是否正确',
         centered: true,
-        okText: "确定",
+        okText: '确定',
       });
     } else {
       Modal.error({
-        title: "检查额度失败",
-        content: "检查额度失败",
+        title: '检查额度失败',
+        content: '检查额度失败',
         centered: true,
-        okText: "确定",
+        okText: '确定',
       });
     }
   } finally {
@@ -1512,14 +1491,14 @@ async function testModels() {
   // 清空表格数据
   tableData.value = [];
 
-  const apiUrlValue = apiUrl.value.replace(/\/+$/, "");
+  const apiUrlValue = apiUrl.value.replace(/\/+$/, '');
   const apiKeyValue = apiKey.value;
   const timeout = parseInt(modelTimeout.value);
   const concurrency = parseInt(modelConcurrency.value);
   let inputModels = modelName.value
-    .split(",")
-    .map((name) => name.trim())
-    .filter((name) => name !== "");
+    .split(',')
+    .map(name => name.trim())
+    .filter(name => name !== '');
   let selectedModelNames = selectedModels.value;
 
   const modelNames = Array.from(
@@ -1527,7 +1506,7 @@ async function testModels() {
   );
 
   if (modelNames.length === 0) {
-    message.error("请输入至少一个模型名称或从列表中选择模型");
+    message.error('请输入至少一个模型名称或从列表中选择模型');
     return;
   }
 
@@ -1549,7 +1528,7 @@ async function testModels() {
       modelNames,
       timeout,
       concurrency,
-      (progress) => {
+      progress => {
         updateTableData(progress);
         completedModels.value += 1;
         progressPercent.value = Math.round(
@@ -1564,7 +1543,7 @@ async function testModels() {
     showSummary(results);
   } catch (error) {
     testModels_spinning.value = false;
-    message.error("测试模型时发生错误: " + error.message);
+    message.error('测试模型时发生错误: ' + error.message);
   } finally {
     testModels_spinning.value = false;
     testingComplete.value = true;
@@ -1573,11 +1552,11 @@ async function testModels() {
 
 function updateTableData(progress) {
   const { type, data } = progress;
-  if (type === "valid") {
+  if (type === 'valid') {
     results.valid.push(data);
-  } else if (type === "invalid") {
+  } else if (type === 'invalid') {
     results.invalid.push(data);
-  } else if (type === "inconsistent") {
+  } else if (type === 'inconsistent') {
     results.inconsistent.push(data);
   }
   // 重新计算表格数据
@@ -1597,17 +1576,17 @@ function computeTableData() {
 
     // 添加对话验证按钮 (放在最前面)
     buttons.push({
-      label: t("CUSTOM_DIALOG_VERIFICATION"),
-      type: "default",
-      key: "customDialogVerification",
+      label: t('CUSTOM_DIALOG_VERIFICATION'),
+      type: 'default',
+      key: 'customDialogVerification',
       onClick: () => verifyCustomDialog(item.model),
     });
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
         label: FUNCTION_VERIFICATION.value,
-        type: "default",
-        key: "functionVerification",
+        type: 'default',
+        key: 'functionVerification',
         onClick: () => verifyFunctionCalling(item.model),
       });
     }
@@ -1615,8 +1594,8 @@ function computeTableData() {
       if (isGpt(item.model) || isClaude(item.model)) {
         buttons.push({
           label: TEMPERATURE_VERIFICATION.value,
-          type: "default",
-          key: "temperatureVerification",
+          type: 'default',
+          key: 'temperatureVerification',
           onClick: () => verifyTemperature(item.model),
         });
       }
@@ -1625,28 +1604,28 @@ function computeTableData() {
       if (isGpt(item.model)) {
         buttons.push({
           label: OFFICIAL_VERIFICATION.value,
-          type: "default",
-          key: "officialVerification",
+          type: 'default',
+          key: 'officialVerification',
           onClick: () => verifyOfficial(item.model),
         });
       }
     }
     // 针对 o1- 模型的特殊处理
-    let remark = "";
-    let fullRemark = "";
-    if (item.model.startsWith("o1-")) {
+    let remark = '';
+    let fullRemark = '';
+    if (item.model.startsWith('o1-')) {
       if (item.has_o1_reason) {
-        remark = t("O1_API_RELIABLE"); // '✨API 可靠'
-        fullRemark = t("O1_API_RELIABLE_DETAIL"); // '返回响应中包含非空 reasoning_tokens，API 可靠'
+        remark = t('O1_API_RELIABLE'); // '✨API 可靠'
+        fullRemark = t('O1_API_RELIABLE_DETAIL'); // '返回响应中包含非空 reasoning_tokens，API 可靠'
       } else {
-        remark = t("O1_API_POSSIBLE_ISSUE"); // '⚠️API 可能存在问题'
-        fullRemark = t("O1_API_POSSIBLE_ISSUE_DETAIL"); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
+        remark = t('O1_API_POSSIBLE_ISSUE'); // '⚠️API 可能存在问题'
+        fullRemark = t('O1_API_POSSIBLE_ISSUE_DETAIL'); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
       }
     }
 
     data.push({
       key: `valid-${index}`,
-      status: `🥳${t("MODEL_STATE_AVAILABLE")} `,
+      status: `🥳${t('MODEL_STATE_AVAILABLE')} `,
       model: item.model,
       responseTime: item.responseTime.toFixed(2),
       buttons: buttons,
@@ -1661,17 +1640,17 @@ function computeTableData() {
 
     // 添加对话验证按钮 (放在最前面)
     buttons.push({
-      label: t("CUSTOM_DIALOG_VERIFICATION"),
-      type: "default",
-      key: "customDialogVerification",
+      label: t('CUSTOM_DIALOG_VERIFICATION'),
+      type: 'default',
+      key: 'customDialogVerification',
       onClick: () => verifyCustomDialog(item.model),
     });
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
         label: FUNCTION_VERIFICATION.value,
-        type: "default",
-        key: "functionVerification",
+        type: 'default',
+        key: 'functionVerification',
         onClick: () => verifyFunctionCalling(item.model),
       });
     }
@@ -1679,8 +1658,8 @@ function computeTableData() {
       if (isGpt(item.model) || isClaude(item.model)) {
         buttons.push({
           label: TEMPERATURE_VERIFICATION.value,
-          type: "default",
-          key: "temperatureVerification",
+          type: 'default',
+          key: 'temperatureVerification',
           onClick: () => verifyTemperature(item.model),
         });
       }
@@ -1689,8 +1668,8 @@ function computeTableData() {
       if (isGpt(item.model)) {
         buttons.push({
           label: OFFICIAL_VERIFICATION.value,
-          type: "default",
-          key: "officialVerification",
+          type: 'default',
+          key: 'officialVerification',
           onClick: () => verifyOfficial(item.model),
         });
       }
@@ -1702,23 +1681,23 @@ function computeTableData() {
     let fullRemark;
 
     if (item.returnedModel && item.returnedModel.startsWith(`${item.model}-`)) {
-      status = `😲${t("MODEL_STATE_INCONSISTENT")} `;
-      remark = t("MODEL_MAPPING"); // 添加国际化
-      fullRemark = `${t("MAPPED_TO_MODEL")}: ${item.returnedModel}`;
+      status = `😲${t('MODEL_STATE_INCONSISTENT')} `;
+      remark = t('MODEL_MAPPING'); // 添加国际化
+      fullRemark = `${t('MAPPED_TO_MODEL')}: ${item.returnedModel}`;
     } else {
-      status = `🤔${t("NO_MATCH")}`; // 使用国际化字符串
-      remark = t("NO_MATCH"); // 如果需要，也可以添加 remark 的国际化
-      fullRemark = `${t("RETURNED_MODEL")}: ${item.returnedModel}`;
+      status = `🤔${t('NO_MATCH')}`; // 使用国际化字符串
+      remark = t('NO_MATCH'); // 如果需要，也可以添加 remark 的国际化
+      fullRemark = `${t('RETURNED_MODEL')}: ${item.returnedModel}`;
     }
 
     // 针对 o1- 模型的特殊处理
-    if (item.model.startsWith("o1-")) {
+    if (item.model.startsWith('o1-')) {
       if (item.has_o1_reason) {
-        remark = t("O1_API_RELIABLE"); // '✨API 可靠'
-        fullRemark = t("O1_API_RELIABLE_DETAIL"); // '返回响应中包含非空 reasoning_tokens，API 可靠'
+        remark = t('O1_API_RELIABLE'); // '✨API 可靠'
+        fullRemark = t('O1_API_RELIABLE_DETAIL'); // '返回响应中包含非空 reasoning_tokens，API 可靠'
       } else {
-        remark = t("O1_API_POSSIBLE_ISSUE"); // '⚠️API 可能存在问题'
-        fullRemark = t("O1_API_POSSIBLE_ISSUE_DETAIL"); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
+        remark = t('O1_API_POSSIBLE_ISSUE'); // '⚠️API 可能存在问题'
+        fullRemark = t('O1_API_POSSIBLE_ISSUE_DETAIL'); // '返回响应中不包含 reasoning_tokens 或为空，API 非官'
       }
     }
 
@@ -1736,14 +1715,14 @@ function computeTableData() {
   // 处理 invalid 模型
   results.invalid.forEach((item, index) => {
     let displayedRemark;
-    let fullRemark = item.response_text || item.error || "";
+    let fullRemark = item.response_text || item.error || '';
     displayedRemark = errorHandler(fullRemark);
 
     data.push({
       key: `invalid-${index}`,
-      status: `😡${t("MODEL_STATE_UNAVAILABLE")} `,
+      status: `😡${t('MODEL_STATE_UNAVAILABLE')} `,
       model: item.model,
-      responseTime: "-",
+      responseTime: '-',
       buttons: [],
       remark: displayedRemark,
       fullRemark: fullRemark,
@@ -1769,7 +1748,7 @@ function handleSummaryOk() {
   showResultContainer.value = true;
 }
 
-const summaryContent = ref("");
+const summaryContent = ref('');
 
 function renderRadarChart(radarChartOption) {
   if (!chartContainer.value) return;
@@ -1786,46 +1765,46 @@ function renderRadarChart(radarChartOption) {
 // 定义 columns
 const columns = [
   {
-    title: "模型状态",
-    dataIndex: "status",
-    key: "status",
-    fixed: "left",
+    title: '模型状态',
+    dataIndex: 'status',
+    key: 'status',
+    fixed: 'left',
     width: 100,
-    customCell: () => ({ attrs: { "data-label": t("MODEL_STATUS_LABEL") } }),
+    customCell: () => ({ attrs: { 'data-label': t('MODEL_STATUS_LABEL') } }),
     sorter: (a, b) => a.status.localeCompare(b.status),
   },
   {
-    title: "模型名称",
-    dataIndex: "model",
-    key: "model",
+    title: '模型名称',
+    dataIndex: 'model',
+    key: 'model',
     width: 180,
     sorter: (a, b) => a.model.localeCompare(b.model),
-    customCell: () => ({ attrs: { "data-label": t("MODEL_NAME_LABEL") } }),
+    customCell: () => ({ attrs: { 'data-label': t('MODEL_NAME_LABEL') } }),
   },
   {
-    title: "用时",
-    dataIndex: "responseTime",
+    title: '用时',
+    dataIndex: 'responseTime',
     width: 70,
-    key: "responseTime",
+    key: 'responseTime',
     sorter: (a, b) => parseFloat(a.responseTime) - parseFloat(b.responseTime),
-    customCell: () => ({ attrs: { "data-label": t("RESPONSE_TIME_LABEL") } }),
+    customCell: () => ({ attrs: { 'data-label': t('RESPONSE_TIME_LABEL') } }),
   },
   {
-    title: "备注",
-    dataIndex: "remark",
-    key: "remark",
+    title: '备注',
+    dataIndex: 'remark',
+    key: 'remark',
     width: 100,
     ellipsis: true,
-    customCell: () => ({ attrs: { "data-label": t("REMARK_LABEL") } }),
+    customCell: () => ({ attrs: { 'data-label': t('REMARK_LABEL') } }),
   },
   {
-    title: "验证",
-    dataIndex: "buttons",
-    key: "buttons",
+    title: '验证',
+    dataIndex: 'buttons',
+    key: 'buttons',
     width: 90,
-    fixed: "right",
+    fixed: 'right',
     customCell: () => ({
-      attrs: { "data-label": t("VERIFICATION_BUTTONS_LABEL") },
+      attrs: { 'data-label': t('VERIFICATION_BUTTONS_LABEL') },
     }),
   },
 ];
@@ -1837,9 +1816,9 @@ function copyText(text) {
     .then(() => {
       message.success(`"${text}" 已复制到剪贴板`);
     })
-    .catch((err) => {
-      console.error("复制失败:", err);
-      message.error("复制失败，请手动复制");
+    .catch(err => {
+      console.error('复制失败:', err);
+      message.error('复制失败，请手动复制');
     });
 }
 
@@ -1854,7 +1833,7 @@ async function verifyTemperature(model) {
     showTemperatureVerificationResult(result);
   } catch (error) {
     verificationLoading.value = false;
-    message.error("验证过程中发生错误：" + error.message);
+    message.error('验证过程中发生错误：' + error.message);
   } finally {
     verificationLoading.value = false; // 结束加载动画
   }
@@ -1872,46 +1851,46 @@ function showTemperatureVerificationResult(result) {
   // 定义列
   const columns = [
     {
-      title: t("TEST"),
-      dataIndex: "testNumber",
-      key: "testNumber",
-      width: "20%",
+      title: t('TEST'),
+      dataIndex: 'testNumber',
+      key: 'testNumber',
+      width: '20%',
     },
     {
-      title: t("RESPONSE"),
-      dataIndex: "response",
-      key: "response",
-      width: "80%",
+      title: t('RESPONSE'),
+      dataIndex: 'response',
+      key: 'response',
+      width: '80%',
     },
   ];
 
   Modal.info({
-    title: t("TEMPERATURE_VERIFICATION_RESULT"),
-    content: h("div", {}, [
+    title: t('TEMPERATURE_VERIFICATION_RESULT'),
+    content: h('div', {}, [
       h(
-        "p",
-        { style: "font-weight: bold;" },
+        'p',
+        { style: 'font-weight: bold;' },
         `当前待验证模型：${result.model}`
       ),
-      h("p", {}, t("REFERENCE_VALUES")),
+      h('p', {}, t('REFERENCE_VALUES')),
       h(
         aTable,
         {
           dataSource,
           columns,
           pagination: false,
-          style: "margin-top: 16px;",
+          style: 'margin-top: 16px;',
         },
         {}
       ),
       h(
-        "p",
-        { style: "margin-top: 16px; font-weight: bold;" },
+        'p',
+        { style: 'margin-top: 16px; font-weight: bold;' },
         `结论：${result.conclusion}`
       ),
     ]),
     width: 600,
-    okText: t("OK"),
+    okText: t('OK'),
   });
 }
 
@@ -1926,7 +1905,7 @@ async function verifyOfficial(model) {
     showOfficialVerificationResult(result);
   } catch (error) {
     verificationLoading.value = false;
-    message.error("验证过程中发生错误：" + error.message);
+    message.error('验证过程中发生错误：' + error.message);
   } finally {
     verificationLoading.value = false;
   }
@@ -1945,59 +1924,59 @@ function showOfficialVerificationResult(result) {
   // 定义列
   const columns = [
     {
-      title: "测试",
-      dataIndex: "testNumber",
-      key: "testNumber",
-      width: "25%",
+      title: '测试',
+      dataIndex: 'testNumber',
+      key: 'testNumber',
+      width: '25%',
     },
     {
-      title: "文本",
-      dataIndex: "text",
-      key: "text",
-      width: "50%",
+      title: '文本',
+      dataIndex: 'text',
+      key: 'text',
+      width: '50%',
     },
     {
-      title: "系统指纹",
-      dataIndex: "fingerprint",
-      key: "fingerprint",
-      width: "25%",
+      title: '系统指纹',
+      dataIndex: 'fingerprint',
+      key: 'fingerprint',
+      width: '25%',
     },
   ];
 
   // 相似度结果以文本形式展示
   const similarityText = Object.entries(result.similarity)
     .map(([key, value]) => `${key}: ${value}`)
-    .join("\n");
+    .join('\n');
 
   Modal.info({
-    title: t("OFFICIAL_VERIFICATION_RESULT"),
+    title: t('OFFICIAL_VERIFICATION_RESULT'),
     content: () =>
-      h("div", {}, [
+      h('div', {}, [
         h(
-          "p",
-          { style: "font-weight: bold;" },
-          `${t("MODEL")}: ${result.model}`
+          'p',
+          { style: 'font-weight: bold;' },
+          `${t('MODEL')}: ${result.model}`
         ),
-        h("p", {}, result.conclusion),
+        h('p', {}, result.conclusion),
         h(
           aTable,
           {
             dataSource,
             columns,
             pagination: false,
-            style: "margin-top: 12px;",
+            style: 'margin-top: 12px;',
           },
           {}
         ),
-        h("p", { style: "margin-top: 16px;" }, t("SIMILARITY_RESULTS") + "："),
+        h('p', { style: 'margin-top: 16px;' }, t('SIMILARITY_RESULTS') + '：'),
         h(
-          "pre",
-          { style: "white-space: pre-wrap; font-size: 12px;" },
+          'pre',
+          { style: 'white-space: pre-wrap; font-size: 12px;' },
           similarityText
         ),
       ]),
     width: 800,
-    okText: t("OK"),
+    okText: t('OK'),
   });
 }
 
@@ -2011,7 +1990,7 @@ function handleFunctionCallingOk() {
   const a = functionCallingA.value;
   const b = functionCallingB.value;
   if (isNaN(a) || isNaN(b)) {
-    message.error("请输入有效的数字 a 和 b");
+    message.error('请输入有效的数字 a 和 b');
     return;
   }
   functionCallingModalVisible.value = false;
@@ -2040,7 +2019,7 @@ async function performFunctionCallingVerification(model, a, b) {
     showFunctionCallingResult(result);
   } catch (error) {
     verificationLoading.value = false;
-    message.error("验证过程中发生错误：" + error.message);
+    message.error('验证过程中发生错误：' + error.message);
   } finally {
     verificationLoading.value = false; // 结束加载动画
   }
@@ -2049,37 +2028,37 @@ async function performFunctionCallingVerification(model, a, b) {
 // 定义显示函数调用验证结果的函数
 function showFunctionCallingResult(result) {
   Modal.info({
-    title: t("FUNCTION_VERIFICATION_RESULT"),
+    title: t('FUNCTION_VERIFICATION_RESULT'),
     content: () =>
-      h("div", {}, [
+      h('div', {}, [
         h(
-          "p",
-          { style: "font-weight: bold;" },
-          `${t("MODEL")}: ${result.model}`
+          'p',
+          { style: 'font-weight: bold;' },
+          `${t('MODEL')}: ${result.model}`
         ),
-        h("div", { style: "display: flex; justify-content: space-between;" }, [
-          h("div", { style: "width: 48%;" }, [
+        h('div', { style: 'display: flex; justify-content: space-between;' }, [
+          h('div', { style: 'width: 48%;' }, [
             h(
-              "p",
-              { style: "font-weight: bold;" },
-              `${t("STANDARD_RESPONSE")}:`
+              'p',
+              { style: 'font-weight: bold;' },
+              `${t('STANDARD_RESPONSE')}:`
             ),
             h(
-              "pre",
+              'pre',
               {
                 style:
-                  "font-size: 12px; border: 1px solid #ddd; padding: 8px; border-radius: 4px;",
+                  'font-size: 12px; border: 1px solid #ddd; padding: 8px; border-radius: 4px;',
               },
               JSON.stringify(result.standardResponse, null, 4)
             ),
           ]),
-          h("div", { style: "width: 48%;" }, [
-            h("p", { style: "font-weight: bold;" }, `${t("MODEL_RESPONSE")}:`),
+          h('div', { style: 'width: 48%;' }, [
+            h('p', { style: 'font-weight: bold;' }, `${t('MODEL_RESPONSE')}:`),
             h(
-              "pre",
+              'pre',
               {
                 style:
-                  "font-size: 12px; border: 1px solid #ddd; padding: 8px; border-radius: 4px;",
+                  'font-size: 12px; border: 1px solid #ddd; padding: 8px; border-radius: 4px;',
               },
               JSON.stringify(result.modelResponse, null, 4)
             ),
@@ -2087,20 +2066,20 @@ function showFunctionCallingResult(result) {
         ]),
       ]),
     width: 600,
-    okText: t("OK"),
+    okText: t('OK'),
   });
 }
 
 // 云端缓存相关状态
 const isCloudLoggedIn = ref(false);
-const cloudUrl = ref("");
-const cloudPassword = ref("");
-let cloudAuthHeader = ""; // 存储 Authorization 头的值
+const cloudUrl = ref('');
+const cloudPassword = ref('');
+let cloudAuthHeader = ''; // 存储 Authorization 头的值
 const cloudDataList = ref([]);
 
 const localListStyle = computed(() => {
   if (localCacheList.value.length > 4) {
-    return { maxHeight: "320px", overflowY: "auto" };
+    return { maxHeight: '320px', overflowY: 'auto' };
   } else {
     return {};
   }
@@ -2108,15 +2087,15 @@ const localListStyle = computed(() => {
 
 const cloudListStyle = computed(() => {
   if (cloudDataList.value.length > 5) {
-    return { maxHeight: "420px", overflowY: "auto" };
+    return { maxHeight: '420px', overflowY: 'auto' };
   } else {
     return {};
   }
 });
 
 // 本地缓存相关状态
-const settingsApiUrl = ref("");
-const settingsApiKey = ref("");
+const settingsApiUrl = ref('');
+const settingsApiKey = ref('');
 const localCacheList = ref([]);
 
 // 打开设置面板时，自动将主表单中的 apiUrl 和 apiKey 赋值给设置面板的输入框
@@ -2125,11 +2104,11 @@ function openSettingsModal() {
   settingsApiKey.value = apiKey.value;
 
   // 检查云端登录状态
-  const savedCloudUrl = localStorage.getItem("cloudUrl");
-  const savedCloudPassword = localStorage.getItem("cloudPassword");
-  const savedIsCloudLoggedIn = localStorage.getItem("isCloudLoggedIn");
+  const savedCloudUrl = localStorage.getItem('cloudUrl');
+  const savedCloudPassword = localStorage.getItem('cloudPassword');
+  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
 
-  if (savedIsCloudLoggedIn === "true" && savedCloudUrl && savedCloudPassword) {
+  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
     cloudUrl.value = savedCloudUrl;
     cloudPassword.value = savedCloudPassword;
     isCloudLoggedIn.value = true;
@@ -2148,7 +2127,7 @@ function closeSettingsModal() {
   showAppSettingsModal.value = false;
   setTimeout(() => {
     const settingsButton = document.querySelector(
-      '[aria-label="' + t("SETTINGS") + '"]'
+      '[aria-label="' + t('SETTINGS') + '"]'
     );
     if (settingsButton) {
       settingsButton.focus();
@@ -2163,15 +2142,15 @@ function saveToLocal() {
   apiKey.value = settingsApiKey.value;
 
   // 获取已有的本地缓存列表
-  const existingList = JSON.parse(localStorage.getItem("localCacheList")) || [];
+  const existingList = JSON.parse(localStorage.getItem('localCacheList')) || [];
   //查找是否有相同的 url 和 sk
   const existingIndex = existingList.findIndex(
-    (existingItem) =>
+    existingItem =>
       normalizeUrl(existingItem.url) === normalizeUrl(apiUrl.value) &&
       existingItem.apiKey.trim() === apiKey.value.trim()
   );
   if (existingIndex !== -1) {
-    message.error(t("RECORD_ALREADY_EXISTS"));
+    message.error(t('RECORD_ALREADY_EXISTS'));
     return;
   }
   // 加入时间戳
@@ -2189,55 +2168,55 @@ function saveToLocal() {
 
   // 新本地缓存表
   localCacheList.value = existingList;
-  localStorage.setItem("localCacheList", JSON.stringify(existingList));
+  localStorage.setItem('localCacheList', JSON.stringify(existingList));
 
-  message.success(t("DATA_SAVED"));
+  message.success(t('DATA_SAVED'));
 }
 
 // 导入本地缓存记录
 function loadLocalRecord(id) {
-  const record = localCacheList.value.find((item) => item.id === id);
+  const record = localCacheList.value.find(item => item.id === id);
   if (record) {
     apiUrl.value = record.url;
     apiKey.value = record.apiKey;
-    message.success(t("CONFIG_IMPORTED"));
+    message.success(t('CONFIG_IMPORTED'));
   }
 }
 
 // 删除本地缓存记录
 function deleteLocalRecord(id) {
-  localCacheList.value = localCacheList.value.filter((item) => item.id !== id);
-  localStorage.setItem("localCacheList", JSON.stringify(localCacheList.value));
-  message.success(t("RECORD_DELETED"));
+  localCacheList.value = localCacheList.value.filter(item => item.id !== id);
+  localStorage.setItem('localCacheList', JSON.stringify(localCacheList.value));
+  message.success(t('RECORD_DELETED'));
 }
 
 // 导出本地缓存
 function exportLocalCache() {
   // 导出的数据仅包含 url 和 sk
-  const dataToExport = localCacheList.value.map((item) => ({
+  const dataToExport = localCacheList.value.map(item => ({
     url: item.url,
     sk: item.apiKey,
   }));
   const dataStr = JSON.stringify(dataToExport, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
+  const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = url;
-  link.download = "api-check-local.json"; // 修改文件名
+  link.download = 'api-check-local.json'; // 修改文件名
   link.click();
   URL.revokeObjectURL(url);
-  message.success(t("DATA_EXPORTED"));
+  message.success(t('DATA_EXPORTED'));
 }
 
 // 导入本地缓存
 function importLocalCache() {
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "application/json";
-  input.onchange = (e) => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       try {
         const importedData = JSON.parse(event.target.result);
         // 将 importedData 规范为数组形式，方便统一处理
@@ -2245,17 +2224,17 @@ function importLocalCache() {
           ? importedData
           : [importedData];
 
-        dataArray.forEach((item) => {
+        dataArray.forEach(item => {
           // 兼容不同的字段名
-          const importedUrl = normalizeUrl(item.url || item.apiUrl || "");
-          const importedApiKey = (item.sk || item.apiKey || "").trim();
+          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
+          const importedApiKey = (item.sk || item.apiKey || '').trim();
           if (!importedUrl || !importedApiKey) {
             // 如果缺少必要的字段，跳过该项
             return;
           }
           // 查找是否有相同的 url 和 apiKey
           const existingIndex = localCacheList.value.findIndex(
-            (existingItem) =>
+            existingItem =>
               normalizeUrl(existingItem.url) === importedUrl &&
               existingItem.apiKey.trim() === importedApiKey
           );
@@ -2279,12 +2258,12 @@ function importLocalCache() {
         });
 
         localStorage.setItem(
-          "localCacheList",
+          'localCacheList',
           JSON.stringify(localCacheList.value)
         );
-        message.success(t("DATA_IMPORTED"));
+        message.success(t('DATA_IMPORTED'));
       } catch (error) {
-        message.error(t("IMPORT_PARSE_ERROR"));
+        message.error(t('IMPORT_PARSE_ERROR'));
         console.error(error);
       }
     };
@@ -2294,38 +2273,38 @@ function importLocalCache() {
 }
 
 function normalizeUrl(url) {
-  return url.replace(/\/+$/, "").toLowerCase();
+  return url.replace(/\/+$/, '').toLowerCase();
 }
 
 // 处理云端登录
 async function handleCloudLogin() {
   if (!cloudUrl.value || !cloudPassword.value) {
-    message.error(t("PLEASE_ENTER_CLOUD_URL_AND_PASSWORD"));
+    message.error(t('PLEASE_ENTER_CLOUD_URL_AND_PASSWORD'));
     return;
   }
   try {
     // 向 /auth 接口发送 POST 请求
     const response = await fetch(`${cloudUrl.value}/auth`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ password: cloudPassword.value }),
     });
     if (response.ok) {
       isCloudLoggedIn.value = true;
       cloudAuthHeader = `Bearer ${cloudPassword.value}`;
-      message.success(t("CLOUD_LOGIN_SUCCESS"));
+      message.success(t('CLOUD_LOGIN_SUCCESS'));
       // 登录后，获取云端数据
       await fetchCloudData();
 
       // 保存登录信息到 localStorage
-      localStorage.setItem("cloudUrl", cloudUrl.value);
-      localStorage.setItem("cloudPassword", cloudPassword.value);
-      localStorage.setItem("isCloudLoggedIn", "true");
+      localStorage.setItem('cloudUrl', cloudUrl.value);
+      localStorage.setItem('cloudPassword', cloudPassword.value);
+      localStorage.setItem('isCloudLoggedIn', 'true');
     } else {
-      message.error(t("CLOUD_LOGIN_FAILED"));
+      message.error(t('CLOUD_LOGIN_FAILED'));
     }
   } catch (error) {
-    message.error(t("CLOUD_LOGIN_ERROR"));
+    message.error(t('CLOUD_LOGIN_ERROR'));
     console.error(error);
   }
 }
@@ -2333,18 +2312,18 @@ async function handleCloudLogin() {
 // 处理云端登出
 function handleCloudLogout() {
   isCloudLoggedIn.value = false;
-  cloudPassword.value = "";
-  cloudAuthHeader = "";
+  cloudPassword.value = '';
+  cloudAuthHeader = '';
   cloudDataList.value = [];
-  localStorage.removeItem("cloudUrl");
-  localStorage.removeItem("cloudPassword");
-  localStorage.removeItem("isCloudLoggedIn");
+  localStorage.removeItem('cloudUrl');
+  localStorage.removeItem('cloudPassword');
+  localStorage.removeItem('isCloudLoggedIn');
 }
 
 // 获取云端数据
 async function fetchCloudData() {
   if (!isCloudLoggedIn.value) {
-    message.error(t("PLEASE_LOGIN_TO_CLOUD"));
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
     return;
   }
   try {
@@ -2361,12 +2340,12 @@ async function fetchCloudData() {
         name: item.name || `配置 ${index + 1}`,
         // 移除 description 字段，直接在渲染时显示更多信息
       }));
-      message.success(t("CLOUD_DATA_LOADED"));
+      message.success(t('CLOUD_DATA_LOADED'));
     } else {
-      message.error(t("CLOUD_DATA_LOAD_FAILED"));
+      message.error(t('CLOUD_DATA_LOAD_FAILED'));
     }
   } catch (error) {
-    message.error(t("CLOUD_DATA_LOAD_ERROR"));
+    message.error(t('CLOUD_DATA_LOAD_ERROR'));
     console.error(error);
   }
 }
@@ -2374,25 +2353,25 @@ async function fetchCloudData() {
 // 保存数据到云端
 async function saveToCloud() {
   if (!isCloudLoggedIn.value) {
-    message.error(t("PLEASE_LOGIN_TO_CLOUD"));
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
     return;
   }
   try {
     const response = await fetch(cloudUrl.value, {
-      method: "POST",
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: cloudAuthHeader,
       },
       body: JSON.stringify(cloudDataList.value),
     });
     if (response.ok) {
-      message.success(t("DATA_SAVED_TO_CLOUD"));
+      message.success(t('DATA_SAVED_TO_CLOUD'));
     } else {
-      message.error(t("DATA_SAVE_TO_CLOUD_FAILED"));
+      message.error(t('DATA_SAVE_TO_CLOUD_FAILED'));
     }
   } catch (error) {
-    message.error(t("DATA_SAVE_TO_CLOUD_ERROR"));
+    message.error(t('DATA_SAVE_TO_CLOUD_ERROR'));
     console.error(error);
   }
 }
@@ -2400,10 +2379,10 @@ async function saveToCloud() {
 // 确认保存数据到云端
 function confirmSaveCloudData() {
   Modal.confirm({
-    title: t("CONFIRM_SAVE"),
-    content: t("CONFIRM_SAVE_PROMPT"),
-    okText: t("OK"),
-    cancelText: t("CANCEL"),
+    title: t('CONFIRM_SAVE'),
+    content: t('CONFIRM_SAVE_PROMPT'),
+    okText: t('OK'),
+    cancelText: t('CANCEL'),
     onOk() {
       saveToCloud();
     },
@@ -2412,50 +2391,50 @@ function confirmSaveCloudData() {
 
 // 导入云端缓存记录
 function loadCloudRecord(id) {
-  const record = cloudDataList.value.find((item) => item.id === id);
+  const record = cloudDataList.value.find(item => item.id === id);
   if (record) {
     apiUrl.value = record.url;
     apiKey.value = record.apiKey;
-    message.success(t("CONFIG_IMPORTED"));
+    message.success(t('CONFIG_IMPORTED'));
   }
 }
 
 // 删除云端记录
 function deleteCloudRecord(id) {
-  cloudDataList.value = cloudDataList.value.filter((item) => item.id !== id);
-  message.success(t("RECORD_DELETED_PLEASE_SAVE"));
+  cloudDataList.value = cloudDataList.value.filter(item => item.id !== id);
+  message.success(t('RECORD_DELETED_PLEASE_SAVE'));
 }
 
 // 导出云端缓存
 function exportCloudCache() {
-  const dataToExport = cloudDataList.value.map((item) => ({
+  const dataToExport = cloudDataList.value.map(item => ({
     url: item.url,
     sk: item.apiKey,
   }));
   const dataStr = JSON.stringify(dataToExport, null, 2);
-  const blob = new Blob([dataStr], { type: "application/json" });
+  const blob = new Blob([dataStr], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
-  const link = document.createElement("a");
+  const link = document.createElement('a');
   link.href = url;
-  link.download = "api-check-cloud.json"; // 修改文件名
+  link.download = 'api-check-cloud.json'; // 修改文件名
   link.click();
   URL.revokeObjectURL(url);
-  message.success(t("DATA_EXPORTED"));
+  message.success(t('DATA_EXPORTED'));
 }
 
 // 导入云端缓存
 function importCloudCache() {
   if (!isCloudLoggedIn.value) {
-    message.error(t("PLEASE_LOGIN_TO_CLOUD"));
+    message.error(t('PLEASE_LOGIN_TO_CLOUD'));
     return;
   }
-  const input = document.createElement("input");
-  input.type = "file";
-  input.accept = "application/json";
-  input.onchange = (e) => {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.onchange = e => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    reader.onload = (event) => {
+    reader.onload = event => {
       try {
         const importedData = JSON.parse(event.target.result);
         // 将 importedData 规范为数组形式，方便统一处理
@@ -2463,10 +2442,10 @@ function importCloudCache() {
           ? importedData
           : [importedData];
 
-        dataArray.forEach((item) => {
+        dataArray.forEach(item => {
           // 兼容不同的字段名
-          const importedUrl = normalizeUrl(item.url || item.apiUrl || "");
-          const importedApiKey = (item.sk || item.apiKey || "").trim();
+          const importedUrl = normalizeUrl(item.url || item.apiUrl || '');
+          const importedApiKey = (item.sk || item.apiKey || '').trim();
 
           if (!importedUrl || !importedApiKey) {
             // 如果缺少必要的字段，跳过该项
@@ -2474,7 +2453,7 @@ function importCloudCache() {
           }
           // 查找是否有相同的 url 和 apiKey
           const existingIndex = cloudDataList.value.findIndex(
-            (existingItem) =>
+            existingItem =>
               normalizeUrl(existingItem.url) === importedUrl &&
               existingItem.apiKey.trim() === importedApiKey
           );
@@ -2497,9 +2476,9 @@ function importCloudCache() {
           }
         });
 
-        message.success(t("DATA_IMPORTED_PLEASE_SAVE"));
+        message.success(t('DATA_IMPORTED_PLEASE_SAVE'));
       } catch (error) {
-        message.error(t("IMPORT_PARSE_ERROR"));
+        message.error(t('IMPORT_PARSE_ERROR'));
         console.error(error);
       }
     };
@@ -2511,7 +2490,7 @@ function importCloudCache() {
 // 页面加载时尝试读取本地缓存
 onMounted(() => {
   // 尝试读取本地缓存列表
-  const savedLocalDataList = localStorage.getItem("localCacheList");
+  const savedLocalDataList = localStorage.getItem('localCacheList');
   if (savedLocalDataList) {
     localCacheList.value = JSON.parse(savedLocalDataList);
   } else {
@@ -2519,11 +2498,11 @@ onMounted(() => {
   }
 
   // 检查云端登录状态
-  const savedCloudUrl = localStorage.getItem("cloudUrl");
-  const savedCloudPassword = localStorage.getItem("cloudPassword");
-  const savedIsCloudLoggedIn = localStorage.getItem("isCloudLoggedIn");
+  const savedCloudUrl = localStorage.getItem('cloudUrl');
+  const savedCloudPassword = localStorage.getItem('cloudPassword');
+  const savedIsCloudLoggedIn = localStorage.getItem('isCloudLoggedIn');
 
-  if (savedIsCloudLoggedIn === "true" && savedCloudUrl && savedCloudPassword) {
+  if (savedIsCloudLoggedIn === 'true' && savedCloudUrl && savedCloudPassword) {
     cloudUrl.value = savedCloudUrl;
     cloudPassword.value = savedCloudPassword;
     isCloudLoggedIn.value = true;
@@ -2552,85 +2531,85 @@ function handleCloseSVGModal() {
 
 function copyToClipboardHandler() {
   if (!svgDataUrl.value) {
-    message.error("请先生成SVG图片");
+    message.error('请先生成SVG图片');
     return;
   }
 
   // 创建一个临时的 Image 对象
   const img = new Image();
   img.onload = function () {
-    const canvas = document.createElement("canvas");
+    const canvas = document.createElement('canvas');
     canvas.width = img.naturalWidth;
     canvas.height = img.naturalHeight;
-    const ctx = canvas.getContext("2d");
+    const ctx = canvas.getContext('2d');
     ctx.drawImage(img, 0, 0);
 
     canvas.toBlob(function (blob) {
       if (blob) {
-        const item = new ClipboardItem({ "image/png": blob });
+        const item = new ClipboardItem({ 'image/png': blob });
         navigator.clipboard.write([item]).then(
           function () {
-            message.success("PNG图片已复制到贴板！");
+            message.success('PNG图片已复制到贴板！');
           },
           function (err) {
-            console.error("复制到剪贴板失败: ", err);
-            message.error("复制到剪贴板失败");
+            console.error('复制到剪贴板失败: ', err);
+            message.error('复制到剪贴板失败');
           }
         );
       } else {
-        message.error("转换图片失败");
+        message.error('转换图片失败');
       }
-    }, "image/png");
+    }, 'image/png');
   };
   img.onerror = function () {
-    message.error("加载SVG数据时发生错误");
+    message.error('加载SVG数据时发生错误');
   };
   img.src = svgDataUrl.value;
 }
 
 function copyModels(type) {
   let models = [];
-  if (type === "valid") {
-    models = results.valid.map((r) => r.model);
-  } else if (type === "available") {
-    models = results.valid.map((r) => r.model);
-    models = models.concat(results.inconsistent.map((r) => r.model));
+  if (type === 'valid') {
+    models = results.valid.map(r => r.model);
+  } else if (type === 'available') {
+    models = results.valid.map(r => r.model);
+    models = models.concat(results.inconsistent.map(r => r.model));
     if (
       results.awaitOfficialVerification &&
       results.awaitOfficialVerification.length
     ) {
       models = models.concat(
-        results.awaitOfficialVerification.map((r) => r.model)
+        results.awaitOfficialVerification.map(r => r.model)
       );
     }
   }
   if (models.length === 0) {
-    message.info(t("NO_MODELS_TO_COPY"));
+    message.info(t('NO_MODELS_TO_COPY'));
     return;
   }
-  const textToCopy = models.join("\n");
+  const textToCopy = models.join('\n');
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
       message.success(
-        t("COPIED_MODELS_TO_CLIPBOARD", {
+        t('COPIED_MODELS_TO_CLIPBOARD', {
           type:
-            type === "valid" ? t("IDENTICAL_MODELS") : t("AVAILABLE_MODELS"),
+            type === 'valid' ? t('IDENTICAL_MODELS') : t('AVAILABLE_MODELS'),
           count: models.length,
         })
       );
     })
-    .catch((err) => {
-      console.error("复制失败:", err);
-      message.error(t("COPY_FAILED"));
+    .catch(err => {
+      console.error('复制失败:', err);
+      message.error(t('COPY_FAILED'));
     });
 }
 
 // 添加新的响应式变量
 const customDialogModalVisible = ref(false);
-const customDialogPrompt = ref("");
+const customDialogPrompt = ref('');
 const customDialogResult = ref(null);
-const currentVerifyingModel = ref("");
+const currentVerifyingModel = ref('');
 const customDialogLoading = ref(false); // 新增对话验证的 loading 状态
 
 // 添加新的验证函数
@@ -2641,18 +2620,17 @@ async function verifyCustomDialog(model) {
 
 async function handleCustomDialogSubmit() {
   if (!customDialogPrompt.value) {
-    message.error(t("ENTER_PROMPT"));
+    message.error(t('ENTER_PROMPT'));
     return;
   }
 
   customDialogLoading.value = true; // 开始加载
   try {
     const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
-    const result = await verifier.verifyCustomDialog(
+    customDialogResult.value = await verifier.verifyCustomDialog(
       currentVerifyingModel.value,
       customDialogPrompt.value
     );
-    customDialogResult.value = result;
   } catch (error) {
     message.error(error.message);
   } finally {
@@ -2662,7 +2640,7 @@ async function handleCustomDialogSubmit() {
 
 function handleCustomDialogCancel() {
   customDialogModalVisible.value = false;
-  customDialogPrompt.value = "";
+  customDialogPrompt.value = '';
   customDialogResult.value = null;
 }
 
@@ -2672,30 +2650,13 @@ async function handlePaste() {
     const text = await navigator.clipboard.readText();
     // 先设置文本值
     apiInfo.value = text;
-    
-    // 手动解析 URL 和 API Key
-    let urlPattern = /(https?:\/\/[^\s，。、！,；;\n]+)/;
-    let keyPattern = /(sk-[a-zA-Z0-9]+)/;
-
-    let urlMatch = text.match(urlPattern);
-    let keyMatch = text.match(keyPattern);
-
-    if (urlMatch) {
-      let cleanUrl = urlMatch[0];
-      // 去除末尾的斜杠和其他字符
-      cleanUrl = cleanUrl.replace(/\/+$/, '');
-      // 如果包含点号，则使用点号之前的部分
-      if (cleanUrl.includes('.')) {
-        apiUrl.value = cleanUrl;
-      } else {
-        apiUrl.value = urlMatch[0];
-      }
+    let { apiUrl: extractedUrl, apiKey: extractedKey } = extractApiInfo(text);
+    if (extractedUrl) {
+      apiUrl.value = extractedUrl;
     }
-    
-    if (keyMatch) {
-      apiKey.value = keyMatch[0];
+    if (extractedKey) {
+      apiKey.value = extractedKey;
     }
-    
     message.success(t('PASTE_SUCCESS'));
   } catch (err) {
     console.error('粘贴失败:', err);
@@ -2750,7 +2711,9 @@ body {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  transition: background-color 0.3s, color 0.3s;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 }
 
 .wrapper {
@@ -2803,7 +2766,9 @@ body {
 .container.result-container {
   opacity: 0;
   transform: translateX(5%);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
 }
 
 .container.result-container.show {
@@ -2936,9 +2901,9 @@ form {
   flex-direction: column;
 }
 
-input[type="text"],
+input[type='text'],
 textarea,
-input[type="number"] {
+input[type='number'] {
   width: 100%;
   padding: 10px;
   margin: 10px 0;
@@ -2951,7 +2916,7 @@ input[type="number"] {
 
 textarea {
   resize: vertical;
-  height: 100px;
+  height: 97px;
 }
 
 .model-input-container {
@@ -3009,7 +2974,7 @@ textarea {
   margin-top: 10px;
 }
 
-.submit-container input[type="button"] {
+.submit-container input[type='button'] {
   width: 30%;
   padding: 10px;
   border: none;
@@ -3047,7 +3012,7 @@ textarea {
   font-size: 14px;
 }
 
-.submit-container input[type="button"] {
+.submit-container input[type='button'] {
   flex: 1;
   min-width: 0;
   padding: 8px;
@@ -3056,7 +3021,7 @@ textarea {
   margin-right: 25px;
 }
 
-.submit-container input[type="button"]:last-child {
+.submit-container input[type='button']:last-child {
   margin-right: 0;
 }
 
@@ -3065,7 +3030,7 @@ textarea {
   margin-bottom: 10px;
 }
 
-.submit-container input[type="button"] {
+.submit-container input[type='button'] {
   width: 100%;
 }
 
@@ -3115,12 +3080,12 @@ body.light-mode .clear-form:hover {
 
 /* 响应操作按钮的悬停效果 */
 
-input[type="button"]:hover {
+input[type='button']:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-input[type="button"]:active {
+input[type='button']:active {
   transform: translateY(0);
 }
 
@@ -3158,29 +3123,29 @@ textarea::placeholder {
 
 @media (pointer: coarse) {
   /* 针对触摸设备的优化 */
-  .submit-container input[type="button"] {
+  .submit-container input[type='button'] {
     padding: 12px;
   }
 }
 
-input[type="text"],
+input[type='text'],
 textarea,
-input[type="number"] {
+input[type='number'] {
   font-size: 14px;
-  font-family: "SmileySans Oblique", sans-serif;
+  font-family: 'SmileySans Oblique', sans-serif;
 }
 
-input[type="text"]::placeholder,
+input[type='text']::placeholder,
 textarea::placeholder,
-input[type="number"]::placeholder {
+input[type='number']::placeholder {
   font-style: italic;
   color: #888;
 }
 
 /* 当输入框有内容时，增加字体的区分度 */
-input[type="text"]:not(:placeholder-shown),
+input[type='text']:not(:placeholder-shown),
 textarea:not(:placeholder-shown),
-input[type="number"]:not(:placeholder-shown) {
+input[type='number']:not(:placeholder-shown) {
   font-weight: 500;
   color: var(--font-color);
 }
@@ -3238,7 +3203,9 @@ input[type="number"]:not(:placeholder-shown) {
   .container.result-container {
     opacity: 0;
     transform: translateX(0%);
-    transition: opacity 0.5s ease, transform 0.5s ease;
+    transition:
+      opacity 0.5s ease,
+      transform 0.5s ease;
   }
 
   .container.result-container.show {
@@ -3328,7 +3295,7 @@ h1 {
 }
 
 h1::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 0;
   left: -100%; /* 初始位置在左侧不可见区域 */
@@ -3451,9 +3418,9 @@ body.light-mode {
     gap: 5px;
   }
 
-  input[type="text"],
+  input[type='text'],
   textarea,
-  input[type="number"] {
+  input[type='number'] {
     font-size: 16px; /* 在移动设备上将字体大小设置为 16px */
   }
 }

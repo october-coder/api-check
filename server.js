@@ -29,21 +29,21 @@ app.use(express.static(path.join(__dirname, 'dist')));
 
 // 处理 SPA 前端路由
 app.get('*', (req, res) => {
-    if (!req.path.startsWith('/api')) {
-        res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-    } else {
-        res.status(404).json({ message: 'Not Found' });
-    }
+  if (!req.path.startsWith('/api')) {
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  } else {
+    res.status(404).json({ message: 'Not Found' });
+  }
 });
 
 // 全局错误处理中间件
 app.use((err, req, res, next) => {
-    console.error('全局错误处理捕获到错误：', err);
-    res.status(500).json({ message: 'Internal Server Error' });
+  console.error('全局错误处理捕获到错误：', err);
+  res.status(500).json({ message: 'Internal Server Error' });
 });
 
 // 启动服务器
 const PORT = process.env.PORT || 13000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+  console.log(`Server is running on port ${PORT}`);
 });

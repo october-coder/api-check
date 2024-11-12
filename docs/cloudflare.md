@@ -41,7 +41,10 @@ async function handleRequest(request) {
         headers: { 'Content-Type': 'application/json', ...corsHeaders },
       });
     }
-  } else if (pathname === '/api' && (request.method === 'GET' || request.method === 'POST')) {
+  } else if (
+    pathname === '/api' &&
+    (request.method === 'GET' || request.method === 'POST')
+  ) {
     // 验证 Authorization 头
     const authHeader = request.headers.get('Authorization');
     if (!authHeader || authHeader !== `Bearer ${PASSWORD}`) {
@@ -61,9 +64,12 @@ async function handleRequest(request) {
       // 将数据保存到 KV
       const body = await request.text();
       await DATA.put('data', body);
-      return new Response(JSON.stringify({ message: 'Data saved successfully' }), {
-        headers: { 'Content-Type': 'application/json', ...corsHeaders },
-      });
+      return new Response(
+        JSON.stringify({ message: 'Data saved successfully' }),
+        {
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        }
+      );
     }
   }
 
@@ -74,11 +80,9 @@ async function handleRequest(request) {
 }
 ```
 
-
-
 ### 2. 配置 KV 存储 与 PASSWORD
 
- **创建 KV 命名空间**
+**创建 KV 命名空间**
 
 - 登录到 Cloudflare 仪表板，进入您的账户。
 
@@ -90,8 +94,8 @@ async function handleRequest(request) {
 
 - 创建后，记下命名空间的 **ID**（在列表中可以看到）。
 
- **创建变量**  PASSWORD
+  **创建变量** PASSWORD
 
 ![上测试报告](./images/cloudflare.png)
 
-### 3.在页面直接填入worker的 url  不需要/api
+### 3.在页面直接填入worker的 url 不需要/api
