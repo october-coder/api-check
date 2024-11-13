@@ -239,7 +239,11 @@
               </div>
 
               <div class="left-icons">
-                <a-tooltip :title="t('CHAT')" placement="bottom">
+                <a-tooltip
+                  :title="t('CHAT')"
+                  placement="bottom"
+                  v-if="enableChat"
+                >
                   <a @click="goChat()" class="icon-button">
                     <MessageOutlined />
                   </a>
@@ -308,6 +312,7 @@
                         <MessageOutlined
                           style="margin-right: 8px; cursor: pointer"
                           @click="goChat(record.model)"
+                          v-if="enableChat"
                         />
                         {{ record.model }}
                       </span>
@@ -1167,6 +1172,8 @@ const tableData = ref([]);
 const totalModels = ref(0);
 const completedModels = ref(0);
 const progressPercent = ref(0);
+const chatSite = ref('https://chat.crond.dev');
+const enableChat = ref(true);
 const pagination = reactive({
   current: 1,
   pageSize: 8, // 默认每页显示8条，可以根据需要调整
@@ -1319,6 +1326,12 @@ const getQueryParams = async () => {
       }
       if (settingsObj.concurrency) {
         modelConcurrency.value = settingsObj.concurrency;
+      }
+      if (settingsObj.chatSite) {
+        chatSite.value = settingsObj.chatSite;
+      }
+      if (settingsObj.enableChat) {
+        enableChat.value = settingsObj.enableChat;
       }
       if (!settingsObj.closeAnnouncement) {
         showAnnouncement();
@@ -2674,9 +2687,9 @@ function goChat(modelName) {
     return;
   }
   //判断是否有modelName 没有就不给url 传值
-  let url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+  let url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
   if (modelName) {
-    url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}","model":"${modelName}"}`;
+    url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}","model":"${modelName}"}`;
   }
   window.open(url);
 }
