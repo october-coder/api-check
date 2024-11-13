@@ -1330,8 +1330,8 @@ const getQueryParams = async () => {
       if (settingsObj.chatSite) {
         chatSite.value = settingsObj.chatSite;
       }
-      if (settingsObj.enableChat) {
-        enableChat.value = settingsObj.enableChat;
+      if (settingsObj.closeChat) {
+        enableChat.value = false;
       }
       if (!settingsObj.closeAnnouncement) {
         showAnnouncement();
