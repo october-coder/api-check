@@ -240,7 +240,7 @@
 
               <div class="left-icons">
                 <a-tooltip :title="t('CHAT')" placement="bottom">
-                  <a @click="goChat" class="icon-button">
+                  <a @click="goChat()" class="icon-button">
                     <MessageOutlined />
                   </a>
                 </a-tooltip>
@@ -292,17 +292,23 @@
                 <a-table
                   :columns="columns"
                   :data-source="tableData"
-                  :pagination="{ pageSize: 8 }"
+                  :pagination="pagination"
                   :row-key="record => record.key"
                   size="small"
                   class="result-table"
+                  @change="handleTableChange"
+                  @resizeColumn="handleResizeColumn"
                 >
                   <template #bodyCell="{ text, record, column, index }">
                     <template v-if="column.dataIndex === 'status'">
                       {{ record.status }}
                     </template>
                     <template v-else-if="column.dataIndex === 'model'">
-                      <span @click="copyText(item.model)">
+                      <span style="display: flex; align-items: center">
+                        <MessageOutlined
+                          style="margin-right: 8px; cursor: pointer"
+                          @click="goChat(record.model)"
+                        />
                         {{ record.model }}
                       </span>
                     </template>
@@ -1157,6 +1163,21 @@ let chartInstance = null;
 const showSVGModal = ref(false);
 const svgDataUrl = ref('');
 const testingComplete = ref(false);
+const tableData = ref([]);
+const totalModels = ref(0);
+const completedModels = ref(0);
+const progressPercent = ref(0);
+const pagination = reactive({
+  current: 1,
+  pageSize: 8, // 默认每页显示8条，可以根据需要调整
+  pageSizeOptions: ['8', '12', '20'], // 可供选择的每页条数
+  showSizeChanger: true, // 显示每页条数切换器
+  total: computed(() => tableData.value.length), // 数据总数
+});
+const handleTableChange = (paginationInfo, filters, sorter) => {
+  pagination.current = paginationInfo.current;
+  pagination.pageSize = paginationInfo.pageSize;
+};
 
 const appDescription = computed(() => {
   const currentLocale = locale.value || 'zh';
@@ -1596,11 +1617,6 @@ const checkQuota = async () => {
   }
 };
 
-const tableData = ref([]);
-const totalModels = ref(0);
-const completedModels = ref(0);
-const progressPercent = ref(0);
-
 // 添加 testModels 函数
 async function testModels() {
   // 重置结果
@@ -1909,6 +1925,7 @@ const columns = [
     key: 'model',
     width: 180,
     ellipsis: true,
+    resizable: true,
     sorter: (a, b) => a.model.localeCompare(b.model),
     customCell: () => ({ attrs: { 'data-label': t('MODEL_NAME_LABEL') } }),
   },
@@ -1917,6 +1934,7 @@ const columns = [
     dataIndex: 'responseTime',
     width: 70,
     key: 'responseTime',
+    resizable: true,
     sorter: (a, b) => parseFloat(a.responseTime) - parseFloat(b.responseTime),
     customCell: () => ({ attrs: { 'data-label': t('RESPONSE_TIME_LABEL') } }),
   },
@@ -1926,6 +1944,7 @@ const columns = [
     key: 'remark',
     width: 100,
     ellipsis: true,
+    resizable: true,
     customCell: () => ({ attrs: { 'data-label': t('REMARK_LABEL') } }),
   },
   {
@@ -1939,6 +1958,10 @@ const columns = [
     }),
   },
 ];
+
+function handleResizeColumn(w, col) {
+  col.width = w;
+}
 
 // 复制文本函数
 function copyText(text) {
@@ -2644,8 +2667,17 @@ onMounted(() => {
 });
 
 // goChat
-function goChat() {
-  const url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+function goChat(modelName) {
+  // 模拟获取模型并打印数据
+  if (!apiKey.value || !apiUrl.value) {
+    message.error('请先填写 API Key 和 API URL');
+    return;
+  }
+  //判断是否有modelName 没有就不给url 传值
+  let url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+  if (modelName) {
+    url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}","model":"${modelName}"}`;
+  }
   window.open(url);
 }
 
@@ -2718,7 +2750,8 @@ function copyModels(type) {
     message.info(t('NO_MODELS_TO_COPY'));
     return;
   }
-  const textToCopy = models.join('\n');
+  //需要加入,分割
+  const textToCopy = models.join(',');
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {

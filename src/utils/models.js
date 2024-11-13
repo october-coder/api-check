@@ -76,4 +76,10 @@ export const presetPromptsList = [
     description:
       'o1系列能答对，gemini-1.5-pro-002概率答对\n(可以根据思考时间分辨):\n 1 2 1 1 2 3 4 3 2 1 1 2 3 4 5 6 5 4 3 2 1 1 2 3 4 5 6 7 8 7',
   },
+  {
+    title: '给主人留下些什么吧英文翻译',
+    content: '给主人留下些什么吧翻译成英文',
+    description:
+      'gpt-4o：乱回答 \n 比如：好好表现 can be translated into English as perform well or do well.',
+  },
 ];
