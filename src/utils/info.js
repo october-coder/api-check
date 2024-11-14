@@ -15,7 +15,7 @@ export const appInfo = {
     ],
   },
   subtitle: '纯前端 OpenAI API 检测工具',
-  version: '2.0.0', // 版本号
+  version: '2.1.0', // 版本号
   author: {
     name: 'RICK',
     url: 'https://blog.rick.icu',
@@ -148,7 +148,7 @@ export const announcement = {
           '新增：本地存储和云端存储',
           '优化：优化前端交互体验',
         ],
-        url: 'https://check.crond.dev',
+        url: 'https://linux.do/t/topic/256917',
       },
       {
         version: 'v1.5',
@@ -158,7 +158,7 @@ export const announcement = {
           '新增：黑暗模式',
           '优化：优化前端交互体验',
         ],
-        url: 'https://check.crond.dev',
+        url: 'https://linux.do/t/topic/256917',
       },
       {
         version: 'v1.4.0',
@@ -188,7 +188,7 @@ export const announcement = {
           'New: Local storage and cloud storage',
           'Optimization: Optimize front-end interactive experience',
         ],
-        url: 'https://check.crond.dev',
+        url: 'https://linux.do/t/topic/256917',
       },
       {
         version: 'v1.5',
@@ -198,7 +198,7 @@ export const announcement = {
           'New: Dark mode',
           'Optimization: Optimize front-end interactive experience',
         ],
-        url: 'https://check.crond.dev',
+        url: 'https://linux.do/t/topic/256917',
       },
       {
         version: 'v1.4.0',
