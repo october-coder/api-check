@@ -223,5 +223,11 @@
   "ENTER_TOKENS": "Please enter tokens",
   "REQUEST_FAILED": "Request failed",
   "REQUEST_ERROR": "Request error",
-  "COPIED_TO_CLIPBOARD": "Copied to clipboard"
+  "COPIED_TO_CLIPBOARD": "Copied to clipboard",
+  "ENTER_REFRESH_TOKENS_ONE_PER_LINE": "Enter Refresh Tokens one per line",
+  "ENTER_SESSION_KEYS_ONE_PER_LINE": "Enter Session Keys one per line",
+  "ENTER_GEMINI_API_KEYS_ONE_PER_LINE": "Enter Gemini API Keys one per line",
+  "ENTER_REFRESH_TOKENS": "Please enter Refresh Tokens",
+  "ENTER_SESSION_KEYS": "Please enter Session Keys",
+  "ENTER_GEMINI_API_KEYS": "Please enter Gemini API Keys"
 }

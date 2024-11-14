@@ -224,5 +224,11 @@
   "ENTER_TOKENS": "请输入 Tokens",
   "REQUEST_FAILED": "请求失败",
   "REQUEST_ERROR": "请求出错",
-  "COPIED_TO_CLIPBOARD": "已复制到剪贴板"
+  "COPIED_TO_CLIPBOARD": "已复制到剪贴板",
+  "ENTER_REFRESH_TOKENS_ONE_PER_LINE": "请输入 Refresh Tokens，每行一个",
+  "ENTER_SESSION_KEYS_ONE_PER_LINE": "请输入 Session Keys，每行一个",
+  "ENTER_GEMINI_API_KEYS_ONE_PER_LINE": "请输入 Gemini API Keys，每行一个",
+  "ENTER_REFRESH_TOKENS": "请输入 Refresh Tokens",
+  "ENTER_SESSION_KEYS": "请输入 Session Keys",
+  "ENTER_GEMINI_API_KEYS": "请输入 Gemini API Keys"
 }

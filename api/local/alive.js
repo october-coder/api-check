@@ -1,4 +1,5 @@
 import express from 'express';
+
 const router = express.Router();
 
 // 中间件：解析 JSON 请求体
@@ -21,23 +22,26 @@ router.post('/', async (req, res) => {
   console.log('Received request:', req.method, req.url);
 
   try {
-    const content = req.body;
-    console.log('Parsed request content:', content);
-    const type = content.type;
+    const requestData = req.body;
+    console.log('Parsed request content:', requestData);
+    const { type } = requestData;
 
-    let responsePromise;
-    if (type === 'refreshTokens') {
-      responsePromise = handleRefreshTokens(content.tokens);
-    } else if (type === 'sessionKeys') {
-      responsePromise = handleSessionKeys(content);
-    } else if (type === 'geminiAPI') {
-      responsePromise = handleTestAPIs(content);
-    } else {
-      res.status(400).json({ error: 'Invalid request type' });
-      return;
+    let responseData;
+    switch (type) {
+      case 'refreshTokens':
+        responseData = await handleRefreshTokens(requestData.tokens);
+        break;
+      case 'sessionKeys':
+        responseData = await handleSessionKeys(requestData);
+        break;
+      case 'geminiAPI':
+        responseData = await handleGeminiAPI(requestData);
+        break;
+      default:
+        res.status(400).json({ error: 'Invalid request type' });
+        return;
     }
 
-    const responseData = await responsePromise;
     res.set(corsHeaders);
     res.status(200).json(responseData);
   } catch (error) {
@@ -51,37 +55,38 @@ router.post('/', async (req, res) => {
 export default router;
 
 // 辅助函数
-async function handleRefreshTokens(refreshTokens) {
-  const results = await Promise.all(refreshTokens.map(checkTokenValidity));
+async function handleRefreshTokens(tokens) {
+  const results = await Promise.all(tokens.map(refreshTokenValidity));
   return results;
 }
 
-async function checkTokenValidity(refreshToken) {
+async function refreshTokenValidity(token) {
   try {
     const response = await fetch('https://token.oaifree.com/api/auth/refresh', {
       method: 'POST',
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: 'refresh_token=' + encodeURIComponent(refreshToken),
+      body: 'refresh_token=' + encodeURIComponent(token),
     });
 
     if (response.ok) {
       const data = await response.json();
       return {
-        refreshToken: refreshToken,
+        refreshToken: token,
         accessToken: data.access_token,
         valid: true,
       };
     }
-    return { refreshToken: refreshToken, accessToken: null, valid: false };
+    return { refreshToken: token, accessToken: null, valid: false };
   } catch (error) {
-    return { refreshToken: refreshToken, accessToken: null, valid: false };
+    return { refreshToken: token, accessToken: null, valid: false };
   }
 }
 
-async function handleSessionKeys(content) {
-  const sessionKeys = content.tokens;
-  const maxAttempts = content.maxAttempts;
-  const requestsPerSecond = content.requestsPerSecond;
+async function handleSessionKeys({
+  tokens: sessionKeys,
+  maxAttempts,
+  requestsPerSecond,
+}) {
   const delayBetweenRequests = 1000 / requestsPerSecond;
 
   const results = await Promise.all(
@@ -100,16 +105,15 @@ function delay(ms) {
 
 async function checkSessionKey(sessionKey, maxAttempts, delayBetweenRequests) {
   let attempts = 0;
-  let successCount = 0;
 
   while (attempts < maxAttempts) {
     attempts++;
     try {
       const response = await fetch('https://api.claude.ai/api/organizations', {
         headers: {
-          accept: 'application/json',
-          cookie: 'sessionKey=' + sessionKey,
-          'user-agent': 'Mozilla/5.0 (X11; Linux x86_64)',
+          Accept: 'application/json',
+          Cookie: 'sessionKey=' + sessionKey,
+          'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64)',
         },
       });
 
@@ -117,29 +121,35 @@ async function checkSessionKey(sessionKey, maxAttempts, delayBetweenRequests) {
         throw new Error('HTTP error! status: ' + response.status);
       }
 
-      const data = await response.json();
-      successCount++;
-      const name = data[0].name || 'Unknown';
-      const capabilities = data[0].capabilities
-        ? data[0].capabilities.join(';')
+      const organizations = await response.json();
+
+      if (!Array.isArray(organizations) || organizations.length === 0) {
+        throw new Error('Invalid response data');
+      }
+
+      const organization = organizations[0];
+      const name = organization.name || 'Unknown';
+      const capabilities = organization.capabilities
+        ? organization.capabilities.join(';')
         : '';
+
       return {
-        sessionKey: sessionKey,
-        name: name,
-        capabilities: capabilities,
+        sessionKey,
+        name,
+        capabilities,
         available: true,
-        attempts: attempts,
-        successRate: successCount / attempts,
+        attempts,
+        successRate: 1 / attempts,
       };
     } catch (error) {
       if (attempts >= maxAttempts) {
         return {
-          sessionKey: sessionKey,
+          sessionKey,
           name: 'Invalid',
           capabilities: '',
           available: false,
-          attempts: attempts,
-          successRate: successCount / attempts,
+          attempts,
+          successRate: 0,
         };
       }
       await delay(delayBetweenRequests);
@@ -147,78 +157,88 @@ async function checkSessionKey(sessionKey, maxAttempts, delayBetweenRequests) {
   }
 }
 
-async function handleTestAPIs(content) {
-  const apiKeys = content.tokens;
-  const model = content.model;
-  const rateLimit = content.rateLimit;
-  const prompt = content.prompt;
-  const user = content.user;
-
+async function handleGeminiAPI({
+  tokens: apiKeys,
+  model,
+  rateLimit,
+  prompt,
+  user,
+}) {
   if (!apiKeys || !Array.isArray(apiKeys) || apiKeys.length === 0) {
     throw new Error('Invalid or empty API keys');
   }
 
   const results = await batchTestAPI(apiKeys, model, rateLimit, prompt, user);
-  const validKeys = results.filter(r => r.valid).map(r => r.key);
-  const invalidKeys = results.filter(r => !r.valid).map(r => r.key);
-  const errors = results
-    .filter(r => r.error)
-    .map(r => ({ key: r.key, error: r.error }));
-  const validResults = results.filter(r => r.valid && r.data);
+
+  const validResults = results.filter(result => result.valid && result.data);
+  const validKeys = validResults.map(result => result.key);
+  const invalidResults = results.filter(result => !result.valid);
+  const invalidKeys = invalidResults.map(result => result.key);
+  const errors = invalidResults.map(result => ({
+    key: result.key,
+    error: result.error,
+  }));
 
   return {
     valid: validKeys.length,
     invalid: invalidKeys.length,
-    invalidKeys: invalidKeys,
-    errors: errors,
-    validResults: validResults,
+    invalidKeys,
+    errors,
+    validResults,
   };
 }
 
 async function batchTestAPI(apiKeys, model, rateLimit, prompt, user) {
-  const results = [];
+  const testResults = [];
   const delayBetweenRequests = 1000 / rateLimit;
 
-  for (let i = 0; i < apiKeys.length; i++) {
-    const apiKey = apiKeys[i];
+  for (const apiKey of apiKeys) {
     try {
       const result = await testAPI(apiKey, model, prompt, user);
-      results.push(result);
+      testResults.push(result);
     } catch (error) {
-      results.push({ key: apiKey, valid: false, error: error.message });
+      testResults.push({ key: apiKey, valid: false, error: error.message });
     }
     await delay(delayBetweenRequests);
   }
 
-  return results;
+  return testResults;
 }
 
 async function testAPI(apiKey, model, prompt, user) {
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+  const requestBody = {
+    contents: [
+      {
+        parts: [{ text: prompt }, { text: user }],
+      },
+    ],
+    safetySettings: [
+      {
+        category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_HATE_SPEECH',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_HARASSMENT',
+        threshold: 'BLOCK_NONE',
+      },
+      {
+        category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
+        threshold: 'BLOCK_NONE',
+      },
+    ],
+  };
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      contents: [
-        {
-          parts: [{ text: prompt }, { text: user }],
-        },
-      ],
-      safetySettings: [
-        {
-          category: 'HARM_CATEGORY_DANGEROUS_CONTENT',
-          threshold: 'BLOCK_NONE',
-        },
-        { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-        { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-        {
-          category: 'HARM_CATEGORY_SEXUALLY_EXPLICIT',
-          threshold: 'BLOCK_NONE',
-        },
-      ],
-    }),
+    body: JSON.stringify(requestBody),
   });
 
   if (!response.ok) {
@@ -229,5 +249,5 @@ async function testAPI(apiKey, model, prompt, user) {
   }
 
   const data = await response.json();
-  return { key: apiKey, valid: true, data: data };
+  return { key: apiKey, valid: true, data };
 }

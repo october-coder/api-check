@@ -2,7 +2,6 @@
   <div>
     <a-modal
       v-model:open="modalVisible"
-      :title="$t('EXPERIMENTAL_FEATURES')"
       :footer="null"
       :width="modalWidth"
       @cancel="handleCancel"
@@ -10,7 +9,20 @@
       :destroyOnClose="true"
       :body-style="{ maxHeight: '80vh', overflowY: 'auto' }"
     >
+      <!-- 自定义标题 -->
+      <template #title>
+        <div class="modal-title">
+          <span>{{ $t('EXPERIMENTAL_FEATURES') }}</span>
+        </div>
+      </template>
+
       <div class="modal-content">
+        <!-- 功能介绍 -->
+        <p class="function-intro">
+          参考自elfmaid
+          <a style="color: #007bff" @click="goToOriginalPost">原贴地址</a>
+        </p>
+
         <!-- API 地址设置 -->
         <div class="api-address-section">
           <a-input
@@ -40,7 +52,7 @@
             <div class="tab-content">
               <a-textarea
                 v-model:value="refreshTokens"
-                :placeholder="$t('ENTER_TOKENS_ONE_PER_LINE')"
+                :placeholder="$t('ENTER_REFRESH_TOKENS_ONE_PER_LINE')"
                 :auto-size="{ minRows: 8, maxRows: 12 }"
                 class="input-field large-input"
               />
@@ -91,7 +103,7 @@
             <div class="tab-content">
               <a-textarea
                 v-model:value="sessionKeys"
-                :placeholder="$t('ENTER_TOKENS_ONE_PER_LINE')"
+                :placeholder="$t('ENTER_SESSION_KEYS_ONE_PER_LINE')"
                 :auto-size="{ minRows: 8, maxRows: 12 }"
                 class="input-field large-input"
               />
@@ -171,7 +183,7 @@
             <div class="tab-content">
               <a-textarea
                 v-model:value="geminiKeys"
-                :placeholder="$t('ENTER_TOKENS_ONE_PER_LINE')"
+                :placeholder="$t('ENTER_GEMINI_API_KEYS_ONE_PER_LINE')"
                 :auto-size="{ minRows: 8, maxRows: 12 }"
                 class="input-field large-input"
               />
@@ -322,7 +334,7 @@ async function handleRefreshTokens() {
     return;
   }
   if (!refreshTokens.value.trim()) {
-    message.error(t('ENTER_TOKENS'));
+    message.error(t('ENTER_REFRESH_TOKENS'));
     return;
   }
   const tokens = refreshTokens.value
@@ -379,7 +391,7 @@ async function handleSessionKeys() {
     return;
   }
   if (!sessionKeys.value.trim()) {
-    message.error(t('ENTER_TOKENS'));
+    message.error(t('ENTER_SESSION_KEYS'));
     return;
   }
   const tokens = sessionKeys.value
@@ -444,7 +456,7 @@ async function handleGeminiKeys() {
     return;
   }
   if (!geminiKeys.value.trim()) {
-    message.error(t('ENTER_TOKENS'));
+    message.error(t('ENTER_GEMINI_API_KEYS'));
     return;
   }
   const tokens = geminiKeys.value
@@ -509,6 +521,10 @@ function copyTokens(tokens) {
 function handleCancel() {
   modalVisible.value = false;
 }
+
+function goToOriginalPost() {
+  window.open('https://linux.do/t/topic/242141');
+}
 </script>
 
 <style scoped>
@@ -530,11 +546,16 @@ function handleCancel() {
   overflow-y: auto;
 }
 
+/* 功能介绍样式 */
+.function-intro {
+  font-size: 14px;
+  color: #666;
+}
+
 .api-address-section {
   display: flex;
   align-items: center;
   margin-bottom: 16px;
-  margin-top: 16px;
   flex-wrap: wrap;
 }
 
