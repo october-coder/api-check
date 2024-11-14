@@ -76,3 +76,7 @@ a {
 footer {
   text-align: center;
 }
+
+input {
+  line-height: normal !important;
+}

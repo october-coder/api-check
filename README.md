@@ -22,7 +22,7 @@
 
   - 显示响应时间、模型一致性等信息，测试结果一目了然。
 
-- 💾 **云端存储与本地存**储
+- 💾 **云端存储与本地存储**
 
   - **云端存储**：配置可保存至云端，实现多设备共享。
   - **本地存储**：常用配置本地保存，快速加载，方便快捷。
@@ -42,9 +42,9 @@
 ### vercel 部署
 
 1. 点击右侧按钮开始部署：
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)，直接使用 Github 账号登录即可，记得在环境变量页填入 后端密码
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)，直接使用 Github 账号登录即可，记得在环境变量页填入 后端密码；
 2. 部署完毕后，即可开始使用；
-3. （可选）部署后端服务 请参考参考 [详细教程](./docs/vercel.md)。
+3. （可选）部署后端服务 请参考 [详细教程](./docs/vercel.md)。
 4. （可选）[绑定自定义域名](https://vercel.com/docs/concepts/projects/domains/add-a-domain)：Vercel 分配的域名 DNS 在某些区域被污染了，绑定自定义域名即可直连。
 
 ### docker 部署
@@ -61,7 +61,7 @@
 ### cloudflare 部署后端
 
 1. 参考 [详细教程](./docs/cloudflare.md)。
-2. 最好绑定自定义域名
+2. 最好绑定自定义域名。
 
 ## 📜最近更新
 
@@ -77,14 +77,14 @@
   - **数据管理**：新增设置面板，方便管理本地和云端的配置数据。
 - ✨**支持预设参数**
   - **一键配置方便**
-  - **快速绑定到new-api**
-- 💻 **支持 Vercel Docker一键部署**
+  - **快速绑定到 new-api**
+- 💻 **支持 Vercel Docker 一键部署**
 - 🌙 **新增暗黑模式**
   - **主题切换**：支持深色模式和浅色模式的切换，适应不同环境和用户偏好。
   - **自动适配**：可以根据系统设置自动切换主题，保护您的视力。
 - 🌐 **国际化支持**
   - **多语言**：新增国际化支持，现已支持中文和英文。
-- 📱 **移动端适配优化**。
+- 📱 **移动端适配优化**
 - 🛠 **其他优化和修复**
 
 ### 🧪 版本历史
@@ -132,15 +132,15 @@
 - 🌙 主题和语言切换
 - 🛠 高级验证功能
 
-  - **官转 验证**：验证 API 的真实性，查看系统指纹。
+  - **官转验证**：验证 API 的真实性，查看系统指纹。
   - **温度验证**：验证模型的随机性和稳定性。
   - **函数调用验证**：测试模型的函数调用能力。
 
 ### 🛠 云端存储
 
-- **docker 部署** 后端url 请使用 https://your_website/api
-- **vercel 部署** 后端url 请使用 https://your_website/api
-- **Cloudflare部署** 后端url 请使用 https://your_website
+- **Docker 部署** 后端url 请使用 https://your_website/api
+- **Vercel 部署** 后端url 请使用 https://your_website/api
+- **Cloudflare 部署** 后端url 请使用 https://your_website
 
 ### 🛠 预设参数设置
 
