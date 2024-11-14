@@ -9,7 +9,7 @@
 export async function checkForUpdates(currentVersion, owner, repo, t) {
   const lastCheck = localStorage.getItem('lastUpdateCheck');
   const now = Date.now();
-  const CHECK_INTERVAL = 12 * 60 * 60 * 1000; // 12 小时
+  const CHECK_INTERVAL = 10 * 12 * 60 * 60 * 1000; // 120 小时
 
   if (lastCheck && now - lastCheck < CHECK_INTERVAL) {
     // 最近已检查过，不需要再次检查
