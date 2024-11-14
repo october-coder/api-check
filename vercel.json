@@ -3,6 +3,10 @@
   "outputDirectory": "dist",
   "routes": [
     {
+      "src": "/api/alive",
+      "dest": "/api/alive.js"
+    },
+    {
       "src": "/api/(.*)",
       "dest": "/api/index.js"
     },

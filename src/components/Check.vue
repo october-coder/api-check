@@ -92,6 +92,17 @@
                     </button>
                   </div>
                 </div>
+                <a-tooltip
+                  :title="t('EXPERIMENTAL_FEATURES')"
+                  placement="bottom"
+                >
+                  <a
+                    @click="showExperimentalFeatures = true"
+                    class="icon-button"
+                  >
+                    <ExperimentOutlined style="cursor: pointer" />
+                  </a>
+                </a-tooltip>
                 <a-tooltip :title="t('SETTINGS')" placement="bottom">
                   <a @click="openSettingsModal" class="icon-button">
                     <SettingOutlined style="cursor: pointer" />
@@ -1032,6 +1043,7 @@
         </div>
       </div>
     </a-modal>
+    <ExperimentalFeatures v-model:visible="showExperimentalFeatures" />
   </ConfigProvider>
 </template>
 <script setup>
@@ -1046,7 +1058,9 @@ import {
   InfoCircleTwoTone,
   SmileOutlined,
   DoubleRightOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons-vue';
+import ExperimentalFeatures from './Experimental.vue';
 import { computed, h, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import {
   ConfigProvider,
@@ -1174,6 +1188,7 @@ const completedModels = ref(0);
 const progressPercent = ref(0);
 const chatSite = ref('https://chat.crond.dev');
 const enableChat = ref(true);
+const showExperimentalFeatures = ref(false);
 const pagination = reactive({
   current: 1,
   pageSize: 8, // 默认每页显示8条，可以根据需要调整

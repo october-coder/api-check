@@ -19,8 +19,10 @@ app.use(express.json());
 // 引入路由
 import authRouter from './api/local/auth.js';
 import apiRouter from './api/local/index.js';
+import aliveRouter from './api/local/alive.js';
 
 // 设置后端接口路由，位于 `/api` 路径下
+app.use('/api/alive', aliveRouter);
 app.use('/api/auth', authRouter);
 app.use('/api', apiRouter);
 
