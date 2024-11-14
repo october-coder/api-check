@@ -1581,7 +1581,17 @@ function filterModels() {
 
 const sortedModels = computed(() => {
   const selectedSet = new Set(selectedModels.value);
-  return models.value.slice().sort((a, b) => {
+  let filteredModels = models.value;
+
+  let prefix = prefixFilter.value.trim().toLowerCase();
+  if (prefix) {
+    // 实时过滤模型
+    filteredModels = filteredModels.filter(model =>
+      model.toLowerCase().includes(prefix)
+    );
+  }
+
+  return filteredModels.slice().sort((a, b) => {
     const aSelected = selectedSet.has(a);
     const bSelected = selectedSet.has(b);
     if (aSelected && !bSelected) return -1; // a 已选中，排在前面
