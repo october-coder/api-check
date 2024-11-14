@@ -1,7 +1,7 @@
 <div align="center">
 <img src="./docs/images/logo.png" alt="logo.png" style="zoom:30%;" />
 
-# API CHECKER
+# API CHECK
 
 </div>
 
