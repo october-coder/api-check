@@ -1,411 +1,451 @@
 <template>
   <ConfigProvider :theme="configProviderTheme">
     <div class="wrapper">
-      <div class="page-content">
-        <div class="container" :class="{ 'shift-left': shouldShift }">
-          <div class="header">
-            <button
-              id="themeToggle"
-              :aria-label="t('SWITCH_THEME')"
-              @click="handleToggleTheme"
-            >
-              <svg
-                id="themeIcon"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="transparent"
-                stroke="currentColor"
-                stroke-width="2"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                class="lucide lucide-sun"
+      <a-flex :direction="'vertical'" :justify="'center'" :align="'center'">
+        <div class="page-content">
+          <div class="container" :class="{ 'shift-left': shouldShift }">
+            <div class="header">
+              <button
+                id="themeToggle"
+                :aria-label="t('SWITCH_THEME')"
+                @click="handleToggleTheme"
               >
-                <circle cx="12" cy="12" r="4"></circle>
-                <path d="M12 2v2"></path>
-                <path d="M12 20v2"></path>
-                <path d="m4.93 4.93 1.41 1.41"></path>
-                <path d="m17.66 17.66 1.41 1.41"></path>
-                <path d="M2 12h2"></path>
-                <path d="M20 12h2"></path>
-                <path d="m6.34 17.66-1.41 1.41"></path>
-                <path d="m19.07 4.93-1.41 1.41"></path>
-              </svg>
-            </button>
-
-            <div class="right-icons" @click="showLanguageMenu = false">
-              <div class="language-container" @click.stop="toggleLanguageMenu">
-                <button :aria-label="t('SWITCH_LANGUAGE')" class="language-btn">
-                  <svg
-                    width="15"
-                    height="15"
-                    viewBox="0 0 15 15"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M7.49996 1.80002C4.35194 1.80002 1.79996 4.352 1.79996 7.50002C1.79996 10.648 4.35194 13.2 7.49996 13.2C10.648 13.2 13.2 10.648 13.2 7.50002C13.2 4.352 10.648 1.80002 7.49996 1.80002ZM0.899963 7.50002C0.899963 3.85494 3.85488 0.900024 7.49996 0.900024C11.145 0.900024 14.1 3.85494 14.1 7.50002C14.1 11.1451 11.145 14.1 7.49996 14.1C3.85488 14.1 0.899963 11.1451 0.899963 7.50002Z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M13.4999 7.89998H1.49994V7.09998H13.4999V7.89998Z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M7.09991 13.5V1.5H7.89991V13.5H7.09991zM10.375 7.49998C10.375 5.32724 9.59364 3.17778 8.06183 1.75656L8.53793 1.24341C10.2396 2.82218 11.075 5.17273 11.075 7.49998 11.075 9.82724 10.2396 12.1778 8.53793 13.7566L8.06183 13.2434C9.59364 11.8222 10.375 9.67273 10.375 7.49998zM3.99969 7.5C3.99969 5.17611 4.80786 2.82678 6.45768 1.24719L6.94177 1.75281C5.4582 3.17323 4.69969 5.32389 4.69969 7.5 4.6997 9.67611 5.45822 11.8268 6.94179 13.2472L6.45769 13.7528C4.80788 12.1732 3.9997 9.8239 3.99969 7.5z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                    <path
-                      d="M7.49996 3.95801C9.66928 3.95801 11.8753 4.35915 13.3706 5.19448 13.5394 5.28875 13.5998 5.50197 13.5055 5.67073 13.4113 5.83948 13.198 5.89987 13.0293 5.8056 11.6794 5.05155 9.60799 4.65801 7.49996 4.65801 5.39192 4.65801 3.32052 5.05155 1.97064 5.8056 1.80188 5.89987 1.58866 5.83948 1.49439 5.67073 1.40013 5.50197 1.46051 5.28875 1.62927 5.19448 3.12466 4.35915 5.33063 3.95801 7.49996 3.95801zM7.49996 10.85C9.66928 10.85 11.8753 10.4488 13.3706 9.6135 13.5394 9.51924 13.5998 9.30601 13.5055 9.13726 13.4113 8.9685 13.198 8.90812 13.0293 9.00238 11.6794 9.75643 9.60799 10.15 7.49996 10.15 5.39192 10.15 3.32052 9.75643 1.97064 9.00239 1.80188 8.90812 1.58866 8.9685 1.49439 9.13726 1.40013 9.30601 1.46051 9.51924 1.62927 9.6135 3.12466 10.4488 5.33063 10.85 7.49996 10.85z"
-                      fill="currentColor"
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-                <div v-if="showLanguageMenu" class="language-menu">
-                  <button
-                    class="language-menu-button"
-                    @click="setLanguage('zh')"
-                  >
-                    {{ t('LANGUAGE_CHINESE') }}
-                  </button>
-                  <button
-                    class="language-menu-button"
-                    @click="setLanguage('en')"
-                  >
-                    {{ t('LANGUAGE_ENGLISH') }}
-                  </button>
-                </div>
-              </div>
-              <a-tooltip :title="t('SETTINGS')" placement="bottom">
-                <a @click="openSettingsModal" class="icon-button">
-                  <SettingOutlined style="cursor: pointer" />
-                </a>
-              </a-tooltip>
-              <a-tooltip :title="t('GITHUB')" placement="bottom">
-                <div @click="openGitHub()" class="icon-button">
-                  <GithubOutlined style="cursor: pointer" />
-                </div>
-              </a-tooltip>
-            </div>
-          </div>
-
-          <h1>{{ t('API_CHECKER_TITLE') }}</h1>
-          <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
-
-          <form @submit.prevent="handleSubmit" id="apiForm">
-            <div style="position: relative">
-              <textarea
-                v-model="apiInfo"
-                id="api_info"
-                name="api_info"
-                :placeholder="t('API_INFO_PLACEHOLDER')"
-              ></textarea>
-              <a-button
-                type="primary"
-                size="small"
-                @click="handlePaste"
-                style="position: absolute; right: 4px; top: 14px; height: 24px"
-              >
-                <template #icon>
-                  <CopyOutlined style="font-size: 14px" />
-                </template>
-              </a-button>
-            </div>
-
-            <input
-              type="text"
-              v-model="apiUrl"
-              id="api_url"
-              name="api_url"
-              :placeholder="t('API_URL_PLACEHOLDER')"
-            />
-
-            <input
-              type="text"
-              v-model="apiKey"
-              id="api_key"
-              name="api_key"
-              :placeholder="t('API_KEY_PLACEHOLDER')"
-            />
-
-            <div class="model-input-container" id="model-input-container">
-              <textarea
-                v-model="modelName"
-                id="model_name"
-                name="model_name"
-                :placeholder="t('MODEL_NAME_PLACEHOLDER')"
-              ></textarea>
-              <a-button
-                type="primary"
-                :loading="spinning"
-                @click="getModelList"
-                class="get-models large-button"
-                style="height: 80px; width: 180px"
-              >
-                {{ t('GET_MODEL_LIST') }}
-              </a-button>
-            </div>
-
-            <div id="modelCheckboxes"></div>
-            <div class="model-timeout-concurrency">
-              <div class="model-timeout">
-                <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
-                <input
-                  type="number"
-                  v-model="modelTimeout"
-                  id="model_timeout"
-                  name="model_timeout"
-                  min="1"
-                  :placeholder="t('TIMEOUT_PLACEHOLDER')"
-                />
-              </div>
-              <div class="model-concurrency">
-                <label for="model_concurrency"
-                  >{{ t('SET_CONCURRENCY') }}:</label
+                <svg
+                  id="themeIcon"
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  fill="transparent"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="lucide lucide-sun"
                 >
-                <input
-                  type="number"
-                  v-model="modelConcurrency"
-                  id="model_concurrency"
-                  name="model_concurrency"
-                  min="1"
-                  :placeholder="t('CONCURRENCY_PLACEHOLDER')"
-                />
-              </div>
-            </div>
+                  <circle cx="12" cy="12" r="4"></circle>
+                  <path d="M12 2v2"></path>
+                  <path d="M12 20v2"></path>
+                  <path d="m4.93 4.93 1.41 1.41"></path>
+                  <path d="m17.66 17.66 1.41 1.41"></path>
+                  <path d="M2 12h2"></path>
+                  <path d="M20 12h2"></path>
+                  <path d="m6.34 17.66-1.41 1.41"></path>
+                  <path d="m19.07 4.93-1.41 1.41"></path>
+                </svg>
+              </button>
 
-            <div class="submit-container">
-              <a-button
-                type="primary"
-                :loading="testModels_spinning"
-                @click="testModels"
-                class="submit-query"
-                size="large"
-              >
-                {{ t('TEST_MODELS') }}
-              </a-button>
-
-              <a-button
-                type="default"
-                :loading="checkQuota_spinning"
-                @click="checkQuota"
-                class="check-quota"
-                size="large"
-              >
-                {{ t('CHECK_QUOTA') }}
-              </a-button>
-
-              <a-button
-                type="ghost"
-                @click="clearForm"
-                class="clear-form"
-                size="large"
-              >
-                {{ t('CLEAR_FORM') }}
-              </a-button>
-            </div>
-          </form>
-        </div>
-        <div
-          class="container result-container"
-          v-if="showResultContainer"
-          :class="{ show: showResultContainer }"
-        >
-          <button class="close-button" @click="closeResults">×</button>
-          <div class="result-content" style="position: relative">
-            <div v-if="verificationLoading" class="loading-overlay">
-              <a-spin size="large" />
-            </div>
-
-            <div class="left-icons">
-              <a-tooltip :title="t('CHAT')" placement="bottom">
-                <a @click="goChat" class="icon-button">
-                  <MessageOutlined />
-                </a>
-              </a-tooltip>
-              <a-tooltip
-                :title="
-                  !testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')
-                "
-                placement="bottom"
-              >
-                <a
-                  @click="goShare"
-                  class="icon-button"
-                  :class="{ 'disabled-icon': !testingComplete }"
+              <div class="right-icons" @click="showLanguageMenu = false">
+                <div
+                  class="language-container"
+                  @click.stop="toggleLanguageMenu"
                 >
-                  <ShareAltOutlined />
-                </a>
-              </a-tooltip>
-
-              <a-dropdown trigger="click">
-                <template #overlay>
-                  <a-menu>
-                    <a-menu-item key="1">
-                      <a @click="copyModels('valid')">{{
-                        t('COPY_IDENTICAL_MODELS')
-                      }}</a>
-                    </a-menu-item>
-                    <a-menu-item key="2">
-                      <a @click="copyModels('available')">{{
-                        t('COPY_AVAILABLE_MODELS')
-                      }}</a>
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-                <a-tooltip :title="t('COPY')" placement="top">
-                  <a class="icon-button">
-                    <CopyOutlined style="cursor: pointer" />
+                  <button
+                    :aria-label="t('SWITCH_LANGUAGE')"
+                    class="language-btn"
+                  >
+                    <svg
+                      width="15"
+                      height="15"
+                      viewBox="0 0 15 15"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M7.49996 1.80002C4.35194 1.80002 1.79996 4.352 1.79996 7.50002C1.79996 10.648 4.35194 13.2 7.49996 13.2C10.648 13.2 13.2 10.648 13.2 7.50002C13.2 4.352 10.648 1.80002 7.49996 1.80002ZM0.899963 7.50002C0.899963 3.85494 3.85488 0.900024 7.49996 0.900024C11.145 0.900024 14.1 3.85494 14.1 7.50002C14.1 11.1451 11.145 14.1 7.49996 14.1C3.85488 14.1 0.899963 11.1451 0.899963 7.50002Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M13.4999 7.89998H1.49994V7.09998H13.4999V7.89998Z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M7.09991 13.5V1.5H7.89991V13.5H7.09991zM10.375 7.49998C10.375 5.32724 9.59364 3.17778 8.06183 1.75656L8.53793 1.24341C10.2396 2.82218 11.075 5.17273 11.075 7.49998 11.075 9.82724 10.2396 12.1778 8.53793 13.7566L8.06183 13.2434C9.59364 11.8222 10.375 9.67273 10.375 7.49998zM3.99969 7.5C3.99969 5.17611 4.80786 2.82678 6.45768 1.24719L6.94177 1.75281C5.4582 3.17323 4.69969 5.32389 4.69969 7.5 4.6997 9.67611 5.45822 11.8268 6.94179 13.2472L6.45769 13.7528C4.80788 12.1732 3.9997 9.8239 3.99969 7.5z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                      <path
+                        d="M7.49996 3.95801C9.66928 3.95801 11.8753 4.35915 13.3706 5.19448 13.5394 5.28875 13.5998 5.50197 13.5055 5.67073 13.4113 5.83948 13.198 5.89987 13.0293 5.8056 11.6794 5.05155 9.60799 4.65801 7.49996 4.65801 5.39192 4.65801 3.32052 5.05155 1.97064 5.8056 1.80188 5.89987 1.58866 5.83948 1.49439 5.67073 1.40013 5.50197 1.46051 5.28875 1.62927 5.19448 3.12466 4.35915 5.33063 3.95801 7.49996 3.95801zM7.49996 10.85C9.66928 10.85 11.8753 10.4488 13.3706 9.6135 13.5394 9.51924 13.5998 9.30601 13.5055 9.13726 13.4113 8.9685 13.198 8.90812 13.0293 9.00238 11.6794 9.75643 9.60799 10.15 7.49996 10.15 5.39192 10.15 3.32052 9.75643 1.97064 9.00239 1.80188 8.90812 1.58866 8.9685 1.49439 9.13726 1.40013 9.30601 1.46051 9.51924 1.62927 9.6135 3.12466 10.4488 5.33063 10.85 7.49996 10.85z"
+                        fill="currentColor"
+                        fill-rule="evenodd"
+                        clip-rule="evenodd"
+                      ></path>
+                    </svg>
+                  </button>
+                  <div v-if="showLanguageMenu" class="language-menu">
+                    <button
+                      class="language-menu-button"
+                      @click="setLanguage('zh')"
+                    >
+                      {{ t('LANGUAGE_CHINESE') }}
+                    </button>
+                    <button
+                      class="language-menu-button"
+                      @click="setLanguage('en')"
+                    >
+                      {{ t('LANGUAGE_ENGLISH') }}
+                    </button>
+                  </div>
+                </div>
+                <a-tooltip
+                  :title="t('EXPERIMENTAL_FEATURES')"
+                  placement="bottom"
+                >
+                  <a
+                    @click="showExperimentalFeatures = true"
+                    class="icon-button"
+                  >
+                    <ExperimentOutlined style="cursor: pointer" />
                   </a>
                 </a-tooltip>
-              </a-dropdown>
+                <a-tooltip :title="t('SETTINGS')" placement="bottom">
+                  <a @click="openSettingsModal" class="icon-button">
+                    <SettingOutlined style="cursor: pointer" />
+                  </a>
+                </a-tooltip>
+                <a-tooltip :title="t('GITHUB')" placement="bottom">
+                  <div @click="openGitHub()" class="icon-button">
+                    <GithubOutlined style="cursor: pointer" />
+                  </div>
+                </a-tooltip>
+              </div>
             </div>
-            <a-progress
-              :percent="progressPercent"
-              show-info
-              size="small"
-              style="margin-top: 10px"
-            />
 
-            <div v-if="!isMobile" class="table-container">
-              <a-table
-                :columns="columns"
-                :data-source="tableData"
-                :pagination="{ pageSize: 8 }"
-                :row-key="record => record.key"
+            <h1>{{ t('API_CHECKER_TITLE') }}</h1>
+            <h3>{{ t('API_CHECKER_SUBTITLE') }}</h3>
+
+            <form @submit.prevent="handleSubmit" id="apiForm">
+              <div style="position: relative">
+                <textarea
+                  v-model="apiInfo"
+                  id="api_info"
+                  name="api_info"
+                  :placeholder="t('API_INFO_PLACEHOLDER')"
+                ></textarea>
+                <a-button
+                  type="primary"
+                  size="small"
+                  @click="handlePaste"
+                  style="
+                    position: absolute;
+                    right: 4px;
+                    top: 14px;
+                    height: 24px;
+                  "
+                >
+                  <template #icon>
+                    <CopyOutlined style="font-size: 14px" />
+                  </template>
+                </a-button>
+              </div>
+
+              <input
+                type="text"
+                v-model="apiUrl"
+                id="api_url"
+                name="api_url"
+                :placeholder="t('API_URL_PLACEHOLDER')"
+              />
+
+              <input
+                type="text"
+                v-model="apiKey"
+                id="api_key"
+                name="api_key"
+                :placeholder="t('API_KEY_PLACEHOLDER')"
+              />
+
+              <div class="model-input-container" id="model-input-container">
+                <textarea
+                  v-model="modelName"
+                  id="model_name"
+                  name="model_name"
+                  :placeholder="t('MODEL_NAME_PLACEHOLDER')"
+                ></textarea>
+                <a-button
+                  type="primary"
+                  :loading="spinning"
+                  @click="getModelList"
+                  class="get-models large-button"
+                  style="height: 80px; width: 180px"
+                >
+                  {{ t('GET_MODEL_LIST') }}
+                </a-button>
+              </div>
+
+              <div id="modelCheckboxes"></div>
+              <div class="model-timeout-concurrency">
+                <div class="model-timeout">
+                  <label for="model_timeout">{{ t('SET_TIMEOUT') }}:</label>
+                  <input
+                    type="number"
+                    v-model="modelTimeout"
+                    id="model_timeout"
+                    name="model_timeout"
+                    min="1"
+                    :placeholder="t('TIMEOUT_PLACEHOLDER')"
+                  />
+                </div>
+                <div class="model-concurrency">
+                  <label for="model_concurrency"
+                    >{{ t('SET_CONCURRENCY') }}:</label
+                  >
+                  <input
+                    type="number"
+                    v-model="modelConcurrency"
+                    id="model_concurrency"
+                    name="model_concurrency"
+                    min="1"
+                    :placeholder="t('CONCURRENCY_PLACEHOLDER')"
+                  />
+                </div>
+              </div>
+
+              <div class="submit-container">
+                <a-button
+                  type="primary"
+                  :loading="testModels_spinning"
+                  @click="testModels"
+                  class="submit-query"
+                  size="large"
+                >
+                  {{ t('TEST_MODELS') }}
+                </a-button>
+
+                <a-button
+                  type="default"
+                  :loading="checkQuota_spinning"
+                  @click="checkQuota"
+                  class="check-quota"
+                  size="large"
+                >
+                  {{ t('CHECK_QUOTA') }}
+                </a-button>
+
+                <a-button
+                  type="ghost"
+                  @click="clearForm"
+                  class="clear-form"
+                  size="large"
+                >
+                  {{ t('CLEAR_FORM') }}
+                </a-button>
+              </div>
+            </form>
+          </div>
+          <div
+            class="container result-container"
+            v-if="showResultContainer"
+            :class="{ show: showResultContainer }"
+          >
+            <button class="close-button" @click="closeResults">×</button>
+            <div class="result-content" style="position: relative">
+              <div v-if="verificationLoading" class="loading-overlay">
+                <a-spin size="large" />
+              </div>
+
+              <div class="left-icons">
+                <a-tooltip
+                  :title="t('CHAT')"
+                  placement="bottom"
+                  v-if="enableChat"
+                >
+                  <a @click="goChat()" class="icon-button">
+                    <MessageOutlined />
+                  </a>
+                </a-tooltip>
+                <a-tooltip
+                  :title="
+                    !testingComplete ? t('PLEASE_WAIT_FOR_TESTING') : t('SHARE')
+                  "
+                  placement="bottom"
+                >
+                  <a
+                    @click="goShare"
+                    class="icon-button"
+                    :class="{ 'disabled-icon': !testingComplete }"
+                  >
+                    <ShareAltOutlined />
+                  </a>
+                </a-tooltip>
+
+                <a-dropdown trigger="click">
+                  <template #overlay>
+                    <a-menu>
+                      <a-menu-item key="1">
+                        <a @click="copyModels('valid')">{{
+                          t('COPY_IDENTICAL_MODELS')
+                        }}</a>
+                      </a-menu-item>
+                      <a-menu-item key="2">
+                        <a @click="copyModels('available')">{{
+                          t('COPY_AVAILABLE_MODELS')
+                        }}</a>
+                      </a-menu-item>
+                    </a-menu>
+                  </template>
+                  <a-tooltip :title="t('COPY')" placement="top">
+                    <a class="icon-button">
+                      <CopyOutlined style="cursor: pointer" />
+                    </a>
+                  </a-tooltip>
+                </a-dropdown>
+              </div>
+              <a-progress
+                :percent="progressPercent"
+                show-info
                 size="small"
-                class="result-table"
-              >
-                <template #bodyCell="{ text, record, column, index }">
-                  <template v-if="column.dataIndex === 'status'">
-                    {{ record.status }}
-                  </template>
-                  <template v-else-if="column.dataIndex === 'model'">
-                    <span @click="copyText(item.model)">
-                      {{ record.model }}
-                    </span>
-                  </template>
-                  <template v-else-if="column.dataIndex === 'responseTime'">
-                    {{ record.responseTime }}
-                  </template>
-                  <template v-else-if="column.dataIndex === 'buttons'">
-                    <template
-                      v-if="record.buttons && record.buttons.length > 0"
-                    >
-                      <a-popover trigger="hover" placement="top">
-                        <template #content>
-                          <div class="verify-btn-group">
-                            <a-button
-                              v-for="(button, idx) in record.buttons"
-                              :key="idx"
-                              type="default"
-                              size="small"
-                              @click="button.onClick"
-                              style="margin: 0 5px 5px 0"
-                              :style="{
-                                backgroundColor: buttonColors[button.key] || '',
-                                borderColor: buttonColors[button.key] || '',
-                              }"
-                            >
-                              {{ button.label }}
-                            </a-button>
-                          </div>
-                        </template>
-                        <a-button type="primary" size="small">
-                          {{ t('VERIFY') }}
-                        </a-button>
-                      </a-popover>
+                style="margin-top: 10px"
+              />
+
+              <div v-if="!isMobile" class="table-container">
+                <a-table
+                  :columns="columns"
+                  :data-source="tableData"
+                  :pagination="pagination"
+                  :row-key="record => record.key"
+                  size="small"
+                  class="result-table"
+                  @change="handleTableChange"
+                  @resizeColumn="handleResizeColumn"
+                >
+                  <template #bodyCell="{ text, record, column, index }">
+                    <template v-if="column.dataIndex === 'status'">
+                      {{ record.status }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'model'">
+                      <span style="display: flex; align-items: center">
+                        <MessageOutlined
+                          style="margin-right: 8px; cursor: pointer"
+                          @click="goChat(record.model)"
+                          v-if="enableChat"
+                        />
+                        {{ record.model }}
+                      </span>
+                    </template>
+                    <template v-else-if="column.dataIndex === 'responseTime'">
+                      {{ record.responseTime }}
+                    </template>
+                    <template v-else-if="column.dataIndex === 'buttons'">
+                      <template
+                        v-if="record.buttons && record.buttons.length > 0"
+                      >
+                        <a-popover trigger="hover" placement="top">
+                          <template #content>
+                            <div class="verify-btn-group">
+                              <a-button
+                                v-for="(button, idx) in record.buttons"
+                                :key="idx"
+                                type="default"
+                                size="small"
+                                @click="button.onClick"
+                                style="margin: 0 5px 5px 0"
+                                :style="{
+                                  backgroundColor:
+                                    buttonColors[button.key] || '',
+                                  borderColor: buttonColors[button.key] || '',
+                                }"
+                              >
+                                {{ button.label }}
+                              </a-button>
+                            </div>
+                          </template>
+                          <a-button type="primary" size="small">
+                            {{ t('VERIFY') }}
+                          </a-button>
+                        </a-popover>
+                      </template>
+                    </template>
+
+                    <template v-else-if="column.dataIndex === 'remark'">
+                      <a-tooltip
+                        :title="record.fullRemark || record.remark"
+                        placement="topLeft"
+                      >
+                        <span v-html="record.remark"></span>
+                      </a-tooltip>
+                    </template>
+                    <template v-else>
+                      {{ text }}
                     </template>
                   </template>
-
-                  <template v-else-if="column.dataIndex === 'remark'">
-                    <a-tooltip
-                      :title="record.fullRemark || record.remark"
-                      placement="topLeft"
-                    >
-                      <span v-html="record.remark"></span>
-                    </a-tooltip>
-                  </template>
-                  <template v-else>
-                    {{ text }}
-                  </template>
-                </template>
-              </a-table>
-            </div>
-            <div v-if="isMobile" class="list-container" style="margin: 0 16px">
-              <div class="result-list">
-                <div
-                  class="list-item"
-                  v-for="item in paginatedData"
-                  :key="item.key"
-                >
-                  <div class="list-item-content">
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('MODEL_STATUS_LABEL')
-                      }}</span>
-                      <span class="field-value">{{ item.status }}</span>
-                    </div>
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('MODEL_NAME_LABEL')
-                      }}</span>
-                      <span class="field-value" @click="copyText(item.model)">
-                        {{ item.model }}
-                      </span>
-                    </div>
-                    <div class="list-item-field">
-                      <span class="field-label">{{
-                        t('RESPONSE_TIME_LABEL')
-                      }}</span>
-                      <span class="field-value">{{ item.responseTime }}</span>
-                    </div>
-                    <div class="list-item-field">
-                      <div class="verify-btn-group">
-                        <a-button
-                          v-for="(button, index) in item.buttons"
-                          :key="index"
-                          type="default"
-                          size="small"
-                          @click="button.onClick"
-                          style="margin-bottom: 5px"
-                          :style="{
-                            backgroundColor: buttonColors[button.key] || '',
-                            borderColor: buttonColors[button.key] || '',
-                          }"
-                        >
-                          {{ button.label }}
-                        </a-button>
+                </a-table>
+              </div>
+              <div
+                v-if="isMobile"
+                class="list-container"
+                style="margin: 0 16px"
+              >
+                <div class="result-list">
+                  <div
+                    class="list-item"
+                    v-for="item in paginatedData"
+                    :key="item.key"
+                  >
+                    <div class="list-item-content">
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('MODEL_STATUS_LABEL')
+                        }}</span>
+                        <span class="field-value">{{ item.status }}</span>
                       </div>
-                    </div>
-                    <div class="list-item-field" v-if="item.remark">
-                      <span class="field-label">{{ t('REMARK_LABEL') }}</span>
-                      <span class="field-value" v-html="item.remark"></span>
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('MODEL_NAME_LABEL')
+                        }}</span>
+                        <span class="field-value" @click="copyText(item.model)">
+                          {{ item.model }}
+                        </span>
+                      </div>
+                      <div class="list-item-field">
+                        <span class="field-label">{{
+                          t('RESPONSE_TIME_LABEL')
+                        }}</span>
+                        <span class="field-value">{{ item.responseTime }}</span>
+                      </div>
+                      <div class="list-item-field">
+                        <div class="verify-btn-group">
+                          <a-button
+                            v-for="(button, index) in item.buttons"
+                            :key="index"
+                            type="default"
+                            size="small"
+                            @click="button.onClick"
+                            style="margin-bottom: 5px"
+                            :style="{
+                              backgroundColor: buttonColors[button.key] || '',
+                              borderColor: buttonColors[button.key] || '',
+                            }"
+                          >
+                            {{ button.label }}
+                          </a-button>
+                        </div>
+                      </div>
+                      <div class="list-item-field" v-if="item.remark">
+                        <span class="field-label">{{ t('REMARK_LABEL') }}</span>
+                        <span class="field-value" v-html="item.remark"></span>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
+              <a-pagination
+                :current="currentPage"
+                :total="tableData.length"
+                :pageSize="pageSize"
+                @change="handlePageChange"
+                style="margin-top: 16px; text-align: right"
+                v-if="isMobile"
+              />
             </div>
-            <a-pagination
-              :current="currentPage"
-              :total="tableData.length"
-              :pageSize="pageSize"
-              @change="handlePageChange"
-              style="margin-top: 16px; text-align: right"
-              v-if="isMobile"
-            />
           </div>
         </div>
-      </div>
+      </a-flex>
     </div>
     <a-modal
       v-model:open="functionCallingModalVisible"
@@ -844,6 +884,8 @@
         </div>
       </div>
     </a-modal>
+
+    <!--  测试总结   -->
     <a-modal
       v-model:open="isSummaryModalVisible"
       :title="t('TEST_RESULT_SUMMARY')"
@@ -874,46 +916,134 @@
         <a-button @click="handleCloseSVGModal">{{ t('CLOSE') }}</a-button>
       </div>
     </a-modal>
+
     <a-modal
       v-model:open="customDialogModalVisible"
       :title="t('CUSTOM_DIALOG_VERIFICATION')"
-      @ok="handleCustomDialogSubmit"
       @cancel="handleCustomDialogCancel"
-      :width="800"
+      :width="600"
+      centered
       :confirmLoading="customDialogLoading"
+      :footer="null"
     >
-      <template v-if="!customDialogResult">
-        <a-textarea
-          v-model:value="customDialogPrompt"
-          :placeholder="t('ENTER_PROMPT')"
-          :rows="4"
-        />
-      </template>
-      <template v-else>
+      <div v-if="!customDialogResult">
+        <div style="margin-bottom: 16px">
+          <p>{{ t('FUNCTION_INTRODUCTION') }}</p>
+        </div>
+        <a-form :label-col="{ span: 4 }" :wrapper-col="{ span: 20 }">
+          <!-- 模型下拉框 -->
+          <a-form-item :label="t('SELECT_MODEL')">
+            <a-select
+              v-model:value="currentVerifyingModel"
+              :options="modelOptions"
+              :placeholder="t('SELECT_MODEL_PLACEHOLDER')"
+              allowClear
+            >
+              <template #suffixIcon>
+                <SmileOutlined />
+              </template>
+            </a-select>
+          </a-form-item>
+
+          <!-- 提示词下拉框 -->
+          <a-form-item :label="t('SELECT_PROMPT')">
+            <a-select
+              v-model="selectedPresetPrompt"
+              :options="promptOptions"
+              :placeholder="t('SELECT_PROMPT_PLACEHOLDER')"
+              @change="changePrompt"
+            >
+              <template #suffixIcon>
+                <SmileOutlined />
+              </template>
+            </a-select>
+          </a-form-item>
+
+          <!-- 提示词输入框 -->
+          <a-form-item :label="t('PROMPT_CONTENT')">
+            <a-textarea
+              v-model:value="customDialogPrompt"
+              :placeholder="t('ENTER_PROMPT')"
+              :rows="4"
+            />
+          </a-form-item>
+
+          <a-form-item :wrapper-col="{ span: 24 }">
+            <div style="text-align: right">
+              <a-button
+                type="primary"
+                @click="handleCustomDialogSubmit"
+                :loading="customDialogLoading"
+                style="width: 100px"
+              >
+                {{ t('SEND') }}
+              </a-button>
+            </div>
+          </a-form-item>
+        </a-form>
+      </div>
+
+      <!-- 返回结果展示 -->
+      <div v-else style="margin-top: 24px">
         <div class="dialog-result">
-          <h3>{{ t('CUSTOM_DIALOG_VERIFICATION_RESULT') }}</h3>
           <div class="result-item">
             <div class="label">{{ t('MODEL') }}:</div>
-            <div class="content">{{ customDialogResult.model }}</div>
+            <div class="content no-box">{{ customDialogResult.model }}</div>
           </div>
+
           <div class="result-item">
             <div class="label">{{ t('PROMPT') }}:</div>
-            <div class="content">{{ customDialogResult.prompt }}</div>
+            <div
+              class="content no-box"
+              style="display: flex; align-items: center"
+            >
+              <span style="flex: 1; margin-right: 8px">
+                {{ customDialogResult.prompt }}
+              </span>
+              <a-popover :title="t('PROMPT_DESCRIPTION')" trigger="click">
+                <template #content>
+                  <pre class="popover-description-pre">{{
+                    getPromptDescriptionByContent(customDialogResult.prompt)
+                  }}</pre>
+                </template>
+                <a-button type="text" shape="circle">
+                  <InfoCircleTwoTone />
+                </a-button>
+              </a-popover>
+            </div>
           </div>
+
+          <!-- 响应内容展示 -->
           <div class="result-item">
             <div class="label">{{ t('RESPONSE_CONTENT') }}:</div>
-            <div class="content">{{ customDialogResult.response }}</div>
+            <div
+              class="content response-content"
+              style="max-height: 300px; overflow-y: auto"
+            >
+              {{ customDialogResult.response }}
+            </div>
           </div>
-          <a-collapse>
+
+          <!-- 原始响应折叠面板 -->
+          <a-collapse :bordered="false">
             <a-collapse-panel :header="t('RAW_RESPONSE')">
-              <pre>{{
+              <pre class="raw-response-pre">{{
                 JSON.stringify(customDialogResult.raw_response, null, 2)
               }}</pre>
             </a-collapse-panel>
           </a-collapse>
+
+          <!-- 继续测试按钮，靠右边，增加图标 -->
+          <div style="text-align: right; margin-top: 16px">
+            <a-button @click="handleContinueTesting">
+              <DoubleRightOutlined />
+              {{ t('CONTINUE_TESTING') }}
+            </a-button>
+          </div>
         </div>
-      </template>
+      </div>
     </a-modal>
+    <ExperimentalFeatures v-model:visible="showExperimentalFeatures" />
   </ConfigProvider>
 </template>
 <script setup>
@@ -925,8 +1055,13 @@ import {
   SettingOutlined,
   ShareAltOutlined,
   UserOutlined,
+  InfoCircleTwoTone,
+  SmileOutlined,
+  DoubleRightOutlined,
+  ExperimentOutlined,
 } from '@ant-design/icons-vue';
-import { computed, h, nextTick, onMounted, reactive, ref } from 'vue';
+import ExperimentalFeatures from './Experimental.vue';
+import { computed, h, nextTick, onMounted, reactive, ref, watch } from 'vue';
 import {
   ConfigProvider,
   message,
@@ -970,6 +1105,7 @@ import {
   cantFunctionModelList,
   cantOfficialModelList,
   cantTemperatureModelList,
+  presetPromptsList,
 } from '../utils/models.js';
 
 // 注册必须的组件
@@ -1046,6 +1182,24 @@ let chartInstance = null;
 const showSVGModal = ref(false);
 const svgDataUrl = ref('');
 const testingComplete = ref(false);
+const tableData = ref([]);
+const totalModels = ref(0);
+const completedModels = ref(0);
+const progressPercent = ref(0);
+const chatSite = ref('https://chat.crond.dev');
+const enableChat = ref(true);
+const showExperimentalFeatures = ref(false);
+const pagination = reactive({
+  current: 1,
+  pageSize: 8, // 默认每页显示8条，可以根据需要调整
+  pageSizeOptions: ['8', '12', '20'], // 可供选择的每页条数
+  showSizeChanger: true, // 显示每页条数切换器
+  total: computed(() => tableData.value.length), // 数据总数
+});
+const handleTableChange = (paginationInfo, filters, sorter) => {
+  pagination.current = paginationInfo.current;
+  pagination.pageSize = paginationInfo.pageSize;
+};
 
 const appDescription = computed(() => {
   const currentLocale = locale.value || 'zh';
@@ -1134,6 +1288,16 @@ onMounted(() => {
   });
 });
 
+// 设置高度单位 vh
+onMounted(() => {
+  const setVh = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+  setVh();
+  window.addEventListener('resize', setVh);
+});
+
 // 显示更新提示的函数
 function showUpdatePrompt(updateInfo) {
   Modal.confirm({
@@ -1177,6 +1341,12 @@ const getQueryParams = async () => {
       }
       if (settingsObj.concurrency) {
         modelConcurrency.value = settingsObj.concurrency;
+      }
+      if (settingsObj.chatSite) {
+        chatSite.value = settingsObj.chatSite;
+      }
+      if (settingsObj.closeChat) {
+        enableChat.value = false;
       }
       if (!settingsObj.closeAnnouncement) {
         showAnnouncement();
@@ -1411,7 +1581,17 @@ function filterModels() {
 
 const sortedModels = computed(() => {
   const selectedSet = new Set(selectedModels.value);
-  return models.value.slice().sort((a, b) => {
+  let filteredModels = models.value;
+
+  let prefix = prefixFilter.value.trim().toLowerCase();
+  if (prefix) {
+    // 实时过滤模型
+    filteredModels = filteredModels.filter(model =>
+      model.toLowerCase().includes(prefix)
+    );
+  }
+
+  return filteredModels.slice().sort((a, b) => {
     const aSelected = selectedSet.has(a);
     const bSelected = selectedSet.has(b);
     if (aSelected && !bSelected) return -1; // a 已选中，排在前面
@@ -1474,11 +1654,6 @@ const checkQuota = async () => {
     checkQuota_spinning.value = false;
   }
 };
-
-const tableData = ref([]);
-const totalModels = ref(0);
-const completedModels = ref(0);
-const progressPercent = ref(0);
 
 // 添加 testModels 函数
 async function testModels() {
@@ -1573,14 +1748,18 @@ function computeTableData() {
   // 处理 valid 模型
   results.valid.forEach((item, index) => {
     const buttons = [];
+    const notChatPattern =
+      /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
 
-    // 添加对话验证按钮 (放在最前面)
-    buttons.push({
-      label: t('CUSTOM_DIALOG_VERIFICATION'),
-      type: 'default',
-      key: 'customDialogVerification',
-      onClick: () => verifyCustomDialog(item.model),
-    });
+    // 添加对话验证按钮 (放在最前面) 如果是对话模型
+    if (!notChatPattern.test(item.model)) {
+      buttons.push({
+        label: t('CUSTOM_DIALOG_VERIFICATION'),
+        type: 'default',
+        key: 'customDialogVerification',
+        onClick: () => verifyCustomDialog(item.model),
+      });
+    }
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
@@ -1638,13 +1817,18 @@ function computeTableData() {
   results.inconsistent.forEach((item, index) => {
     const buttons = [];
 
-    // 添加对话验证按钮 (放在最前面)
-    buttons.push({
-      label: t('CUSTOM_DIALOG_VERIFICATION'),
-      type: 'default',
-      key: 'customDialogVerification',
-      onClick: () => verifyCustomDialog(item.model),
-    });
+    const notChatPattern =
+      /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
+
+    // 添加对话验证按钮 (放在最前面) 如果是对话模型
+    if (!notChatPattern.test(item.model)) {
+      buttons.push({
+        label: t('CUSTOM_DIALOG_VERIFICATION'),
+        type: 'default',
+        key: 'customDialogVerification',
+        onClick: () => verifyCustomDialog(item.model),
+      });
+    }
 
     if (!cantFunctionModelList.includes(item.model)) {
       buttons.push({
@@ -1778,6 +1962,8 @@ const columns = [
     dataIndex: 'model',
     key: 'model',
     width: 180,
+    ellipsis: true,
+    resizable: true,
     sorter: (a, b) => a.model.localeCompare(b.model),
     customCell: () => ({ attrs: { 'data-label': t('MODEL_NAME_LABEL') } }),
   },
@@ -1786,6 +1972,7 @@ const columns = [
     dataIndex: 'responseTime',
     width: 70,
     key: 'responseTime',
+    resizable: true,
     sorter: (a, b) => parseFloat(a.responseTime) - parseFloat(b.responseTime),
     customCell: () => ({ attrs: { 'data-label': t('RESPONSE_TIME_LABEL') } }),
   },
@@ -1795,6 +1982,7 @@ const columns = [
     key: 'remark',
     width: 100,
     ellipsis: true,
+    resizable: true,
     customCell: () => ({ attrs: { 'data-label': t('REMARK_LABEL') } }),
   },
   {
@@ -1808,6 +1996,10 @@ const columns = [
     }),
   },
 ];
+
+function handleResizeColumn(w, col) {
+  col.width = w;
+}
 
 // 复制文本函数
 function copyText(text) {
@@ -2513,8 +2705,17 @@ onMounted(() => {
 });
 
 // goChat
-function goChat() {
-  const url = `https://chat.crond.dev/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+function goChat(modelName) {
+  // 模拟获取模型并打印数据
+  if (!apiKey.value || !apiUrl.value) {
+    message.error('请先填写 API Key 和 API URL');
+    return;
+  }
+  //判断是否有modelName 没有就不给url 传值
+  let url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}"}`;
+  if (modelName) {
+    url = `${chatSite.value}/#/?settings={"key":"${apiKey.value}","url":"${apiUrl.value}","model":"${modelName}"}`;
+  }
   window.open(url);
 }
 
@@ -2587,7 +2788,8 @@ function copyModels(type) {
     message.info(t('NO_MODELS_TO_COPY'));
     return;
   }
-  const textToCopy = models.join('\n');
+  //需要加入,分割
+  const textToCopy = models.join(',');
   navigator.clipboard
     .writeText(textToCopy)
     .then(() => {
@@ -2605,26 +2807,79 @@ function copyModels(type) {
     });
 }
 
-// 添加新的响应式变量
+// 模态框显示控制
 const customDialogModalVisible = ref(false);
+const currentVerifyingModel = ref('');
+// 计算模型列表
+const modelNames = computed(() => {
+  let inputModels = modelName.value
+    .split(',')
+    .map(name => name.trim())
+    .filter(name => name !== '');
+  let selectedModelNames = selectedModels.value || [];
+  let currentModel = currentVerifyingModel.value
+    ? [currentVerifyingModel.value]
+    : [];
+  return Array.from(
+    new Set([...inputModels, ...selectedModelNames, ...currentModel])
+  );
+});
+
+// 模型选项列表，用于下拉框
+const modelOptions = computed(() =>
+  modelNames.value.map(name => ({
+    label: name,
+    value: name,
+  }))
+);
+
+// 提示词相关
 const customDialogPrompt = ref('');
 const customDialogResult = ref(null);
-const currentVerifyingModel = ref('');
-const customDialogLoading = ref(false); // 新增对话验证的 loading 状态
+const customDialogLoading = ref(false);
 
-// 添加新的验证函数
-async function verifyCustomDialog(model) {
-  currentVerifyingModel.value = model;
-  customDialogModalVisible.value = true;
+// 预设的提示词列表，包含标题、内容和描述
+const presetPrompts = ref(presetPromptsList);
+
+// 提示词选项列表，用于下拉框
+const promptOptions = computed(() =>
+  presetPrompts.value.map(prompt => ({
+    label: prompt.title,
+    value: prompt.title,
+  }))
+);
+
+const selectedPresetPrompt = ref(null);
+
+// 修改 changePrompt 函数
+function changePrompt(value) {
+  const prompt = presetPrompts.value.find(item => item.title === value);
+  if (prompt) {
+    customDialogPrompt.value = prompt.content;
+  } else {
+    customDialogPrompt.value = '';
+  }
 }
 
+// 添加根据提示词内容获取描述的方法
+function getPromptDescriptionByContent(content) {
+  const prompt = presetPrompts.value.find(item => item.content === content);
+  return prompt ? prompt.description : t('NO_DESCRIPTION_AVAILABLE');
+}
+
+// 处理发送请求
 async function handleCustomDialogSubmit() {
   if (!customDialogPrompt.value) {
     message.error(t('ENTER_PROMPT'));
     return;
   }
 
-  customDialogLoading.value = true; // 开始加载
+  if (!currentVerifyingModel.value) {
+    message.error(t('SELECT_MODEL'));
+    return;
+  }
+
+  customDialogLoading.value = true;
   try {
     const verifier = new ModelVerifier(apiUrl.value, apiKey.value);
     customDialogResult.value = await verifier.verifyCustomDialog(
@@ -2634,14 +2889,28 @@ async function handleCustomDialogSubmit() {
   } catch (error) {
     message.error(error.message);
   } finally {
-    customDialogLoading.value = false; // 结束加载
+    customDialogLoading.value = false;
   }
 }
 
+// 处理继续测试
+function handleContinueTesting() {
+  customDialogResult.value = null;
+  // 模型和提示词保持默认值，无需重新设置
+}
+
+// 处理关闭模态框
 function handleCustomDialogCancel() {
   customDialogModalVisible.value = false;
   customDialogPrompt.value = '';
   customDialogResult.value = null;
+  selectedPresetPrompt.value = null;
+}
+
+// 打开验证对话框的函数
+function verifyCustomDialog(model) {
+  currentVerifyingModel.value = model || modelNames.value[0] || '';
+  customDialogModalVisible.value = true;
 }
 
 // 添加粘贴处理函数
@@ -2719,9 +2988,9 @@ body {
 .wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: center; /* 水平居中 */
-  overflow-y: auto;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(var(--vh, 1vh) * 100);
 }
 
 .page-content {
@@ -3235,24 +3504,24 @@ input[type='number']:not(:placeholder-shown) {
 
 /* 移动端样式 */
 @media (max-width: 767px) {
-  .page-content {
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    flex-grow: 0;
-    overflow-y: auto;
-  }
-
   .container {
     max-width: 95%;
     margin-left: auto;
     margin-right: auto;
+    margin-bottom: 20px;
   }
 
   .container.shift-left,
   .container.result-container {
     transform: none;
     opacity: 1;
+  }
+
+  .result-container {
+    width: 100%;
+    overflow: hidden; /* 防止内容溢出 */
+    max-width: 95%;
+    margin-bottom: 20px;
   }
 
   /* 添加以下内容，确保 .page-content 仍然占据可用空间，并且内容可滚动 */
@@ -3269,6 +3538,7 @@ input[type='number']:not(:placeholder-shown) {
 
 .result-table .ant-table-cell {
   padding: 8px;
+  table-layout: fixed;
   white-space: normal; /* 允许内容换行 */
   word-break: break-all; /* 长单词会换行 */
 }
@@ -3439,18 +3709,22 @@ body.light-mode {
   border-bottom: 1px solid var(--border-color, #e0e0e0);
   padding: 8px 0;
   display: flex;
-  align-items: center;
+  flex-direction: row; /* 确保子元素水平排列 */
+  align-items: flex-start; /* 垂直方向顶部对齐 */
+  text-align: left; /* 确保文本左对齐 */
 }
 
 .field-label {
   font-weight: bold;
   margin-right: 8px;
   min-width: 100px;
+  text-align: left;
 }
 
 .field-value {
   flex: 1;
   word-break: break-all;
+  text-align: left;
 }
 
 /* 调整按钮在移动端的显示 */
@@ -3674,11 +3948,52 @@ body.light-mode {
     }
 
     .content {
-      background: var(--background-color);
-      padding: 8px;
-      border-radius: 4px;
-      white-space: pre-wrap;
+      /* 移除背景和边框，使布局更加紧凑 */
+      background: none;
+      padding: 0;
+      border: none;
+
+      /* 设置水平布局时的样式 */
+      display: flex;
+      align-items: center;
+
+      &.no-box {
+        /* 特殊样式，用于移除框框 */
+        background: none;
+        padding: 0;
+        border: none;
+        display: inline;
+      }
+
+      &.response-content {
+        background: var(--background-color);
+        padding: 8px;
+        border-radius: 4px;
+        white-space: pre-wrap;
+        border: 1px solid #d9d9d9;
+        max-height: 150px;
+        overflow-y: auto;
+      }
+
+      pre {
+        margin: 0;
+        white-space: pre-wrap;
+        word-break: break-all;
+        font-size: 12px;
+      }
     }
   }
+}
+
+/* 调整原始响应字体大小 */
+.raw-response-pre {
+  font-size: 12px;
+}
+
+.popover-description-pre {
+  margin: 0; /* 去除默认的 margin */
+  white-space: pre-wrap; /* 保留换行符，自动换行 */
+  word-break: break-word; /* 单词过长时换行 */
+  font-size: 14px; /* 根据需要调整字体大小 */
 }
 </style>

@@ -182,3 +182,63 @@ export async function testModelList(
 
   return { valid, invalid, inconsistent, awaitOfficialVerification };
 }
+
+// GPT Refresh Tokens
+export function checkRefreshTokens(apiAddress, tokens) {
+  return fetch(apiAddress, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      type: 'refreshTokens',
+      tokens: tokens,
+    }),
+  }).then(response => response.json());
+}
+
+// Claude Session Keys
+export function checkSessionKeys(
+  apiAddress,
+  tokens,
+  maxAttempts,
+  requestsPerSecond
+) {
+  return fetch(apiAddress, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      type: 'sessionKeys',
+      tokens: tokens,
+      maxAttempts: maxAttempts,
+      requestsPerSecond: requestsPerSecond,
+    }),
+  }).then(response => response.json());
+}
+
+// Gemini Keys
+export function checkGeminiKeys(
+  apiAddress,
+  tokens,
+  model,
+  rateLimit,
+  prompt,
+  user
+) {
+  return fetch(apiAddress, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      type: 'geminiAPI',
+      tokens: tokens,
+      model: model,
+      rateLimit: rateLimit,
+      prompt: prompt,
+      user: user,
+    }),
+  }).then(response => response.json());
+}

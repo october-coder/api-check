@@ -1,16 +1,20 @@
-// vite.config.js
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import Components from 'unplugin-vue-components/vite';
 import { AntDesignVueResolver } from 'unplugin-vue-components/resolvers';
+import { visualizer } from 'rollup-plugin-visualizer';
 
 export default defineConfig({
   plugins: [
     vue(),
+    visualizer({
+      open: true,
+    }),
     Components({
       resolvers: [
         AntDesignVueResolver({
-          importStyle: false, // css in js
+          importStyle: false,
+          resolveIcons: true,
         }),
       ],
     }),
@@ -25,13 +29,31 @@ export default defineConfig({
     },
   },
   css: {
-    loaderOptions: {
+    preprocessorOptions: {
       less: {
-        lessOptions: {
-          modifyVars: {
-            hack: `true; @import "~ant-design-vue/lib/style/themes/dark.less";`,
-          },
-          javascriptEnabled: true,
+        modifyVars: {
+          hack: `true; @import "~ant-design-vue/lib/style/themes/dark.less";`,
+        },
+        javascriptEnabled: true,
+      },
+    },
+  },
+  build: {
+    // 添加 build 配置
+    rollupOptions: {
+      output: {
+        // 手动拆分 chunk
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            if (id.includes('ant-design-vue')) {
+              return 'ant-design-vue';
+            }
+            if (id.includes('lodash')) {
+              return 'lodash';
+            }
+            // 添加更多需要单独拆分的库
+            return 'vendor';
+          }
         },
       },
     },

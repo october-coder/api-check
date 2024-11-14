@@ -67,6 +67,27 @@
 
 <img src="./docs/images/testing.png" alt="测试" style="zoom:50%;" />
 
+### v2.1.0
+
+🔔 **新特性与优化**
+
+- ✨ **新增快捷聊天测试**
+  - 对接魔改 NextChat，可快捷测试模型。
+  - 新增 `closeChat` 设置，方便中转站使用。
+- 🧪 **添加实验性功能模块** from [elfmaid](https://linux.do/u/elfmaid)
+  - 批量测试 gpt Refresh Tokens
+  - 批量测试 claude Session Keys
+  - 批量测试 gemini API Keys
+- ✂️ **新增粘贴按钮 ** by [fangyuan](https://linux.do/u/fangyuan99)
+- 📝 **新增自定义对话验证功能**
+  - 快捷prompt测试 by [fangyuan](https://linux.do/u/fangyuan99)
+
+🔧 **优化与修复**
+
+- 🐳 **优化 Dockerfile** 减小镜像体积。
+
+- 🎨 **修复布局问题** 改善界面显示
+
 ### v2.0.0
 
 🔔 **全新特性与优化**
@@ -171,8 +192,13 @@
 - **描述**: 是否关闭公告显示。设置为 `true` 时关闭公告显示，设置为 `false` 或未定义时显示公告。 **方便中转站使用**
 - **示例**: `"closeAnnouncement": true`
 
+🚪 closeChat **方便中转站使用**
+
+- **描述**：是否关闭快捷聊天功能。设置为 `true` 时关闭聊天功能，设置为 `false` 或未定义时开启聊天功能。
+- **示例**：`"closeChat": true`
+
 ```
-https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true}
+https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-mini","gpt-4o"],"timeout":10,"concurrency":2,"closeAnnouncement":true,"closeChat":true}
 ```
 
 解码后的 JSON 字符串如下：
@@ -184,7 +210,8 @@ https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-
   "models": ["gpt-4o-mini", "gpt-4o"],
   "timeout": 10,
   "concurrency": 2,
-  "closeAnnouncement": true
+  "closeAnnouncement": true,
+  "closeChat": true
 }
 ```
 
@@ -192,18 +219,20 @@ https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-
 
 ```
 {
-        "name": "check",
-        "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true}",
-        "icon": "https://check.crond.dev/logo.png"
+  "name": "check",
+  "link": "https://check.crond.dev/?settings={%22key%22:%22*sk*%22,%22url%22:%22*api*%22,%22models%22:[%22gpt-4o-mini%22],%22timeout%22:10,%22concurrency%22:2,%22closeAnnouncement%22:true,%22closeChat%22:true}",
+  "icon": "https://check.crond.dev/logo.png"
 }
+
 ```
 
 - **newapi** 示例
 
 ```
 {
-    "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true}"
+  "CHECK": "https://check.crond.dev/?settings={\"key\":\"{key}\",\"url\":\"{address}\",\"models\":[\"gpt-4o-mini\"],\"timeout\":10,\"concurrency\":2,\"closeAnnouncement\":true,\"closeChat\":true}"
 }
+
 ```
 
 ### 🛠 **高级验证功能**
