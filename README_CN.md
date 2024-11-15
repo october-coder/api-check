@@ -270,3 +270,7 @@ https://check.crond.dev/?settings={"key":"*sk*","url":"*api*","models":["gpt-4o-
 - [Megasoft](https://linux.do/u/zhong_little)
 - [fangyuan99](https://linux.do/u/fangyuan99)
 - [juzeon](https://github.com/juzeon)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=october-coder/api-check&type=Date)](https://star-history.com/#october-coder/api-check&Date)
