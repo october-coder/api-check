@@ -2941,6 +2941,7 @@ async function handlePaste() {
   gap: 10px;
   /* 靠左对齐 */
   justify-content: flex-start;
+  margin-top: 6px;
 }
 
 /* 统一图标按钮的样式 */
