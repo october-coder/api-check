@@ -1556,11 +1556,11 @@ function onSelectAll(e) {
 function onSelectAllChatOnly(e) {
   if (e.target.checked) {
     const notChatPattern =
-      /^(dall|mj|midjourney|stable-diffusion|playground|flux|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/;
+      /(bge|stabilityai|dall|mj|stable|flux|video|midjourney|stable-diffusion|playground|swap_face|tts|whisper|text|emb|luma|vidu|pdf|suno|pika|chirp|domo|runway|cogvideo|babbage|davinci|gpt-4o-realtime)/i;
     selectedModels.value = models.value.filter(
       model =>
         !notChatPattern.test(model) &&
-        !/(image|audio|video|music|pdf|flux|suno|embed)/.test(model)
+        !/(image|audio|video|music|pdf|flux|suno|embed)/i.test(model)
     );
   } else {
     selectedModels.value = [];
