@@ -274,3 +274,6 @@ Special thanks to the following contributors whose efforts have made this projec
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=october-coder/api-check&type=Date)](https://star-history.com/#october-coder/api-check&Date)
+
+[![image](iframe组件截图图片链接)](https://yxvm.com/)
+[NodeSupport](https://github.com/NodeSeekDev/NodeSupport)赞助了本项目
