@@ -1,0 +1,22 @@
+name: Sync Fork
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Every day at midnight
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          # Necessary for fork syncing
+          fetch-depth: 0 
+      - name: Sync with upstream
+        uses: aormsby/Fork-Sync-With-Upstream-action@v3.2
+        with:
+          upstream_repository: october-coder/api-check
+          upstream_branch: main
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
