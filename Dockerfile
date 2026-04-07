@@ -1,17 +1,24 @@
+# 全局参数：镜像源（CI 时通过 --build-arg NPM_REGISTRY=... 覆盖）
+ARG NPM_REGISTRY=https://registry.npmjs.org/
+
 # 阶段1：基础镜像准备
-FROM node:18-alpine AS base
+FROM node:24-alpine AS base
+
+ARG NPM_REGISTRY
 
 # 设置工作目录
 WORKDIR /app
 
-# 配置国内镜像源
-RUN npm config set registry https://registry.npmmirror.com/
+# 配置镜像源
+RUN npm config set registry ${NPM_REGISTRY}
 
 # 安装必要的系统依赖（例如 CA 证书）
-RUN apk add --no-cache ca-certificates
+RUN apk update && apk add --no-cache ca-certificates && update-ca-certificates
 
 # 阶段2：构建应用程序
 FROM base AS builder
+
+ARG NPM_REGISTRY
 
 WORKDIR /app
 
@@ -19,6 +26,7 @@ WORKDIR /app
 COPY package.json yarn.lock ./
 
 # 安装所有依赖，包括开发依赖
+RUN yarn config set registry ${NPM_REGISTRY}
 RUN yarn install
 
 # 复制项目源代码
@@ -40,7 +48,7 @@ RUN yarn install --production --ignore-scripts --prefer-offline
 RUN yarn cache clean --all
 
 # 阶段3：构建最终的生产镜像
-FROM node:18-alpine
+FROM node:24-alpine
 
 # 设置工作目录
 WORKDIR /app

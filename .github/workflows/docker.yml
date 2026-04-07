@@ -52,8 +52,11 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           context: .
+          pull: true
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+          build-args: |
+            NPM_REGISTRY=https://registry.npmjs.org
