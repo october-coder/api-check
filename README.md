@@ -57,8 +57,13 @@
    docker run -d -p 13000:13000 \
      -e PASSWORD=you_password \
      -v you_path:/app/data \
-     --name api-check ghcr.io/rickcert/api-check:latest
+     --name api-check ghcr.io/october-coder/api-check:latest
    ```
+
+   The image is automatically built and pushed via GitHub Actions on every push to the `main` branch. Available tags:
+   - `latest` - latest main branch build
+   - `v2.1.0` - specific version tags
+   - `sha-xxxxxxx` - commit SHA based tags
 
 ### Cloudflare Backend Deployment
 

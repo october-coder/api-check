@@ -55,8 +55,13 @@
    docker run -d -p 13000:13000 \
      -e PASSWORD=you_password \
      -v you_path:/app/data \
-     --name api-check ghcr.io/rickcert/api-check:latest
+     --name api-check ghcr.io/october-coder/api-check:latest
    ```
+
+   镜像通过 GitHub Actions 自动构建并推送到 `ghcr.io`。可用标签：
+   - `latest` - 最新 main 分支构建
+   - `v2.1.0` - 版本标签
+   - `sha-xxxxxxx` - 提交 SHA 标签
 
 ### cloudflare 部署后端
 
