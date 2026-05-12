@@ -44,7 +44,8 @@
 ### Vercel Deployment
 
 1. Click the button on the right to start deployment:
-   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check). Simply log in using your GitHub account, and remember to fill in the backend password on the environment variables page.
+   [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/october-coder/api-check&env=PASSWORD&project-name=api-check&repository-name=api-check)
+[![Deploy to PandaStack](https://dashboard.pandastack.io/deploy-button.svg)](https://dashboard.pandastack.io/deploy?repo=october-coder/api-check&type=static&buildCmd=npm+run+build&outputDir=dist). Simply log in using your GitHub account, and remember to fill in the backend password on the environment variables page.
 2. After deployment, you can start using it.
 3. (Optional) To deploy the backend service, please refer to the [Detailed Tutorial](./docs/vercel.md).
 4. (Optional) [Bind a Custom Domain Name](https://vercel.com/docs/concepts/projects/domains/add-a-domain): The domain name assigned by Vercel may be polluted in some regions. Binding a custom domain name allows direct access.
